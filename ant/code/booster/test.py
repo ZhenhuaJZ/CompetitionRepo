@@ -12,7 +12,7 @@ from xgboost import XGBClassifier
 from  sklearn.ensemble  import  GradientBoostingClassifier, RandomForestClassifier, ExtraTreesClassifier, AdaBoostClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.pipeline import Pipeline
-from sklearn.metrics import roc_curve, roc_auc_score
+from sklearn.metrics import roc_curve, roc_auc_score, accuracy_score
 from sklearn.grid_search import GridSearchCV
 from sklearn_evaluation import plot
 import operator
@@ -33,61 +33,62 @@ train_data = pd.read_csv(train_path)
 test_data = pd.read_csv(test_path)
 train_data = train_data[(train_data.label==0)|(train_data.label==1)]
 #Main data
-train = train_data.iloc[300:1000,3:]
-labels = train_data.iloc[300:1000,1]
+train = train_data.iloc[:,3:]
+labels = train_data.iloc[:,1]
 test = test_data.iloc[:,2:]
 
 def custom_imputation(df_train, df_test, fillna_value = None):
-    train = df_train.fillna(fillna_value)
-    test = df_test.fillna(fillna_value)
-    return train, test
+	train = df_train.fillna(fillna_value)
+	test = df_test.fillna(fillna_value)
+	return train, test
 
 def save_score(preds):
-    low_risk = 0
-    medium_risk = 0
-    high_risk = 0
-    for p in preds:
-        if p > 0.2 and p < 0.4:
-            low_risk += 1
+	low_risk = 0
+	medium_risk = 0
+	high_risk = 0
+	for p in preds:
+		if p > 0.2 and p < 0.4:
+			low_risk += 1
 
-        elif p >= 0.4 and p < 0.6:
-            medium_risk += 1
+		elif p >= 0.4 and p < 0.6:
+			medium_risk += 1
 
-        elif p >= 0.6:
-            high_risk += 1
-
+		elif p >= 0.6:
+			high_risk += 1
+	"""
     print("probability [0.2 ~ 0.4] rate : {:.3f}%\n".format(100*(low_risk/len(preds))),
           "probability [0.4 ~ 0.6] rate : {:.3f}%\n".format(100*(medium_risk/len(preds))),
           "probability [0.6 ~ 1.0] rate : {:.3f}%\n".format(100*(high_risk/len(preds))))
-
-    answer_sheet = pd.read_csv(as_path)
-    answer_sheet = pd.DataFrame(answer_sheet)
-    answer = answer_sheet.assign(score = preds)
-    answer.to_csv(score_path + "{}_score_{}d{}m{}h.csv".format(param_name, now.day, now.month, now.hour), index = None, float_format = "%.9f")
-    return print("Score saved in {}".format(score_path))
+	"""
+	answer_sheet = pd.read_csv(as_path)
+	answer_sheet = pd.DataFrame(answer_sheet)
+	answer = answer_sheet.assign(score = preds)
+	answer.to_csv(score_path + "score_{}d{}m{}h.csv".format(now.day, now.month, now.hour), index = None, float_format = "%.9f")
+	return print("Score saved in {}".format(score_path))
 
 def main():
-    _train, _test = train, test
-    _train, _test = custom_imputation(train, test, fillna_value = 1)
-    #split data
-    #train, validation, label, validation_label = train_test_split(train, labels, test_size = 0.3, random_state = 42)
-    #feature preprocessing
-    imputer = Imputer(missing_values='NaN', strategy='mean') #mean ,median, most_frequent
-    standar = StandardScaler(with_mean=True, with_std=True)
-    norm = Normalizer(norm = 'l2') #norm l1, l2
-    #feature selection
-    tbfs = XGBClassifier(max_depth = 3, n_estimators = 400, subsample = 0.8,
-                        colsample_bytree = 0.8, learning_rate = 0.08, n_jobs = -1) #tree base feature_selection
-    kbest = SelectKBest(chi2)
-    #clf
-    xgb = XGBClassifier(max_depth = 3, n_estimators = 400, subsample = 0.9,
-                        colsample_bytree = 0.8, learning_rate = 0.1, n_jobs = -1)
-    #rdforest = RandomForestClassifier(n_jobs = -1)
-    #grdboost = GradientBoostingClassifier(n_jobs = -1)
+	_train, _test, _labels = train, test, labels
+	_train, _test = custom_imputation(train, test, fillna_value = 1)
+	print("# Start training")
+	#split data
+	#_train, _validation, _labels, _validation_labels = train_test_split(_train, labels, test_size = 0.1, random_state = 42)
+	#feature preprocessing
+	imputer = Imputer(missing_values='NaN', strategy='mean') #mean ,median, most_frequent
+	standar = StandardScaler(with_mean=True, with_std=True)
+	norm = Normalizer(norm = 'l2') #norm l1, l2
+	#feature selection
+	tbfs = XGBClassifier(max_depth = 3, n_estimators = 30, subsample = 0.8,
+	                    colsample_bytree = 0.8, learning_rate = 0.08) #tree base feature_selection
+	kbest = SelectKBest(chi2)
+	#clf
+	xgb = XGBClassifier(max_depth = 3, n_estimators = 450, subsample = 0.9,
+	                    colsample_bytree = 0.8, learning_rate = 0.1)
+	#rdforest = RandomForestClassifier(n_jobs = -1)
+	#grdboost = GradientBoostingClassifier(n_jobs = -1)
 
-    # ###########################Tuning Params################################
+	# ###########################Tuning Params################################
 
-    params = [
+	params = [
               [{
                #"tbfs__min_child_weight" : [1,2,3], 
                "xgb__max_depth" : [3, 4], 
@@ -97,23 +98,23 @@ def main():
               [{
                #"tbfs__subsample" : [0.9, 0.8], 
                "xgb__gamma" : [0.1, 0.2], 
-               "xgb__subsample" : [0.9, 0.8, 0.7], 
-               "xgb__colsample_bytree" : [0.9, 0.8, 0.7],
+               "xgb__subsample" : [0.8, 0.7], 
+               "xgb__colsample_bytree" : [0.8, 0.7],
               }],
 
               [{
               #"tbfs__colsample_bytree" : [0.8, 0.7], 
               "xgb__reg_alpha" : [0.01, 0.03], 
-              "xgb__scale_pos_weight" : [1, 10, 20],
+              "xgb__scale_pos_weight" : [1, 10],
               }],
 
               [{
-              "xgb__learning_rate" : [i*0.01 for i in range(4,8)]
+              "xgb__learning_rate" : [i*0.01 for i in range(3,8)]
               }]
 
              ]
 
-    pipe = Pipeline(steps = [ #('imputer', Imputer()),
+	pipe = Pipeline(steps = [ #('imputer', Imputer()),
     	                       ('xgb', xgb)])
 
     #pipe_2 = Pipeline(steps = [('imputer', Imputer()),
@@ -123,48 +124,78 @@ def main():
     #pipe_3 = Pipeline(steps = [('imputer', Imputer()),
                                #('tbfs', SelectFromModel(tbfs)),
     	                       #('xgb', xgb)])
-
+	i = 0
 	for param in params:
 		start = time.time()
-		print("# Tuning hyper-parameters for {}".format(params))
-		clf = GridSearchCV(pipe, param_grid  = param, scoring = 'roc_auc',
-		                   verbose = 1, n_jobs = -1, cv = 3)
-		end = time.time()
-		print("# >>>>Duration<<<< : {}min ".format(round((end-start)/60,2)))
+		if i == 0:
+			print("# Tuning hyper-parameters for {}".format(param))
+			clf = GridSearchCV(pipe, param_grid  = param, scoring = 'roc_auc',
+			                   verbose = 1, n_jobs = -1, cv = 3)
+			clf = clf.fit(_train, _labels)
+			bst_params = clf.best_params_
+			bst_score = clf.best_score_
+			bst_estimator = clf.best_estimator_
+			i = 1
+		else:
 
-	clf = clf.fit(_train, labels)
+			clf = GridSearchCV(bst_estimator, param_grid  = param, scoring = 'roc_auc',
+			                   verbose = 1, n_jobs = -1, cv = 3)
+		
+			clf = clf.fit(_train, _labels)
+			bst_params = clf.best_params_
+			bst_score = clf.best_score_
+			bst_estimator = clf.best_estimator_
+			print(bst_estimator)
+			print("\nBest params set found on development set:\n{}".format(bst_params))
+			end = time.time()
+			print("# >>>>Duration<<<< : {}min ".format(round((end-start)/60,2)))
+
+	clf = clf.fit(_train, _labels)
 	bst_params = clf.best_params_
 	bst_score = clf.best_score_
 	bst_estimator = clf.best_estimator_
 	print("\nBest estimator set found on development set:\n{}".format(bst_estimator))
 
-    thresholds = np.sort(clf.best_estimator_.named_steps["xgb"].feature_importances_)
+	thresholds = np.sort(clf.best_estimator_.named_steps["xgb"].feature_importances_)
+	thresholds = thresholds.tolist()
+	thresholds.reverse()
+	print(thresholds)
+	"""
 	for thresh in thresholds:
 		#seletc features using thresh
-		selection = SelectFromModel(bst_estimator.steps[1][1], threshold = thresh, prefit = True)
+		selection = SelectFromModel(bst_estimator.steps[0][1], threshold = thresh, prefit = True)
 		selected_train = selection.transform(_train)
+		selected_val = selection.transform(_validation)
 		selected_test = selection.transform(_test)
 
 		#train model
-		clf = clf.fit(selected_train, labels)
-		probs = clf.predict_proba(selected_test)
+		clf = clf.fit(selected_train, _labels)
+		#evl model
+		val_preds = clf.predict_proba(selected_val)
+		accuracy = accuracy_score(_validation_labels, val_preds)
+		print("Tresh = %.3f, Accuracy: %.2f" %(thresh, accuracy * 100))
+		#print(matrix)!!!
+	"""
 		#save score
-		print(len(probs))
-		#save_score(probs[1])
+	probs = clf.predict_proba(_test) #selected_test
+	save_score(probs[:,1])
+
+		
 
     # ###############################save params################################
-
-    with open(params_path  + "params.txt", 'a') as f:
-        f.write(
-                "************************" + "\n"
-                + str(bst_estimator) + "\n"
-                + str(bst_params) + "\n"
-                + str(bst_score))
-
+	
+	with open(params_path  + "params.txt", 'a') as f:
+		f.write(
+				"************************" + "\n"
+				+ str(bst_estimator) + "\n"
+				+ str(bst_params) + "\n"
+				+ str(bst_score)
+				)
+	"""
     print("Find best params {}, with best roc {}".format(bst_params, bst_score))
     plot.grid_search(clf.grid_scores_, change='xgb__learning_rate', kind ='bar')
     plt.savefig(params_path + "grid_params_{}.png".format(round(bst_score,2)))
-
+	"""
 
 if __name__ == '__main__':
     warnings.filterwarnings(module = 'sklearn*',
