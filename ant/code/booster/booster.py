@@ -46,7 +46,7 @@ feats_selet_param = {
 param = {
 
         "objective" : "binary:logistic",
-        "max_depth" : 4,
+        "max_depth" : 400,
         "min_child_weight" : 1,
         "gamma" : 0.1,
         "subsample" : 0.7,
