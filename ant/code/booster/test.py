@@ -28,9 +28,9 @@ train_data = pd.read_csv(train_path)
 test = pd.read_csv(test_path)
 train_data = train_data[(train_data.label==0)|(train_data.label==1)]
 #Main data
-train = train_data.iloc[3:200,3:]
-labels = train_data.iloc[3:200,1]
-test = test.iloc[3:200,2:]
+train = train_data.iloc[3:1000,3:]
+labels = train_data.iloc[3:1000,1]
+test = test.iloc[3:300,2:]
 
 def custom_imputation(df_train, df_test, fillna_value = None):
     train = df_train.fillna(fillna_value)
@@ -73,18 +73,21 @@ def main():
     	                       #('xgb', xgb)])
 
     for param in params:
-    	clf = GridSearchCV(pipe, param_grid  = param,  scoring = 'roc_auc',
+    	clf = GridSearchCV(pipe, param_grid  = param, scoring = 'roc_auc',
                            verbose = 1, n_jobs = -1, cv = 5)
+
+
+
+    clf = clf.fit(train, labels)
 
     print("\nBest parameters set found on development set:")
     bst_params = clf.best_params_
     bst_score = clf.best_score_
     bst_estimator = clf.best_estimator_
+    print(bst_params)
     print(bst_score)
-
-    clf = bst_estimator.fit(train, labels)
-    probs = clf.predict_proba(test)
-    print(probs)
+    probs = bst_estimator.predict_proba(test)
+    #print(probs)
 
 if __name__ == '__main__':
     warnings.filterwarnings(module = 'sklearn*', action = 'ignore', category = DeprecationWarning)
