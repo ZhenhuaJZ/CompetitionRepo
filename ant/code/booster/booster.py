@@ -54,10 +54,10 @@ param = {
         #"alpha" : 0.05,
         "eta" : 0.07, #learning_rate
         "eval_metric" : ['error','auc'], #early stop only effects on error (not sure which one its relay on)
-        "num_round" : 400,
+        "num_round" : 4,
         #"scale_pos_weight" : 60, #[60-70]
         "train_path" : "../../data/train_heatmap.csv", #train_heatmap , train_mode_fill, train,
-        "test_path" : "../../data/train_heatmap.csv", #test_a_heatmap, test_a_mode_fill, test_a,
+        "test_path" : "../../data/test_a_heatmap.csv", #test_a_heatmap, test_a_mode_fill, test_a,
         #"features_selection" : True,
         #"importance_feats_rate" : 0.8, #if 0.8 then leave features importance > 80%
         }
@@ -470,10 +470,13 @@ def main():
         if validation_mode :
 
             train, test, label, validation, validation_label = load_data()
-
             bst, dtest, evals_result = create_DMatrix(param, train, test, label, validation, validation_label)
-
             save_figure(suffix, evals_result)
+
+            plt.figure(figsize=(50,50))
+            fpr, tpr, thresholds = roc_curve(validation_label, bst.predict(xgb.DMatrix(validation), ntree_limit= bst.best_iteration))
+            plot_roc_curve(fpr, tpr, "auc")
+            plt.savefig(score_path + "auc.png")
 
         else :
 
@@ -483,10 +486,7 @@ def main():
 
         preds = predict_and_save_model(bst, dtest, suffix)
 
-        plt.figure(figsize=(50,50))
-        fpr, tpr, thresholds = roc_curve(validation_label, bst.predict(xgb.DMatrix(validation), ntree_limit= bst.best_iteration))
-        plot_roc_curve(fpr, tpr, "auc")
-        plt.savefig(score_path + "auc.png")
+
 
 
         save_score(preds, suffix)
