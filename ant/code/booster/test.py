@@ -17,6 +17,7 @@ from sklearn.grid_search import GridSearchCV
 from sklearn_evaluation import plot
 import operator
 import warnings
+now = datetime.datetime.now()
 
 #train_data path
 train_path = "../../data/train.csv" #train_heatmap , train_mode_fill, train,
@@ -29,12 +30,12 @@ as_path = "../../tool/answer_sheet.csv"
 
 #Pd read path
 train_data = pd.read_csv(train_path)
-test = pd.read_csv(test_path)
+test_data = pd.read_csv(test_path)
 train_data = train_data[(train_data.label==0)|(train_data.label==1)]
 #Main data
-train = train_data.iloc[3:200,3:]
-labels = train_data.iloc[3:200,1]
-test = test.iloc[3:200,2:]
+train = train_data.iloc[3:1000,3:]
+labels = train_data.iloc[3:1000,1]
+test = test_data.iloc[3:200,2:]
 
 def custom_imputation(df_train, df_test, fillna_value = None):
     train = df_train.fillna(fillna_value)
@@ -67,8 +68,9 @@ def save_score(preds):
 
 def main():
     start = time.time()
+    _train, _test = train, test
     os.makedirs(score_path)
-    train, test = custom_imputation(train, test, fillna_value = 1)
+    _train, _test = custom_imputation(train, test, fillna_value = 1)
     #split data
     #train, validation, label, validation_label = train_test_split(train, labels, test_size = 0.3, random_state = 42)
     #feature preprocessing
@@ -82,8 +84,8 @@ def main():
     #clf
     xgb = XGBClassifier(max_depth = 3, n_estimators = 400, subsample = 0.9,
                         colsample_bytree = 0.8, learning_rate = 0.1, n_jobs = -1)
-    rdforest = RandomForestClassifier(n_jobs = -1)
-    grdboost = GradientBoostingClassifier(n_jobs = -1)
+    #rdforest = RandomForestClassifier(n_jobs = -1)
+    #grdboost = GradientBoostingClassifier(n_jobs = -1)
 
     # ###########################Tuning Params################################
 
@@ -110,12 +112,12 @@ def main():
     	clf = GridSearchCV(pipe, param_grid  = param, scoring = 'roc_auc',
                            verbose = 1, n_jobs = -1, cv = 5)
 
-    clf = clf.fit(train, labels)
+    clf = clf.fit(_train, labels)
     bst_params = clf.best_params_
     bst_score = clf.best_score_
     bst_estimator = clf.best_estimator_
     print("\nBest parameters set found on development set: + \n +{}".format(bst_params))
-    probs = clf.predict_proba(test)
+    probs = clf.predict_proba(_test)
     #save score
     save_score(probs[1])
 
