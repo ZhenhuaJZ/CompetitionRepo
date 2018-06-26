@@ -36,10 +36,10 @@ feats_selet_param = {
         "eta" : 0.08, #learning_rate
         #"eval_metric" : ['error','auc'], #early stop only effects on error (not sure which one its relay on)
         "num_round" : 400,
-        "scale_pos_weight" : 50, #[60-70]
+        "scale_pos_weight" : 10, #[60-70]
         "train_path" : "../../data/train_heatmap.csv", #[train_heatmap , train_mode_fill, train]
         "test_path" : "../../data/test_a_heatmap.csv", #[test_a_heatmap, test_a_mode_fill, test_a]
-        "features_selection" : False,
+        "features_selection" : True,
         "importance_feats_rate" : 0.2, #if 0.8 then leave features importance > 80%
         }
 
@@ -54,8 +54,8 @@ param = {
         #"alpha" : 0.05,
         "eta" : 0.07, #learning_rate
         "eval_metric" : ['error','auc'], #early stop only effects on error (not sure which one its relay on)
-        "num_round" : 4,
-        #"scale_pos_weight" : 60, #[60-70]
+        "num_round" : 400,
+        "scale_pos_weight" : 10, #[60-70]
         "train_path" : "../../data/train_heatmap.csv", #train_heatmap , train_mode_fill, train,
         "test_path" : "../../data/test_a_heatmap.csv", #test_a_heatmap, test_a_mode_fill, test_a,
         #"features_selection" : True,
@@ -66,7 +66,7 @@ num_round = param["num_round"]
 features_selection = feats_selet_param["features_selection"]
 importance_feats_rate = feats_selet_param["importance_feats_rate"]
 early_stopping_rounds = 30
-validation_mode = False # default 0.3's all data
+validation_mode = True # default 0.3's all data
 suffix = "{}:{}".format(now.hour, now.minute) #signle training save file name's suffix
 
 #*******************************************************************************#
@@ -75,11 +75,11 @@ suffix = "{}:{}".format(now.hour, now.minute) #signle training save file name's 
 #*******************************************************************************#
 
 
-loop_function = False #if False shut down loop_function
-loop_param = "scale_pos_weight" #change the loop parameter here
-loop_start = 0.1 #start loop digit
-loop_end = 1  #end loop digit
-loop_step = 0.1  #loop stop
+loop_function = True #if False shut down loop_function
+loop_param = "eta" #change the loop parameter here
+loop_start = 0.02 #start loop digit
+loop_end = 0.1  #end loop digit
+loop_step = 0.01  #loop stop
 
 
 #***********************data_path***********************************************#
