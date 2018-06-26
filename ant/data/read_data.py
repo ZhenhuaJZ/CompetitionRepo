@@ -101,8 +101,8 @@ def convert_to_date(array):
 def main():
 
     #"/home/leo/ant_leo/data/replaced_missing_train_complete.csv"
-    data_path = "train_mode_fill.csv"
-    save_path = "train_mode_fill_dated.csv"
+    data_path = "train.csv"
+    save_path = "train_fill_0.csv"
 
     csv_path = "test_a_heatmap.csv"
     npy_path = "test_a_heatmap.npy"
@@ -119,7 +119,7 @@ def main():
     new_test_save_path = ""
 
     xbg_format(data_path, save_path, 
-               sort_data = True, fillzero = False, 
+               sort_data = True, fillzero = True, 
                header = True, label_mode = None) ## label_mode = [keep_0_1, keep_1, keep_0, keep_-1]
     #mergeFile(srcpath, despath)
     #csv2npy(csv_path, npy_path)
