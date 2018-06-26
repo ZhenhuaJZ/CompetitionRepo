@@ -37,8 +37,8 @@ feats_selet_param = {
         #"eval_metric" : ['error','auc'], #early stop only effects on error (not sure which one its relay on)
         "num_round" : 400,
         "scale_pos_weight" : 50, #[60-70]
-        "train_path" : "../data/train_heatmap.csv", #[train_heatmap , train_mode_fill, train]
-        "test_path" : "../data/test_a_heatmap.csv", #[test_a_heatmap, test_a_mode_fill, test_a]
+        "train_path" : "../../data/train_heatmap.csv", #[train_heatmap , train_mode_fill, train]
+        "test_path" : "../../data/test_a_heatmap.csv", #[test_a_heatmap, test_a_mode_fill, test_a]
         "features_selection" : False,
         "importance_feats_rate" : 0.2, #if 0.8 then leave features importance > 80%
         }
@@ -56,8 +56,8 @@ param = {
         "eval_metric" : ['error','auc'], #early stop only effects on error (not sure which one its relay on)
         "num_round" : 400,
         #"scale_pos_weight" : 60, #[60-70]
-        "train_path" : "../data/train_heatmap.csv", #train_heatmap , train_mode_fill, train,
-        "test_path" : "../data/train_heatmap.csv", #test_a_heatmap, test_a_mode_fill, test_a,
+        "train_path" : "../../data/train_heatmap.csv", #train_heatmap , train_mode_fill, train,
+        "test_path" : "../../data/train_heatmap.csv", #test_a_heatmap, test_a_mode_fill, test_a,
         #"features_selection" : True,
         #"importance_feats_rate" : 0.8, #if 0.8 then leave features importance > 80%
         }
@@ -98,9 +98,9 @@ score_path = "score/{}_{}_{}:{}/".format(now.month, now.day, now.hour, now.minut
 #***********************Tool-box***********************************************#
 #pandas read answer_sheet
 #the path of answer_sheet.csv
-as_path = "tool/answer_sheet.csv"
+as_path = "../../tool/answer_sheet.csv"
 #xgb.fmap path
-fmap = "score_path/tool/"
+fmap = score_path+ "tool/"
 
 
 def ceate_feature_map(df):
