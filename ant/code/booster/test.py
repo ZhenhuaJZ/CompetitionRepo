@@ -33,9 +33,9 @@ train_data = pd.read_csv(train_path)
 test_data = pd.read_csv(test_path)
 train_data = train_data[(train_data.label==0)|(train_data.label==1)]
 #Main data
-train = train_data.iloc[3:1000,3:]
-labels = train_data.iloc[3:1000,1]
-test = test_data.iloc[3:200,2:]
+train = train_data.iloc[300:1000,3:]
+labels = train_data.iloc[300:1000,1]
+test = test_data.iloc[:,2:]
 
 def custom_imputation(df_train, df_test, fillna_value = None):
     train = df_train.fillna(fillna_value)
@@ -67,9 +67,7 @@ def save_score(preds):
     return print("Score saved in {}".format(score_path))
 
 def main():
-    start = time.time()
     _train, _test = train, test
-    os.makedirs(score_path)
     _train, _test = custom_imputation(train, test, fillna_value = 1)
     #split data
     #train, validation, label, validation_label = train_test_split(train, labels, test_size = 0.3, random_state = 42)
@@ -92,8 +90,8 @@ def main():
     params = [
               [{"tbfs__min_child_weight" : [1,2,3]}, {"xgb__max_depth" : [3, 4], "xgb__min_child_weight" : [1, 2, 3]}],
               [{"tbfs__subsample" : [0.9, 0.8]}, {"xgb__gamma" : [0.1, 0.2], "xgb__subsample" : [0.9, 0.8, 0.7], "xgb__colsample_bytree" : [0.9, 0.8, 0.7]}],
-              [{"tbfs__colsample_bytree" : [0.8, 0.7]}, {"xgb__reg_alpha" : [0.01, 0.05, 0.06], "xgb__scale_pos_weight" : [1, 10, 20]}],
-              [{"xgb__learning_rate" : [i*0.01 for i in range(3,9)]}]
+              [{"tbfs__colsample_bytree" : [0.8, 0.7]}, {"xgb__reg_alpha" : [0.01, 0.03], "xgb__scale_pos_weight" : [1, 10, 20]}],
+              [{"xgb__learning_rate" : [i*0.01 for i in range(4,8)]}]
              ]
 
     pipe = Pipeline(steps = [ #('imputer', Imputer()),
@@ -109,14 +107,18 @@ def main():
     	                       #('xgb', xgb)])
 
     for param in params:
+        start = time.time()
+        print("# Tuning hyper-parameters for {}".format(param))
     	clf = GridSearchCV(pipe, param_grid  = param, scoring = 'roc_auc',
-                           verbose = 1, n_jobs = -1, cv = 5)
+                           verbose = 1, n_jobs = -1, cv = 3)
+        end = time.time()
+        print("# >>>>Duration<<<< : {}min ".format(round((end-start)/60,2)))
 
     clf = clf.fit(_train, labels)
     bst_params = clf.best_params_
     bst_score = clf.best_score_
     bst_estimator = clf.best_estimator_
-    print("\nBest parameters set found on development set: + \n +{}".format(bst_params))
+    print("\nBest estimator set found on development set:\n{}".format(bst_estimator))
     probs = clf.predict_proba(_test)
     #save score
     save_score(probs[1])
@@ -131,12 +133,13 @@ def main():
                 + str(bst_score))
 
     print("Find best params {}, with best roc {}".format(bst_params, bst_score))
-    plot.grid_search(clf.grid_scores_, change='max_depth', kind ='bar')
+    plot.grid_search(clf.grid_scores_, change='xgb__learning_rate', kind ='bar')
     plt.savefig(params_path + "grid_params_{}.png".format(round(bst_score,2)))
-    end = time.time()
-    print(">>>>Duration<<<< : {}min ".format(round((end-start)/60,2)))
+
 
 if __name__ == '__main__':
     warnings.filterwarnings(module = 'sklearn*',
                             action = 'ignore', category = DeprecationWarning)
+    os.makedirs(score_path)
+    os.makedirs(params_path)
     main()
