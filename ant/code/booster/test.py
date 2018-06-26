@@ -88,14 +88,32 @@ def main():
     # ###########################Tuning Params################################
 
     params = [
-              [{"tbfs__min_child_weight" : [1,2,3]}, {"xgb__max_depth" : [3, 4], "xgb__min_child_weight" : [1, 2, 3]}],
-              [{"tbfs__subsample" : [0.9, 0.8]}, {"xgb__gamma" : [0.1, 0.2], "xgb__subsample" : [0.9, 0.8, 0.7], "xgb__colsample_bytree" : [0.9, 0.8, 0.7]}],
-              [{"tbfs__colsample_bytree" : [0.8, 0.7]}, {"xgb__reg_alpha" : [0.01, 0.03], "xgb__scale_pos_weight" : [1, 10, 20]}],
-              [{"xgb__learning_rate" : [i*0.01 for i in range(4,8)]}]
+              [{
+               #"tbfs__min_child_weight" : [1,2,3], 
+               "xgb__max_depth" : [3, 4], 
+               "xgb__min_child_weight" : [1, 2, 3],
+              }],
+           
+              [{
+               #"tbfs__subsample" : [0.9, 0.8], 
+               "xgb__gamma" : [0.1, 0.2], 
+               "xgb__subsample" : [0.9, 0.8, 0.7], 
+               "xgb__colsample_bytree" : [0.9, 0.8, 0.7],
+              }],
+
+              [{
+              #"tbfs__colsample_bytree" : [0.8, 0.7], 
+              "xgb__reg_alpha" : [0.01, 0.03], 
+              "xgb__scale_pos_weight" : [1, 10, 20],
+              }],
+
+              [{
+              "xgb__learning_rate" : [i*0.01 for i in range(4,8)]
+              }]
+
              ]
 
     pipe = Pipeline(steps = [ #('imputer', Imputer()),
-                               ('tbfs', SelectFromModel(tbfs)),
     	                       ('xgb', xgb)])
 
     #pipe_2 = Pipeline(steps = [('imputer', Imputer()),
@@ -106,22 +124,33 @@ def main():
                                #('tbfs', SelectFromModel(tbfs)),
     	                       #('xgb', xgb)])
 
-    for param in params:
-        start = time.time()
-        print("# Tuning hyper-parameters for {}".format(param))
-    	clf = GridSearchCV(pipe, param_grid  = param, scoring = 'roc_auc',
-                           verbose = 1, n_jobs = -1, cv = 3)
-        end = time.time()
-        print("# >>>>Duration<<<< : {}min ".format(round((end-start)/60,2)))
+	for param in params:
+		start = time.time()
+		print("# Tuning hyper-parameters for {}".format(params))
+		clf = GridSearchCV(pipe, param_grid  = param, scoring = 'roc_auc',
+		                   verbose = 1, n_jobs = -1, cv = 3)
+		end = time.time()
+		print("# >>>>Duration<<<< : {}min ".format(round((end-start)/60,2)))
 
-    clf = clf.fit(_train, labels)
-    bst_params = clf.best_params_
-    bst_score = clf.best_score_
-    bst_estimator = clf.best_estimator_
-    print("\nBest estimator set found on development set:\n{}".format(bst_estimator))
-    probs = clf.predict_proba(_test)
-    #save score
-    save_score(probs[1])
+	clf = clf.fit(_train, labels)
+	bst_params = clf.best_params_
+	bst_score = clf.best_score_
+	bst_estimator = clf.best_estimator_
+	print("\nBest estimator set found on development set:\n{}".format(bst_estimator))
+
+    thresholds = np.sort(clf.best_estimator_.named_steps["xgb"].feature_importances_)
+	for thresh in thresholds:
+		#seletc features using thresh
+		selection = SelectFromModel(bst_estimator.steps[1][1], threshold = thresh, prefit = True)
+		selected_train = selection.transform(_train)
+		selected_test = selection.transform(_test)
+
+		#train model
+		clf = clf.fit(selected_train, labels)
+		probs = clf.predict_proba(selected_test)
+		#save score
+		print(len(probs))
+		#save_score(probs[1])
 
     # ###############################save params################################
 
