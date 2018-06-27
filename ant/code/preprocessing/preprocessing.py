@@ -89,9 +89,6 @@ def replace_missing_by_custom_mode(train_data,test_data):
     black_data = train_data.loc[train_data["label"] == 1]
     white_data = train_data.loc[train_data["label"] == 0]
 
-    print(black_data)
-    print(white_data)
-
     for i in range(black_data.shape[1]-3):
         col_name = black_data.columns.values.tolist()[3:]
         if black_data[col_name[i]].mode()[0] == white_data[col_name[i]].mode()[0]:

@@ -17,6 +17,8 @@ from sklearn.ensemble import RandomForestClassifier
 from xgboost import XGBClassifier
 import operator
 import warnings
+
+#import function from preprocessing.py
 import sys
 sys.path.insert(0,"/home/stirfryrabbit/Documents/CompetitionRepo/ant/code/preprocessing")
 from preprocessing import replace_missing_by_custom_mode
@@ -94,11 +96,11 @@ def save_score(preds, param_name):
     return print("Score saved in {}".format(score_path))
 
 def main():
-    train_mode_path = "../../data/train.csv" #train_heatmap , train_mode_fill_leo, train, train_mode_fill_full_feat
-    test_mode_path = "../../data/test_a.csv" #test_a_heatmap, test_a_mode_fill, test_a, test_mode_fill_full_feat
-    train_data = pd.read_csv(train_mode_path)
-    train_data = train_data[(train_mode_data.label==0)|(train_mode_data.label==1)]
-    test_data = pd.read_csv(test_mode_path)
+    train_path = "../../data/train.csv" #train_heatmap , train_fill_leo, train, train_fill_full_feat
+    test_path = "../../data/test_a.csv" #test_a_heatmap, test_a_mode_fill, test_a, test_mode_fill_full_feat
+    train_data = pd.read_csv(train_path)
+    train_data = train_data[(train_data.label==0)|(train_data.label==1)]
+    test_data = pd.read_csv(test_path)
     print("\nreaded data")
     # Fill NaN data with mode
     train_data, test_data = replace_missing_by_custom_mode(train_data,test_data)
@@ -115,7 +117,7 @@ def main():
     exit()
     print("Initialised classifiers")
     xgb = xgb.fit(feature, label,
-                  # eval_set = [(train_mode_test, label_mode_test)],
+                  # eval_set = [(train_test, label_mode_test)],
                   # eval_metric = "auc",
                   # verbose = True
                   )
