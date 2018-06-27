@@ -58,13 +58,66 @@ def replace_missing_by_gaussian(data_array):
                 print("feature {}".format(i-1) + " processed NaN {}".format(count) + " data")
     return data_array
 
-def main():
-    data = pd.read_csv('../../data/replaced_missing_train.csv')
-    print("data was read")
-    data = replace_missing_by_gaussian(data)
-    data = data.iloc[:,1:]
-    print(data)
-    data.to_csv(save_link, index=None)
+def file_merge(black_data, white_data):
+    merged_file = pd.concat([black_data,white_data], axis = 0)
+    merged_file = merged_file.sort_values(by = "date")
+    return merged_file
 
-if __name__ == "__main__":
-    main()
+
+############################## Replace_missing by mode ############################
+def find_common_mode(black_frequency_list, white_frequency_list):
+    min_freq_diff = 99999;
+    min_mode_value = 0;
+    # Find the most similar common mode between black_frequency_list and white_frequency_list
+    for i in range(5):
+        if i == len(white_frequency_list)-1:
+            break;
+        for j in range(5):
+            if j == len(black_frequency_list)-1:
+                break;
+            # Calculate the difference in frequency, the number with smallest frequency is stored in min_mode_value
+            freq_diff = abs((white_frequency_list.iloc[i] - black_frequency_list.iloc[j])*100)
+            #print(freq_diff)
+            if (freq_diff < min_freq_diff) and (white_frequency_list.index[i] == black_frequency_list.index[j]):
+                min_mode_value = white_frequency_list.index[i]
+    common_mode = min_mode_value
+    return common_mode
+
+def replace_missing_by_custom_mode(train_data,test_data):
+    print("Initiate custom mode filling nan process")
+
+    black_data = train_data.loc[train_data["label"] == 1]
+    white_data = train_data.loc[train_data["label"] == 0]
+
+    for i in range(black_data.shape[1]-3):
+        col_name = black_data.columns.values.tolist()[3:]
+        if black_data[col_name[i]].mode()[0] == white_data[col_name[i]].mode()[0]:
+        #if black_data["f{}".format(i)].mode()[0] == white_data["f{}".format(i)].mode()[0]:
+            #common_mode = black_data["f{}".format(i)].mode()[0]
+            common_mode = black_data[col_name[i]].mode()[0]
+        else:
+            # Calculate a list of occurrence in each feature
+            black_mode_list = black_data[col_name[i]].value_counts() / len(black_data[col_name[i]])
+            white_mode_list = white_data[col_name[i]].value_counts() / len(white_data[col_name[i]])
+            # Calculate the common occurrence between black and white data
+            common_mode = find_common_mode(black_mode_list,white_mode_list)
+        black_data[col_name[i]] = black_data[col_name[i]].fillna(black_data[col_name[i]].mode()[0])
+        white_data[col_name[i]] = white_data[col_name[i]].fillna(white_data[col_name[i]].mode()[0])
+        test_data[col_name[i]] = test_data[col_name[i]].fillna(common_mode)
+        print("Filled feature {}".format(col_name[i]) + "***Black Filled:{}".format(black_data[col_name[i]].mode()[0]) +
+              "***White Filled:{}".format(white_data[col_name[i]].mode()[0]) + "***Test Filled:{}".format(common_mode))
+        print("******************************")
+    print("End of custom mode filling")
+    train_data_merged = file_merge(black_data, white_data)
+    print(white_data)
+    return train_data_merged, test_data
+
+# def main():
+#     black_data_filled = pd.read_csv("../../data/black_label_mode_fill.csv")
+#     print("read black data")
+#     white_data_filled = pd.read_csv("../../data/white_label_mode_fill.csv")
+#     print("read white data")
+#     merged_data = file_merge(black_data_filled, white_data_filled)
+#     merged_data.to_csv("../../data/train_mode_fill.csv",index = None)
+# if __name__ == "__main__":
+#     main()
