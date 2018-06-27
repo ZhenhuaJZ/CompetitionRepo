@@ -6,12 +6,12 @@ import os
 import csv
 import datetime, time
 from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import Imputer, StandardScaler, Normalizer
+from sklearn.preprocessing import Imputer, StandardScaler, Normalizer, MaxAbsScaler, MinMaxScaler
 from sklearn.feature_selection import SelectFromModel, SelectKBest, chi2
 from xgboost import XGBClassifier
 from  sklearn.ensemble  import  GradientBoostingClassifier, RandomForestClassifier, ExtraTreesClassifier, AdaBoostClassifier
 from sklearn.linear_model import LogisticRegression
-from sklearn.pipeline import Pipeline
+from sklearn.pipeline import Pipeline, make_pipeline
 from sklearn.metrics import roc_curve, roc_auc_score, accuracy_score
 from sklearn.grid_search import GridSearchCV
 from sklearn_evaluation import plot
@@ -68,26 +68,29 @@ def save_score(preds):
 
 def main():
 	_train, _test, _labels = train, test, labels
-	_train, _test = custom_imputation(train, test, fillna_value = 1)
+	_train, _test = custom_imputation(train, test, fillna_value = 0)
 	print("# Start training")
 	#split data
 	#_train, _validation, _labels, _validation_labels = train_test_split(_train, labels, test_size = 0.1, random_state = 42)
-	#feature preprocessing
+	# #####################Feature Preprocessing#############################
 	imputer = Imputer(missing_values='NaN', strategy='mean') #mean ,median, most_frequent
 	standar = StandardScaler(with_mean=True, with_std=True)
+	maxabs_std = MaxAbsScaler()
+	minmax_std = MinMaxScaler()
 	norm = Normalizer(norm = 'l2') #norm l1, l2
-	#feature selection
-	tbfs = XGBClassifier(max_depth = 3, n_estimators = 30, subsample = 0.8,
-	                    colsample_bytree = 0.8, learning_rate = 0.08) #tree base feature_selection
+	# #####################Feature Selection#################################
 	kbest = SelectKBest(chi2)
-	#clf
+
+	# #####################Feature Reduction#################################
+
+	# #####################Classcifiers######################################
 	xgb = XGBClassifier(max_depth = 3, n_estimators = 450, subsample = 0.9,
 	                    colsample_bytree = 0.8, learning_rate = 0.1)
 	#rdforest = RandomForestClassifier(n_jobs = -1)
 	#grdboost = GradientBoostingClassifier(n_jobs = -1)
 
 	# ###########################Tuning Params################################
-
+	"""
 	params = [
               [{
                #"tbfs__min_child_weight" : [1,2,3], 
@@ -113,53 +116,84 @@ def main():
               }]
 
              ]
+	"""
+	params = [
+              [{
+               "kbest__k" : [20,40,60], 
+               "xgb__max_depth" : [3, 4], 
+               "xgb__min_child_weight" : [1, 2, 3],
+               #"xgb__max_depth" : [400,450,480]
+              }],
+           
+              [{ 
+               "xgb__gamma" : [0.1, 0.2], 
+               "xgb__subsample" : [0.8, 0.7], 
+               "xgb__colsample_bytree" : [0.8, 0.7],
+              }],
 
-	pipe = Pipeline(steps = [ #('imputer', Imputer()),
-    	                       ('xgb', xgb)])
+              [{
+              "xgb__reg_alpha" : [0.01, 0.03], 
+              "xgb__scale_pos_weight" : [1, 10],
+              }],
 
-    #pipe_2 = Pipeline(steps = [('imputer', Imputer()),
-                               #('kbest', kbest),
+              [{
+              "xgb__learning_rate" : [i*0.01 for i in range(3,8)]
+              }]
+
+             ]
+
+	#pipe = Pipeline(steps = [ #('imputer', Imputer()),
     	                       #('xgb', xgb)])
 
     #pipe_3 = Pipeline(steps = [('imputer', Imputer()),
                                #('tbfs', SelectFromModel(tbfs)),
     	                       #('xgb', xgb)])
-	i = 0
+
+	#pre_pipe = Pipeline([('standar', standar)])
+
+	pipe = Pipeline([('minmax_std', minmax_std), ('kbest', kbest), ('xgb', xgb)])
+	#pipe = Pipeline([('kbest', kbest), ('xgb', xgb)])
+
+	clf_initialize = True
 	for param in params:
-		start = time.time()
-		if i == 0:
-			print("# Tuning hyper-parameters for {}".format(param))
-			clf = GridSearchCV(pipe, param_grid  = param, scoring = 'roc_auc',
-			                   verbose = 1, n_jobs = -1, cv = 3)
-			clf = clf.fit(_train, _labels)
-			bst_params = clf.best_params_
-			bst_score = clf.best_score_
-			bst_estimator = clf.best_estimator_
-			i = 1
-		else:
-
-			clf = GridSearchCV(bst_estimator, param_grid  = param, scoring = 'roc_auc',
-			                   verbose = 1, n_jobs = -1, cv = 3)
 		
-			clf = clf.fit(_train, _labels)
+		if clf_initialize:
+			start = time.time()
+			print("\n# Tuning hyper-parameters for {}\n {}".format(param,str("##"*40)))
+
+			clf = GridSearchCV(pipe, param_grid  = param, scoring = 'roc_auc',
+			                   verbose = 1, n_jobs = 1, cv = 3)
+			#clf = make_pipeline(minmax_std, GridSearchCV(pipe, param_grid  = param, scoring = 'roc_auc',
+			                   #verbose = 1, n_jobs = 1, cv = 3))
+			clf.fit(_train, _labels)
 			bst_params = clf.best_params_
 			bst_score = clf.best_score_
 			bst_estimator = clf.best_estimator_
+			print("\n# Best params set found on development set:\n{}".format(bst_params))
 			print(bst_estimator)
-			print("\nBest params set found on development set:\n{}".format(bst_params))
-			end = time.time()
-			print("# >>>>Duration<<<< : {}min ".format(round((end-start)/60,2)))
+			print("\n# >>>>Duration<<<< : {}min ".format(round((time.time()-start)/60,2)))
+			clf_initialize = False
 
-	clf = clf.fit(_train, _labels)
-	bst_params = clf.best_params_
-	bst_score = clf.best_score_
-	bst_estimator = clf.best_estimator_
-	print("\nBest estimator set found on development set:\n{}".format(bst_estimator))
+		else:
+			start = time.time()
+			print("\n# Tuning hyper-parameters for {}\n {}".format(param,str("##"*40)))
+			clf = GridSearchCV(bst_estimator, param_grid  = param, scoring = 'roc_auc',
+					verbose = 1, n_jobs = 1, cv = 3)
+			#clf = make_pipeline(minmax_std, GridSearchCV(bst_estimator, param_grid  = param, scoring = 'roc_auc',
+								#verbose = 1, n_jobs = 1, cv = 3))
+			clf.fit(_train, _labels)
+			bst_params = clf.best_params_
+			bst_score = clf.best_score_
+			bst_estimator = clf.best_estimator_
+			print("\n# Best params set found on development set:\n{}".format(bst_params))
+			print(bst_estimator)
+			print("\n# >>>>Duration<<<< : {}min ".format(round((time.time()-start)/60,2)))
 
-	thresholds = np.sort(clf.best_estimator_.named_steps["xgb"].feature_importances_)
-	thresholds = thresholds.tolist()
-	thresholds.reverse()
-	print(thresholds)
+
+	#thresholds = np.sort(clf.best_estimator_.named_steps["xgb"].feature_importances_)
+	#thresholds = thresholds.tolist()[int(len(thresholds)*0.4):]
+	#print(thresholds)
+
 	"""
 	for thresh in thresholds:
 		#seletc features using thresh
@@ -179,8 +213,6 @@ def main():
 		#save score
 	probs = clf.predict_proba(_test) #selected_test
 	save_score(probs[:,1])
-
-		
 
     # ###############################save params################################
 	
