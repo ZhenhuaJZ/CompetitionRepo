@@ -117,6 +117,7 @@ def main():
                   # verbose = True
                   )
     score_mode = xgb.predict_proba(test_mode)
+    print(score_mode)
     save_score(score_mode,"mode")
 
 if __name__ == "__main__":
