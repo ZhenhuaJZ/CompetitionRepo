@@ -17,6 +17,9 @@ from sklearn.ensemble import RandomForestClassifier
 from xgboost import XGBClassifier
 import operator
 import warnings
+import sys
+sys.path.insert(0,"/home/stirfryrabbit/Documents/CompetitionRepo/ant/code/preprocessing")
+from preprocessing import replace_missing_by_custom_mode
 
 from sklearn.feature_selection import SelectKBest
 from sklearn.feature_selection import chi2
@@ -91,32 +94,32 @@ def save_score(preds, param_name):
     return print("Score saved in {}".format(score_path))
 
 def main():
-    train_mode_path = "../../data/train_mode_fill_full_feat.csv" #train_heatmap , train_mode_fill_leo, train, train_mode_fill_full_feat
-    test_mode_path = "../../data/test_mode_fill_full_feat.csv" #test_a_heatmap, test_a_mode_fill, test_a, test_mode_fill_full_feat
-
-    train_mode_data = pd.read_csv(train_mode_path)
-    train_mode_data = train_mode_data[(train_mode_data.label==0)|(train_mode_data.label==1)]
-    test_mode_data = pd.read_csv(test_mode_path)
+    train_mode_path = "../../data/train.csv" #train_heatmap , train_mode_fill_leo, train, train_mode_fill_full_feat
+    test_mode_path = "../../data/test_a.csv" #test_a_heatmap, test_a_mode_fill, test_a, test_mode_fill_full_feat
+    train_data = pd.read_csv(train_mode_path)
+    train_data = train_data[(train_mode_data.label==0)|(train_mode_data.label==1)]
+    test_data = pd.read_csv(test_mode_path)
     print("\nreaded data")
-    train_mode = train_mode_data.iloc[:,3:]
-    label_mode = train_mode_data.iloc[:,1]
-    test_mode = test_mode_data.iloc[:,2:]
-    del test_mode_data, train_mode_data
-    # train_mode_train, train_mode_test, label_mode_train, label_mode_test = train_test_split(
-    #     train_mode, label_mode, test_size = 0.1, random_state = 42)
-    print("processed mode data")
-
+    # Fill NaN data with mode
+    train_data, test_data = replace_missing_by_custom_mode(train_data,test_data)
+    # Extract features and labels from train and test data set
+    feature = train_data.iloc[:,3:]
+    label = train_data.iloc[:,1]
+    test = test_data.iloc[:,2:]
+    # Delete the original data to save memory
+    del test_data, train_data
+    # Using XGB for classifier`
     print("Start selecting importance features")
     xgb = XGBClassifier(n_estimators=200, max_depth=4, learning_rate = 0.07,
     	                subsample = 0.8, colsample_bytree = 0.9, n_jobs = -1)
-
+    exit()
     print("Initialised classifiers")
-    xgb = xgb.fit(train_mode, label_mode,
+    xgb = xgb.fit(feature, label,
                   # eval_set = [(train_mode_test, label_mode_test)],
                   # eval_metric = "auc",
                   # verbose = True
                   )
-    score_mode = xgb.predict_proba(test_mode)
+    score_mode = xgb.predict_proba(test)
     print(score_mode)
     save_score(score_mode,"mode")
 

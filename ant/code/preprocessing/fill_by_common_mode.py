@@ -66,25 +66,25 @@ def replace_missing_by_custom_mode(black_data,white_data,test_data):
         black_data[col_name[i]] = black_data[col_name[i]].fillna(black_data[col_name[i]].mode()[0])
         white_data[col_name[i]] = white_data[col_name[i]].fillna(white_data[col_name[i]].mode()[0])
         test_data[col_name[i]] = test_data[col_name[i]].fillna(common_mode)
-        print("Filled feature {}".format(col_name[i]) + "***Black Filled:{}".format(black_data[col_name[i]].mode()[0]) + 
+        print("Filled feature {}".format(col_name[i]) + "***Black Filled:{}".format(black_data[col_name[i]].mode()[0]) +
               "***White Filled:{}".format(white_data[col_name[i]].mode()[0]) + "***Test Filled:{}".format(common_mode))
         print("******************************")
     print("End of custom mode filling")
     return black_data, white_data, test_data
 
 def main():
-    black_data = pd.read_csv("data/train_heatmap_1.csv")
+    black_data = pd.read_csv("../../data/black_label_w_missing.csv")
     print("loaded black data")
-    white_data = pd.read_csv("data/train_heatmap_0.csv")
+    white_data = pd.read_csv("../../data/white_label_w_missing.csv")
     print("loaded white data")
-    test_data = pd.read_csv("data/test_a_heatmap.csv")
+    test_data = pd.read_csv("../../data/test_a.csv")
     print("loaded test data")
     black_data_filled, white_data_filled, test_data_filled = replace_missing_by_custom_mode(black_data,white_data,test_data)
-    black_data_filled.to_csv("data/train_1_mode_fill.csv", index = None)
+    black_data_filled.to_csv("../../data/black_label_mode_fill.csv", index = None)
     print("saved black data")
-    white_data_filled.to_csv("data/train_0_mode_fill.csv", index = None)
+    white_data_filled.to_csv("../../data/white_label_mode_fill.csv", index = None)
     print("saved white data")
-    test_data_filled.to_csv("data/test_a_mode_fill.csv", index = None)
+    test_data_filled.to_csv("../../data/test_mode_fill.csv", index = None)
     print("saved test data")
     print("end of program")
 
