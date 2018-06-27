@@ -98,7 +98,7 @@ print("Read and processed mode data")
 
 
 print("\nStart selecting importance features")
-xgb = XGBClassifier(n_estimators=200, max_depth=4, learning_rate = 0.07,
+xgb = XGBClassifier(n_estimators=400, max_depth=4, learning_rate = 0.07,
 	                subsample = 0.7, colsample_bytree = 0.9, n_jobs = -1)
 
 xgb = xgb.fit(train_mode, label_mode)
