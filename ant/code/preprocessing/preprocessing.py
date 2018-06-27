@@ -110,6 +110,7 @@ def replace_missing_by_custom_mode(train_data,test_data):
     print("End of custom mode filling")
     train_data_merged = file_merge(black_data, white_data)
     print(white_data)
+    print(black_data)
     return train_data_merged, test_data
 
 # def main():
