@@ -17,6 +17,8 @@ from sklearn.grid_search import GridSearchCV
 from sklearn_evaluation import plot
 import operator
 import warnings
+from tempfile import mkdtemp
+from shutil import rmtree
 now = datetime.datetime.now()
 
 #train_data path
@@ -33,8 +35,8 @@ train_data = pd.read_csv(train_path)
 test_data = pd.read_csv(test_path)
 train_data = train_data[(train_data.label==0)|(train_data.label==1)]
 #Main data
-train = train_data.iloc[:,3:]
-labels = train_data.iloc[:,1]
+train = train_data.iloc[1:1000,3:]
+labels = train_data.iloc[1:1000,1]
 test = test_data.iloc[:,2:]
 
 def custom_imputation(df_train, df_test, fillna_value = None):
@@ -66,6 +68,44 @@ def save_score(preds):
 	answer.to_csv(score_path + "score_{}d{}m{}h.csv".format(now.day, now.month, now.hour), index = None, float_format = "%.9f")
 	return print("Score saved in {}".format(score_path))
 
+def custom_gridsearch(_train, _labels, pipe_clf, param):
+
+	start = time.time()
+	print("\n# Tuning hyper-parameters for {}\n {}\n".format(param,str("##"*40)))
+	clf = GridSearchCV(pipe_clf, param_grid  = param, scoring = 'roc_auc',
+	                   verbose = 1, n_jobs = 1, cv = 3)
+	clf.fit(_train, _labels)
+	bst_params = clf.best_params_
+	bst_score = clf.best_score_
+	bst_estimator = clf.best_estimator_
+	print("\n# Best params set found on development set:\n{}".format(bst_params))
+	print("\nFind best estimator {}, \nwith best roc {}".format(bst_estimator.steps[-1], bst_score))
+
+	# ###############################save params################################
+	plot_x = next(iter(param[0].keys()))
+	plt.figure(figsize=(70,50))
+	plot.grid_search(clf.grid_scores_, change= str(plot_x), kind ='bar')
+	plt.legend(fontsize=50)
+	plt.xticks(fontsize=50)
+	plt.tick_params(axis='both', labelsize = '40')
+	plt.savefig(params_path + "{}_{}.png".format(plot_x, round(bst_score,2)))
+	with open(params_path  + "params.txt", 'a') as f:
+		f.write(
+				"**"*30 + "\n"
+				+ str(bst_estimator.steps[-2:]) + "\n"
+				+ str(bst_params) + "\n"
+				+ str(bst_score) + "\n"
+				)
+
+	print("\n# >>>>Duration<<<< : {}min ".format(round((time.time()-start)/60,2)))
+	print("\n# Cleared est cache ")
+	rmtree(cachedir)
+	clf_initialize = False
+
+	return clf_initialize, bst_estimator
+
+
+
 def main():
 	_train, _test, _labels = train, test, labels
 	_train, _test = custom_imputation(train, test, fillna_value = 0)
@@ -84,7 +124,7 @@ def main():
 	# #####################Feature Reduction#################################
 
 	# #####################Classcifiers######################################
-	xgb = XGBClassifier(max_depth = 3, n_estimators = 450, subsample = 0.9,
+	xgb = XGBClassifier(max_depth = 3, n_estimators = 3, subsample = 0.9,
 	                    colsample_bytree = 0.8, learning_rate = 0.1)
 	#rdforest = RandomForestClassifier(n_jobs = -1)
 	#grdboost = GradientBoostingClassifier(n_jobs = -1)
@@ -93,21 +133,21 @@ def main():
 	"""
 	params = [
               [{
-               #"tbfs__min_child_weight" : [1,2,3], 
-               "xgb__max_depth" : [3, 4], 
+               #"tbfs__min_child_weight" : [1,2,3],
+               "xgb__max_depth" : [3, 4],
                "xgb__min_child_weight" : [1, 2, 3],
               }],
-           
+
               [{
-               #"tbfs__subsample" : [0.9, 0.8], 
-               "xgb__gamma" : [0.1, 0.2], 
-               "xgb__subsample" : [0.8, 0.7], 
+               #"tbfs__subsample" : [0.9, 0.8],
+               "xgb__gamma" : [0.1, 0.2],
+               "xgb__subsample" : [0.8, 0.7],
                "xgb__colsample_bytree" : [0.8, 0.7],
               }],
 
               [{
-              #"tbfs__colsample_bytree" : [0.8, 0.7], 
-              "xgb__reg_alpha" : [0.01, 0.03], 
+              #"tbfs__colsample_bytree" : [0.8, 0.7],
+              "xgb__reg_alpha" : [0.01, 0.03],
               "xgb__scale_pos_weight" : [1, 10],
               }],
 
@@ -119,25 +159,25 @@ def main():
 	"""
 	params = [
               [{
-               "kbest__k" : [20,40,60], 
-               "xgb__max_depth" : [3, 4], 
-               "xgb__min_child_weight" : [1, 2, 3],
-               #"xgb__max_depth" : [400,450,480]
-              }],
-           
-              [{ 
-               "xgb__gamma" : [0.1, 0.2], 
-               "xgb__subsample" : [0.8, 0.7], 
-               "xgb__colsample_bytree" : [0.8, 0.7],
+               "kbest__k" : [20,40,60],
+               "xgb__max_depth" : [3,4],
+               #"xgb__min_child_weight" : [2, 3],
               }],
 
               [{
-              "xgb__reg_alpha" : [0.01, 0.03], 
-              "xgb__scale_pos_weight" : [1, 10],
+               "xgb__gamma" : [0.1, 0.2],
+			   "xgb__n_estimators" : [3,4,5],
               }],
 
               [{
-              "xgb__learning_rate" : [i*0.01 for i in range(3,8)]
+			  "xgb__scale_pos_weight" : [1, 10],
+			  "xgb__subsample" : [0.8, 0.7],
+			  "xgb__colsample_bytree" : [0.8, 0.7],
+              }],
+
+              [{
+			  "xgb__learning_rate" : [i*0.01 for i in range(3,8)],
+			  "xgb__reg_alpha" : [0.01, 0.03],
               }]
 
              ]
@@ -151,27 +191,39 @@ def main():
 
 	#pre_pipe = Pipeline([('standar', standar)])
 
-	pipe = Pipeline([('minmax_std', minmax_std), ('kbest', kbest), ('xgb', xgb)])
+	pipe = Pipeline([('minmax_std', minmax_std), ('kbest', kbest), ('xgb', xgb)], memory = cachedir)
 	#pipe = Pipeline([('kbest', kbest), ('xgb', xgb)])
 
 	clf_initialize = True
 	for param in params:
-		
-		if clf_initialize:
-			start = time.time()
-			print("\n# Tuning hyper-parameters for {}\n {}".format(param,str("##"*40)))
 
+		if clf_initialize:
+
+			clf_initialize, best_est = custom_gridsearch(_train, _labels, pipe, param)
+
+		else:
+			_, best_est = custom_gridsearch(_train, _labels, best_est, param)
+
+			"""
+			start = time.time()
+			print("\n# Tuning hyper-parameters for {}\n {}\n".format(param,str("##"*40)))
 			clf = GridSearchCV(pipe, param_grid  = param, scoring = 'roc_auc',
 			                   verbose = 1, n_jobs = 1, cv = 3)
-			#clf = make_pipeline(minmax_std, GridSearchCV(pipe, param_grid  = param, scoring = 'roc_auc',
-			                   #verbose = 1, n_jobs = 1, cv = 3))
 			clf.fit(_train, _labels)
 			bst_params = clf.best_params_
 			bst_score = clf.best_score_
 			bst_estimator = clf.best_estimator_
 			print("\n# Best params set found on development set:\n{}".format(bst_params))
-			print(bst_estimator)
+			print("\nFind best estimator {}, \nwith best roc {}".format(bst_estimator.steps[-1], bst_score))
+			plot_x = next(iter(param[0].keys()))
+			plt.figure(figsize=(70,50))
+			plot.grid_search(clf.grid_scores_, change= str(plot_x), kind ='bar')
+			plt.legend(fontsize=30)
+			plt.tick_params(axis='both', labelsize = '40')
+			plt.savefig(params_path + "{}_{}.png".format(plot_x, round(bst_score,2)))
 			print("\n# >>>>Duration<<<< : {}min ".format(round((time.time()-start)/60,2)))
+			print("\n# Cleared est cache ")
+			rmtree(cachedir)
 			clf_initialize = False
 
 		else:
@@ -179,17 +231,23 @@ def main():
 			print("\n# Tuning hyper-parameters for {}\n {}".format(param,str("##"*40)))
 			clf = GridSearchCV(bst_estimator, param_grid  = param, scoring = 'roc_auc',
 					verbose = 1, n_jobs = 1, cv = 3)
-			#clf = make_pipeline(minmax_std, GridSearchCV(bst_estimator, param_grid  = param, scoring = 'roc_auc',
-								#verbose = 1, n_jobs = 1, cv = 3))
 			clf.fit(_train, _labels)
 			bst_params = clf.best_params_
 			bst_score = clf.best_score_
 			bst_estimator = clf.best_estimator_
 			print("\n# Best params set found on development set:\n{}".format(bst_params))
-			print(bst_estimator)
+			#Plot evaluation fig
+			print("\nFind best estimator {}, \nwith best roc {}".format(bst_estimator.steps[-1], bst_score))
+			plot_x = next(iter(param[0].keys()))
+			plt.figure(figsize=(70,50))
+			plot.grid_search(clf.grid_scores_, change= str(plot_x), kind ='bar')
+			plt.legend(fontsize=30)
+			plt.tick_params(axis='both', labelsize = '40')
+			plt.savefig(params_path + "{}_{}.png".format(plot_x, round(bst_score,2)))
 			print("\n# >>>>Duration<<<< : {}min ".format(round((time.time()-start)/60,2)))
-
-
+			print("\n# Cleared est cache ")
+			rmtree(cachedir)
+			"""
 	#thresholds = np.sort(clf.best_estimator_.named_steps["xgb"].feature_importances_)
 	#thresholds = thresholds.tolist()[int(len(thresholds)*0.4):]
 	#print(thresholds)
@@ -210,28 +268,15 @@ def main():
 		print("Tresh = %.3f, Accuracy: %.2f" %(thresh, accuracy * 100))
 		#print(matrix)!!!
 	"""
-		#save score
-	probs = clf.predict_proba(_test) #selected_test
+	# save score
+	probs = best_est.predict_proba(_test) #selected_test
 	save_score(probs[:,1])
 
-    # ###############################save params################################
-	
-	with open(params_path  + "params.txt", 'a') as f:
-		f.write(
-				"************************" + "\n"
-				+ str(bst_estimator) + "\n"
-				+ str(bst_params) + "\n"
-				+ str(bst_score)
-				)
-	"""
-    print("Find best params {}, with best roc {}".format(bst_params, bst_score))
-    plot.grid_search(clf.grid_scores_, change='xgb__learning_rate', kind ='bar')
-    plt.savefig(params_path + "grid_params_{}.png".format(round(bst_score,2)))
-	"""
 
 if __name__ == '__main__':
     warnings.filterwarnings(module = 'sklearn*',
                             action = 'ignore', category = DeprecationWarning)
     os.makedirs(score_path)
     os.makedirs(params_path)
+    cachedir = mkdtemp()
     main()
