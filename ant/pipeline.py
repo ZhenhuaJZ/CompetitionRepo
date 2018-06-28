@@ -73,7 +73,7 @@ def custom_gridsearch(_train, _labels, pipe_clf, param, params_path):
 	return clf_initialize, bst_estimator
 
 
-def main(method, _train, _labels, _test_online, _test_offline_feature, _test_offline_labels, fillna_value, params_path):
+def main(method, _train, _labels, _test_online, _test_offline_feature, _test_offline_labels, fillna_value, model_path, params_path):
 
 # #######################Make project path#####################################
 	warnings.filterwarnings(module = 'sklearn*',

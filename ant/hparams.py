@@ -95,15 +95,15 @@ params_3 = [
 		   #"xgb__n_estimators" : [3,4,5],
           }],
 
-          [{
-		  "xgb__subsample" : [0.7, 0.6],
-		  "xgb__colsample_bytree" : [0.9, 0.8],
-          }],
+          #[{
+		  #"xgb__subsample" : [0.7, 0.6],
+		  #"xgb__colsample_bytree" : [0.9, 0.8],
+          #}],
 
-          [{
-		  "xgb__learning_rate" : [i*0.01 for i in range(6,8)],
-		  "xgb__reg_alpha" : [0.05, 0.07],
-          }]
+          #[{
+		  #"xgb__learning_rate" : [i*0.01 for i in range(6,8)],
+		  #"xgb__reg_alpha" : [0.05, 0.07],
+          #}]
          ]
 # ##########################PipeLine#####################################
 pipe_family = {

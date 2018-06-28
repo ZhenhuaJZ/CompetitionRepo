@@ -41,4 +41,4 @@ _test_offline_labels = _test_offline.iloc[:,1]
 
 if __name__ == '__main__':
 
-    main(method, _train, _labels, _test_online, _test_offline_feature, _test_offline_labels, fillna_value, params_path)
+    main(method, _train, _labels, _test_online, _test_offline_feature, _test_offline_labels, fillna_value, model_path, params_path)
