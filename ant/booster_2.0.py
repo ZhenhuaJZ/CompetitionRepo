@@ -1,7 +1,6 @@
 from xgboost import XGBClassifier
 from data_processing import save_score, test_train_split_by_date, creat_project_dirs
 from model_performance import offline_model_performance
-now = datetime.datetime.now()
 
 # #####################Data path################################################
 train_path = "data/train.csv" #train_heatmap , train_mode_fill, train,

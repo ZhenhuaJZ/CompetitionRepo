@@ -1,6 +1,7 @@
 import pandas as pd
 from sklearn.model_selection import cross_val_score
 from sklearn.metrics import roc_curve
+import datetime
 now = datetime.datetime.now()
 
 def offline_model_performance(estimator, validation_feature, validation_label):
