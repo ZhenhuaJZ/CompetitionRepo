@@ -9,10 +9,10 @@ def creat_project_dirs():
     params_path = log_path + "params/"
     score_path = log_path + "score/"
     model_path = log_path + "model/"
-	os.makedirs(log_path)
-	os.makedirs(score_path)
-	os.makedirs(params_path)
-	os.makedirs(model_path)
+    os.makedirs(log_path)
+    os.makedirs(score_path)
+    os.makedirs(params_path)
+    os.makedirs(model_path)
 
 def round_to_whole(data, tolerance):
     p = 10**tolerance
