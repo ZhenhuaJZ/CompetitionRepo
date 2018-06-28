@@ -1,7 +1,5 @@
 from hparams import *
 from pipeline import *
-#creat_project_dirs
-creat_project_dirs()
 #data path
 train_path = "data/train.csv" #train_heatmap , train_mode_fill, train,
 test_path = "data/test_b.csv" #test_a_heatmap, test_a_mode_fill, test_b

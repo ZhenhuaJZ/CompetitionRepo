@@ -16,6 +16,7 @@ import warnings
 from hparams import *
 from data_processing import save_score, creat_project_dirs, test_train_split_by_date
 from model_performance import offline_model_performance
+log_path, params_path, score_path, model_path = creat_project_dirs("GS")
 
 def custom_imputation(df_train, df_test, fillna_value = 0):
 	train = df_train.fillna(fillna_value)
