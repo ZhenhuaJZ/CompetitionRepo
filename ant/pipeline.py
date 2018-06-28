@@ -26,7 +26,7 @@ def custom_imputation(df_train, df_test, fillna_value = 0):
 	return train, test
 """
 
-def custom_gridsearch(_train, _labels, pipe_clf, param):
+def custom_gridsearch(_train, _labels, pipe_clf, param, params_path):
 	start = time.time()
 	print("\n{}\n# Tuning hyper-parameters for {}\n{}\n".format(str("##"*50),param,str("##"*50)))
 	clf = GridSearchCV(pipe_clf, param_grid  = param, scoring = 'roc_auc',
@@ -96,9 +96,9 @@ def main(method, _train, _labels, _test_online, _test_offline_feature, _test_off
 	clf_initialize = True
 	for param in Hparams:
 		if clf_initialize:
-			clf_initialize, best_est = custom_gridsearch(_train, _labels, pipe, param)
+			clf_initialize, best_est = custom_gridsearch(_train, _labels, pipe, param, params_path)
 		else:
-			_, best_est = custom_gridsearch(_train, _labels, best_est, param)
+			_, best_est = custom_gridsearch(_train, _labels, best_est, param, params_path)
 	#save model, score
 	joblib.dump(best_est, model_path + "{}.pkl".format(method))
 	performance_score = offline_model_performance(best_est, _test_offline_feature, _test_offline_labels, params_path)
