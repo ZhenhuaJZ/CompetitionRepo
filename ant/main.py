@@ -1,7 +1,13 @@
 from hparams import *
 from pipeline import *
 from data_processing import custom_imputation
-log_path, params_path, score_path, model_path = creat_project_dirs("GS")
+now = datetime.datetime.now()
+
+log_path = "log/date_{}/{}:{}_GS/".format(now.day,now.hour,now.minute)
+params_path = log_path + "params/"
+score_path = log_path + "score/"
+model_path = log_path + "model/"
+creat_project_dirs(log_path, params_path, score_path, model_path)
 #data path
 train_path = "data/train.csv" #train_heatmap , train_mode_fill, train,
 test_path = "data/test_b.csv" #test_a_heatmap, test_a_mode_fill, test_b

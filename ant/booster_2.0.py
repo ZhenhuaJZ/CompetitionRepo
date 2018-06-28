@@ -3,7 +3,13 @@ from xgboost import XGBClassifier
 from sklearn.externals import joblib
 from data_processing import save_score, test_train_split_by_date, creat_project_dirs, custom_imputation
 from model_performance import offline_model_performance
-log_path, params_path, score_path, model_path = creat_project_dirs("SM")
+now = datetime.datetime.now()
+
+log_path = "log/date_{}/{}:{}_SM/".format(now.day,now.hour,now.minute)
+params_path = log_path + "params/"
+score_path = log_path + "score/"
+model_path = log_path + "model/"
+creat_project_dirs(log_path, params_path, score_path, model_path)
 # #####################Data path################################################
 train_path = "data/train.csv" #train_heatmap , train_mode_fill, train,
 test_path = "data/test_b.csv" #test_a_heatmap, test_a_mode_fill, test_b

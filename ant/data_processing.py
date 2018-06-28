@@ -5,17 +5,10 @@ import math
 import datetime
 now = datetime.datetime.now()
 
-def creat_project_dirs(title):
-    # #####################File path#########################################
-    log_path = "log/date_{}/{}:{}_{}/".format(now.day,now.hour,now.minute,title)
-    params_path = log_path + "params/"
-    score_path = log_path + "score/"
-    model_path = log_path + "model/"
-    os.makedirs(log_path)
-    os.makedirs(score_path)
-    os.makedirs(params_path)
-    os.makedirs(model_path)
-    return log_path, params_path, score_path, model_path
+# #####################Creat path###############################################
+def creat_project_dirs(*args):
+    for a in args:
+        os.makedirs(a)
 
 def round_to_whole(data, tolerance):
     p = 10**tolerance

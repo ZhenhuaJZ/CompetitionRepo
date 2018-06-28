@@ -16,7 +16,7 @@ import warnings
 from hparams import *
 from data_processing import save_score, creat_project_dirs, test_train_split_by_date, custom_imputation
 from model_performance import offline_model_performance
-log_path, params_path, score_path, model_path = creat_project_dirs("GS")
+
 
 """
 def custom_imputation(df_train, df_test, fillna_value = 0):
@@ -105,7 +105,6 @@ def main(method, _train, _labels, _test_online, _test_offline, _test_offline_lab
 	with open(params_path  + "params.txt", 'a') as f:
 		f.write("**"*40 + "\n"*2
 				+"Perfromance : <<<{}>>>".format(str(performance_score)) + "\n"
-
 				+"**"*40 + "\n"*2
 				)
 	probs = best_est.predict_proba(_test_online)
