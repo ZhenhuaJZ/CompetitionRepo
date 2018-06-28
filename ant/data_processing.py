@@ -103,8 +103,8 @@ def replace_missing_by_custom_mode(train_data,test_data):
 def save_score(preds, score_path):
     now = datetime.datetime()
     as_path = "lib/answer_sheet.csv"
-	answer_sheet = pd.read_csv(as_path)
-	answer_sheet = pd.DataFrame(answer_sheet)
-	answer = answer_sheet.assign(score = preds)
-	answer.to_csv(score_path + "score_day{}_time{}:{}.csv".format(now.day, now.hour, now.minute), index = None, float_format = "%.9f")
-	return print("\n# Score saved in {}".format(score_path))
+    answer_sheet = pd.read_csv(as_path)
+    answer_sheet = pd.DataFrame(answer_sheet)
+    answer = answer_sheet.assign(score = preds)
+    answer.to_csv(score_path + "score_day{}_time{}:{}.csv".format(now.day, now.hour, now.minute), index = None, float_format = "%.9f")
+    return print("\n# Score saved in {}".format(score_path))
