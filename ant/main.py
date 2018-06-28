@@ -19,7 +19,7 @@ test_path = "data/test_b.csv" #test_a_heatmap, test_a_mode_fill, test_b
 # #method_2_describ = ["StandardScaler", "Tree-Base Importance Feature", "Xgboost"]
 
 ################################################################################
-method = "method_2"
+method = "method_3"
 fillna_value = 0
 
 # #########################Main data########################################
