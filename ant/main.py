@@ -1,6 +1,7 @@
 from hparams import *
 from pipeline import *
 from data_processing import custom_imputation
+import datetime
 now = datetime.datetime.now()
 
 log_path = "log/date_{}/{}:{}_GS/".format(now.day,now.hour,now.minute)

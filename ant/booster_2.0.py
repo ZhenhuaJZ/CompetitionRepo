@@ -3,6 +3,7 @@ from xgboost import XGBClassifier
 from sklearn.externals import joblib
 from data_processing import save_score, test_train_split_by_date, creat_project_dirs, custom_imputation
 from model_performance import offline_model_performance
+import datetime
 now = datetime.datetime.now()
 
 log_path = "log/date_{}/{}:{}_SM/".format(now.day,now.hour,now.minute)
