@@ -25,7 +25,6 @@ def custom_imputation(df_train, df_test, fillna_value = 0):
 	return train, test
 
 def custom_gridsearch(_train, _labels, pipe_clf, param):
-
 	start = time.time()
 	print("\n{}\n# Tuning hyper-parameters for {}\n{}\n".format(str("##"*50),param,str("##"*50)))
 	clf = GridSearchCV(pipe_clf, param_grid  = param, scoring = 'roc_auc',
