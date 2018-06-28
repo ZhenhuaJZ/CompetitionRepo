@@ -1,5 +1,7 @@
 from hparams import *
 from pipeline import *
+from data_processing import custom_imputation
+log_path, params_path, score_path, model_path = creat_project_dirs("GS")
 #data path
 train_path = "data/train.csv" #train_heatmap , train_mode_fill, train,
 test_path = "data/test_b.csv" #test_a_heatmap, test_a_mode_fill, test_b
