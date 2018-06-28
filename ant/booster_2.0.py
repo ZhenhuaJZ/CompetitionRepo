@@ -37,7 +37,7 @@ xgb = XGBClassifier(max_depth = 3, n_estimators = 5, subsample = 0.9,
 xgb = xgb.fit(_train, _labels)
 probs = xgb.predict_proba(_test_online)
 joblib.dump(xgb, model_path + "{}.pkl".format("model"))
-offline_score = offline_model_performance(xgb, _test_offline_feature, _test_offline_labels)
+offline_score = offline_model_performance(xgb, _test_offline_feature, _test_offline_labels, params_path)
 save_score(probs[:,1], score_path)
 
 def main():
