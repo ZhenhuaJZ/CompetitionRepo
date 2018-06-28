@@ -30,9 +30,8 @@ def custom_gridsearch(_train, _labels, pipe_clf, param, params_path):
 	start = time.time()
 	print("\n{}\n# Tuning hyper-parameters for {}\n{}\n".format(str("##"*50),param,str("##"*50)))
 	clf = GridSearchCV(pipe_clf, param_grid  = param, scoring = 'roc_auc',
-	                   verbose = 1, n_jobs = 1, cv = 3)
-	print(_train)
-	print(_labels)
+	                   verbose = 1, n_jobs = 1, cv = 5)
+
 	clf.fit(_train, _labels)
 	bst_params = clf.best_params_
 	bst_score = clf.best_score_
