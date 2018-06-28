@@ -29,7 +29,7 @@ _train_data, _test_online = custom_imputation(_train_data, _test_online, fillna_
 #change -1 label to 1
 _train_data.loc[_train_data["label"] == -1] = 1
 _train_data = _train_data[(_train_data.label==0)|(_train_data.label==1)]
-_train,  _test_offline = test_train_split_by_date(_train_data, 20171020, 20171031)
+_train,  _test_offline = test_train_split_by_date(_train_data, 20171020, 20171031, params_path)
 
 _train = _train.iloc[:,3:]
 _labels = _train.iloc[:,1]
