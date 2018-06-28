@@ -1,13 +1,7 @@
 from xgboost import XGBClassifier
-from data_processing import save_score, test_train_split_by_date
+from data_processing import save_score, test_train_split_by_date, creat_project_dirs
 from model_performance import offline_model_performance
 now = datetime.datetime.now()
-
-# #####################File path################################################
-log_path = "log/date_{}/SM_{}:{}/".format(now.day,now.hour,now.minute)
-params_path = log_path + "params/"
-score_path = log_path + "score/"
-model_path = log_path + "model/"
 
 # #####################Data path################################################
 train_path = "data/train.csv" #train_heatmap , train_mode_fill, train,
@@ -39,10 +33,7 @@ offline_score = offline_model_performance(xgb, _test_offline_feature, _test_offl
 save_score(probs[:,1], score_path)
 
 def main():
-	os.makedirs(log_path)
-	os.makedirs(score_path)
-	os.makedirs(params_path)
-	os.makedirs(model_path)
+	creat_project_dirs()
 
 if __name__ == '__main__':
     main()
