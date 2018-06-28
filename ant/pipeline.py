@@ -14,7 +14,7 @@ from sklearn_evaluation import plot
 import operator
 from shutil import rmtree
 from hparams import *
-from jim import *
+from offline_test_search import *
 import warnings
 
 def custom_imputation(df_train, df_test, fillna_value = 0):
@@ -107,7 +107,7 @@ def main(method, _train, _labels, _test_online, _test_offline, _test_offline_lab
 			_, best_est = custom_gridsearch(_train, _labels, best_est, param)
 	#save model, score
 	joblib.dump(best_est, model_path + "{}.pkl".format(method))
-	offline_score = jim(best_est, _test_offline, _test_offline_labels)
+	offline_score = offline_model_performance(best_est, _test_offline, _test_offline_labels)
 	print("\n# Best perfromance : ", offline_score)
 	probs = best_est.predict_proba(_test_online) #selected_test
 	save_score(probs[:,1])

@@ -11,10 +11,8 @@ def offline_model_performance(estimator, validation_feature, validation_label):
     fpr, tpr, thresholds = roc_curve(validation_label, estimator.predict_proba(validation_feature)[:,1])
     # Search for tpr = 0.001
     print("1",fpr)
-    print(type(fpr))
-    print("2",tpr)
+    print(len(fpr))
     for i in range(len(fpr)):
-        print(i)
         if fpr[i] == 0.001:
             tpr1 = tpr[i]
         elif fpr[i] == 0.005:

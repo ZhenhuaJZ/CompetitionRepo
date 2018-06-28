@@ -20,13 +20,18 @@ _train_data = pd.read_csv(train_path)
 _test_online = pd.read_csv(test_path)
 _train_data, _test_online = custom_imputation(_train_data, _test_online, fillna_value)
 
-_train_data = _train_data[(_train_data.label==0)|(_train_data.label==1)]
-_train,  _test_offline = jim(_train_data, 20170101, 20170209)
+#_train_data = _train_data[(_train_data.label==0)|(_train_data.label==1)]
+#_train,  _test_offline = test_train_split_by_date(_train_data, 20170905, 20170910)
+
+_train = _train_data[(_train_data.label==0)|(_train_data.label==1)] #for test purpose
+
+_test_offline = _train.iloc[1001:3200,3:] # for test purpose
+_test_offline_labels = _train.iloc[1001:3200,1] #for test purpose
 
 _train = _train.iloc[:1000,3:]
 _labels = _train.iloc[:1000,1]
-_test_offline = _test_offline._train.iloc[:1000,3:]
-_test_offline_labels = _test_offline._train.iloc[:1000,1]
+#_test_offline = _test_offline.iloc[:,3:]
+#_test_offline_labels = _test_offline.iloc[:,1]
 _test_online = _test_online.iloc[:,2:]
 
 if __name__ == '__main__':
