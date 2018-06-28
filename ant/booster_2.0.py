@@ -23,7 +23,7 @@ _train_data, _test_online = custom_imputation(_train_data, _test_online, fillna_
 #change -1 label to 1
 _train_data.loc[_train_data["label"] == -1] = 1
 #Split train and offine test
-_train_data, _test_offline =  test_train_split_by_date(_train_data, 20171020, 20171031, params_path)
+_train_data, _test_offline =  test_train_split_by_date(_train_data, 20171001, 20171020, params_path)
 #train data
 _train = _train_data.iloc[:,3:]
 _labels = _train_data.iloc[:,1]
@@ -35,6 +35,14 @@ _test_offline_labels = _test_offline.iloc[:,1]
 xgb = XGBClassifier(max_depth = 4, n_estimators = 480, subsample = 0.8, gamma = 0.1,
 					scale_pos_weight =20,
 					colsample_bytree = 0.8, learning_rate = 0.08, n_jobs = -1)
+
+with open(params_path  + "params.txt", 'a') as f:
+	f.write(
+			"**"*40 + "\n"*2
+			+ str(xgb) + "\n"*2
+			+"**"*40 + "\n"*2
+			)
+
 xgb = xgb.fit(_train, _labels)
 probs = xgb.predict_proba(_test_online)
 joblib.dump(xgb, model_path + "{}.pkl".format("model"))
