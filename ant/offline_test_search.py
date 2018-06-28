@@ -8,7 +8,7 @@ def offline_model_performance(estimator, validation_feature, validation_label):
         # Load estimator
         # estimator =
     # Obtain array of false positive rate and true positive rate
-    fpr, tpr, thresholds = roc_curve(validation_label, estimator.predict(validation_feature)[:,1])
+    fpr, tpr, thresholds = roc_curve(validation_label, estimator.predict_proba(validation_feature)[:,1])
     # Search for tpr = 0.001
     fpr1 = 99
     fpr2 = 99
@@ -44,7 +44,7 @@ def main():
     data.loc[data["label"] == -1] = 1
     print(data)
     print(data.loc[data["label"] == -1])
-    test,test2 = test_train_split_by_date(data, 20170910, 20170911)
+    test,test2 = test_train_split_by_date(data, 20171020, 20171031)
     print(test)
     print("training data :{}".format(len(test)/len(data.iloc[:,1]*100)))
     print("test data percentage :{}".format(len(test2)/len(data.iloc[:,1]*100)))
