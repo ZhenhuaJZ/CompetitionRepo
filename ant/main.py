@@ -13,7 +13,6 @@ test_path = "data/test_b.csv" #test_a_heatmap, test_a_mode_fill, test_b
 ################################################################################
 method = "method_2"
 fillna_value = 0
-test_size = 0.2
 
 # #########################Main data########################################
 _train_data = pd.read_csv(train_path)
