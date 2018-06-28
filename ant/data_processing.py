@@ -1,6 +1,18 @@
 import numpy as np
 import pandas as pd
 import math
+import datetime
+
+def creat_project_dirs():
+    # #####################File path#########################################
+    log_path = "log/date_{}/GS_{}:{}/".format(now.day,now.hour,now.minute)
+    params_path = log_path + "params/"
+    score_path = log_path + "score/"
+    model_path = log_path + "model/"
+	os.makedirs(log_path)
+	os.makedirs(score_path)
+	os.makedirs(params_path)
+	os.makedirs(model_path)
 
 def round_to_whole(data, tolerance):
     p = 10**tolerance
@@ -17,9 +29,21 @@ def batch_data(data, split_ratio):
 
 # test_train_split_by_date split the test set by providing a range of dates in yyyymmdd
 def test_train_split_by_date(data, start_y_m_d, end_y_m_d):
+    now = datetime.datetime()
+    log_path = "log/date_{}/GS_{}:{}/".format(now.day,now.hour,now.minute)
+    params_path = log_path + "params/"
+
     split_data = data[(data["date"] >= start_y_m_d) & (data["date"] <= end_y_m_d)]
     data = data.drop(data.index[(data["date"] >= start_y_m_d) & (data["date"] <= end_y_m_d)])
-    print("\n# Offline test percentiage {}%".format(len(split_data)/len(data.iloc[:,1]*100)))
+    split_data_percent = round(len(split_data)/len(data.iloc[:,1]*100),2)
+    print("\n# Offline test percentiage {}%".format(split_data_percent))
+	with open(params_path  + "params.txt", 'a') as f:
+		f.write(
+				"**"*40 + "\n"*2
+				+"Split by date from <<<{}>>> to <<<{}>>>".format(str(start_y_m_d), str(end_y_m_d)) + "\n"
+				+"Occupy {}%".format(str(ssplit_data_percent)) + "\n"*2
+				+"**"*40 + "\n"*2
+				)
     return data, split_data
 
 # This function merges two dataframe and can be sort by provided string
@@ -77,6 +101,7 @@ def replace_missing_by_custom_mode(train_data,test_data):
 # #############################Save score#######################################
 #pass preds and save score file path
 def save_score(preds, score_path):
+    now = datetime.datetime()
     as_path = "lib/answer_sheet.csv"
 	answer_sheet = pd.read_csv(as_path)
 	answer_sheet = pd.DataFrame(answer_sheet)

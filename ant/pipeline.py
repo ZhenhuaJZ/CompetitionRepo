@@ -14,7 +14,7 @@ import operator
 from shutil import rmtree
 import warnings
 from hparams import *
-from data_preprocessing import save_score
+from data_processing import save_score, creat_project_dirs
 from model_performance import offline_model_performance
 
 def custom_imputation(df_train, df_test, fillna_value = 0):
@@ -76,10 +76,8 @@ def main(method, _train, _labels, _test_online, _test_offline, _test_offline_lab
 # #######################Make project path#####################################
 	warnings.filterwarnings(module = 'sklearn*',
 	                        action = 'ignore', category = DeprecationWarning)
-	os.makedirs(log_path)
-	os.makedirs(score_path)
-	os.makedirs(params_path)
-	os.makedirs(model_path)
+	creat_project_dirs()
+
 	with open(params_path  + "params.txt", 'a') as f:
 		f.write(
 				"**"*40 + "\n"*2
