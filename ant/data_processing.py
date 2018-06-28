@@ -24,7 +24,7 @@ def batch_data(data, split_ratio):
     return batch
 
 # test_train_split_by_date split the test set by providing a range of dates in yyyymmdd
-def test_train_split_by_date(data, start_y_m_d, end_y_m_d):
+def test_train_split_by_date(data, start_y_m_d, end_y_m_d, params_path):
 
     #log_path = "log/date_{}/GS_{}:{}/".format(now.day,now.hour,now.minute)
     #params_path = log_path + "params/"

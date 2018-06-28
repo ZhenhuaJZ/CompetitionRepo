@@ -5,7 +5,7 @@ from sklearn.metrics import roc_curve
 import datetime
 now = datetime.datetime.now()
 
-def offline_model_performance(estimator, validation_feature, validation_label):
+def offline_model_performance(estimator, validation_feature, validation_label, params_path):
     #log_path = "log/date_{}/GS_{}:{}/".format(now.day,now.hour,now.minute)
     #params_path = log_path + "params/"
     # Obtain array of false positive rate and true positive rate

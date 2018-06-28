@@ -39,4 +39,4 @@ _test_online = _test_online.iloc[:,2:]
 
 if __name__ == '__main__':
 
-    main(method, _train, _labels, _test_online, _test_offline_feature, _test_offline_labels, fillna_value)
+    main(method, _train, _labels, _test_online, _test_offline_feature, _test_offline_labels, fillna_value, params_path)
