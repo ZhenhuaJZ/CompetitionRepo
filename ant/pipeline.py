@@ -12,9 +12,10 @@ from sklearn.externals import joblib
 from sklearn_evaluation import plot
 import operator
 from shutil import rmtree
-from hparams import *
-from offline_test_search import *
 import warnings
+from hparams import *
+from data_preprocessing import save_score
+from model_performance import offline_model_performance
 
 def custom_imputation(df_train, df_test, fillna_value = 0):
 	train = df_train.fillna(fillna_value)
@@ -78,7 +79,7 @@ def save_score(preds):
 
 def main(method, _train, _labels, _test_online, _test_offline, _test_offline_labels, fillna_value):
 
-	# #######################Make project path##################################
+# #######################Make project path#####################################
 	warnings.filterwarnings(module = 'sklearn*',
 	                        action = 'ignore', category = DeprecationWarning)
 	os.makedirs(log_path)
@@ -96,7 +97,7 @@ def main(method, _train, _labels, _test_online, _test_offline, _test_offline_lab
 	Hparams = strategy[method][0]
 	pipe = strategy[method][1]
 
-	# #########################GridSearch ######################################
+# #########################GridSearch #########################################
 	print("\n# Start training")
 	clf_initialize = True
 	for param in Hparams:
