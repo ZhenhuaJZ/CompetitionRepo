@@ -30,14 +30,14 @@ def batch_data(data, split_ratio):
 
 def test_train_split_by_date(data, start_y_m_d, end_y_m_d):
     split_data = data[(data["date"] >= start_y_m_d) & (data["date"] <= end_y_m_d)]
-    data = data.drop(data.index[(data["date"] == start_y_m_d) & (data["date"] == end_y_m_d)])
+    data = data.drop(data.index[(data["date"] >= start_y_m_d) & (data["date"] <= end_y_m_d)])
     return data, split_data
 
 def main():
-    data = pd.read_csv("data/black_label_mode_fill.csv")
+    data = pd.read_csv("data/train.csv")
     test,test2 = test_train_split_by_date(data, 20170910, 20170911)
-    print(test)
-    print(test2)
+    print("training data :{}".format(len(test)/len(data.iloc[:,1]*100)))
+    print("test data percentage :{}".format(len(test2)/len(data.iloc[:,1]*100)))
 
 main()
 
