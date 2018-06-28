@@ -10,12 +10,18 @@ def offline_model_performance(estimator, validation_feature, validation_label):
     # Obtain array of false positive rate and true positive rate
     fpr, tpr, thresholds = roc_curve(validation_label, estimator.predict(validation_feature)[:,1])
     # Search for tpr = 0.001
+    fpr1 = 99
+    fpr2 = 99
+    fpr3 = 99
     for i in range(len(fpr)):
-        if fpr[i] == 0.001:
+        if fpr[i] >= 0.001 and fpr[i] <= fpr1:
+            fpr1 = fpr[i]
             tpr1 = tpr[i]
-        elif fpr[i] == 0.005:
+        elif fpr[i] >= 0.005 and fpr[i] <= fpr2:
+            fpr2 = fpr[i]
             tpr2 = tpr[i]
-        elif fpr[i] == 0.01:
+        elif fpr[i] == 0.01 and fpr[i] <= fpr3:
+            fpr3 = fpr[i]
             tpr3 = tpr[i]
     model_performance = 0.4 * tpr1 + 0.3 * tpr2 + 0.3 * tpr3
     return model_performance
@@ -35,7 +41,11 @@ def test_train_split_by_date(data, start_y_m_d, end_y_m_d):
 
 def main():
     data = pd.read_csv("data/train.csv")
+    data.loc[data["label"] == -1] = 1
+    print(data)
+    print(data.loc[data["label"] == -1])
     test,test2 = test_train_split_by_date(data, 20170910, 20170911)
+    print(test)
     print("training data :{}".format(len(test)/len(data.iloc[:,1]*100)))
     print("test data percentage :{}".format(len(test2)/len(data.iloc[:,1]*100)))
 
