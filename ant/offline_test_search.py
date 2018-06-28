@@ -8,13 +8,9 @@ def offline_model_performance(estimator, validation_feature, validation_label):
         # Load estimator
         # estimator =
     # Obtain array of false positive rate and true positive rate
-    fpr, tpr, thresholds = roc_curve(validation_label, estimator.predict_proba(validation_feature)[:,1])
+    fpr, tpr, thresholds = roc_curve(validation_label, estimator.predict(validation_feature)[:,1])
     # Search for tpr = 0.001
-    print("1",fpr)
-    print(type(fpr))
-    print("2",tpr)
     for i in range(len(fpr)):
-        print(i)
         if fpr[i] == 0.001:
             tpr1 = tpr[i]
         elif fpr[i] == 0.005:
@@ -23,20 +19,27 @@ def offline_model_performance(estimator, validation_feature, validation_label):
             tpr3 = tpr[i]
     model_performance = 0.4 * tpr1 + 0.3 * tpr2 + 0.3 * tpr3
     return model_performance
-#
-# def batch_data(data, split_ratio):
-#     size_per_batch = len(data.iloc[:,1]) * split_ratio
-#     num_batch = int(1/split_ratio)
-#     batch = {}
-#     for i in range(num_batch):
-#         batch["batch_{}".format(i)] = data.loc[(i*size_per_batch):(size_per_batch*(i+1))]
-#     return batch
-#
-# def test_train_split_by_date(data, start_y_m_d, end_y_m_d):
-#     split_data = data[(data["date"] >= start_y_m_d) && (data["date"] <= end_y_m_d)]
-#     data = data.drop(data.index[(data["date"] == start_y_m_d):(data["date"] == end_y_m_d)])
-#     return data, split_data
 
+def batch_data(data, split_ratio):
+    size_per_batch = len(data.iloc[:,1]) * split_ratio
+    num_batch = int(1/split_ratio)
+    batch = {}
+    for i in range(num_batch):
+        batch["batch_{}".format(i)] = data.loc[(i*size_per_batch):(size_per_batch*(i+1))]
+    return batch
+
+def test_train_split_by_date(data, start_y_m_d, end_y_m_d):
+    split_data = data[(data["date"] >= start_y_m_d) & (data["date"] <= end_y_m_d)]
+    data = data.drop(data.index[(data["date"] == start_y_m_d) & (data["date"] == end_y_m_d)])
+    return data, split_data
+
+def main():
+    data = pd.read_csv("data/black_label_mode_fill.csv")
+    test,test2 = test_train_split_by_date(data, 20170910, 20170911)
+    print(test)
+    print(test2)
+
+main()
 
 
 # def test_set_search(estimator, data, online_score, test_set_size):
