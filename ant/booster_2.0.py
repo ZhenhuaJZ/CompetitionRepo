@@ -33,7 +33,7 @@ _test_offline_feature = _test_offline.iloc[:,3:]
 _test_offline_labels = _test_offline.iloc[:,1]
 
 xgb = XGBClassifier(max_depth = 4, n_estimators = 480, subsample = 0.8, gamma = 0.1,
-					scale_pos_weight =20
+					scale_pos_weight =20,
 					colsample_bytree = 0.8, learning_rate = 0.08, n_jobs = -1)
 xgb = xgb.fit(_train, _labels)
 probs = xgb.predict_proba(_test_online)
