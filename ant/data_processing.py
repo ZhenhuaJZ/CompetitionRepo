@@ -1,8 +1,6 @@
 import numpy as np
 import pandas as pd
 import math
-feature_starting_column = 2
-save_link = '../../data/replaced_missing_train_complete.csv'
 
 def round_to_whole(data, tolerance):
     p = 10**tolerance
