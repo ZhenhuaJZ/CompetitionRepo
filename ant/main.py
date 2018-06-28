@@ -30,5 +30,5 @@ _test_offline_labels = _test_offline.iloc[:,1]
 _test_online = _test_online.iloc[:,2:]
 
 if __name__ == '__main__':
-
+    creat_project_dirs()
     main(method, _train, _labels, _test_online, _test_offline_feature, _test_offline_labels, fillna_value)

@@ -1,4 +1,6 @@
+import pandas as pd
 from xgboost import XGBClassifier
+from sklearn.externals import joblib
 from data_processing import save_score, test_train_split_by_date, creat_project_dirs
 from model_performance import offline_model_performance
 
@@ -32,7 +34,7 @@ offline_score = offline_model_performance(xgb, _test_offline_feature, _test_offl
 save_score(probs[:,1], score_path)
 
 def main():
-	creat_project_dirs()
 
 if __name__ == '__main__':
+	creat_project_dirs()
     main()

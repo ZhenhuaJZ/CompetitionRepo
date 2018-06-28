@@ -75,7 +75,6 @@ def main(method, _train, _labels, _test_online, _test_offline, _test_offline_lab
 # #######################Make project path#####################################
 	warnings.filterwarnings(module = 'sklearn*',
 	                        action = 'ignore', category = DeprecationWarning)
-	creat_project_dirs()
 
 	with open(params_path  + "params.txt", 'a') as f:
 		f.write(
