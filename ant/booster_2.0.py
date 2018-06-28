@@ -24,7 +24,7 @@ print("check out ", len(_train_data))
 _train, _test_offline =  test_train_split_by_date(_train_data, 20170905, 20170915)
 
 _train = _train.iloc[:,3:]
-_label = _train.iloc[:,1]
+_labels = _train.iloc[:,1]
 _test_offline = _test_offline.iloc[:,3:]
 _test_offline_labels = _test_offline.iloc[:,1]
 
