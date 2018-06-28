@@ -1,1 +1,3 @@
 # atComp
+
+added few lines
