@@ -7,7 +7,6 @@ save_link = '../../data/replaced_missing_train_complete.csv'
 def round_to_whole(data, tolerance):
     p = 10**tolerance
     return int(data*p + 0.5)/p
-
 #################################### Split data #########################################
 def batch_data(data, split_ratio):
     size_per_batch = len(data.iloc[:,1]) * split_ratio
@@ -72,3 +71,13 @@ def replace_missing_by_custom_mode(train_data,test_data):
     print("End of custom mode filling")
     train_data_merged = file_merge(black_data, white_data)
     return train_data_merged, test_data
+
+# #############################Save score#######################################
+#pass preds and save score file path
+def save_score(preds, score_path):
+    as_path = "lib/answer_sheet.csv"
+	answer_sheet = pd.read_csv(as_path)
+	answer_sheet = pd.DataFrame(answer_sheet)
+	answer = answer_sheet.assign(score = preds)
+	answer.to_csv(score_path + "score_day{}_time{}:{}.csv".format(now.day, now.hour, now.minute), index = None, float_format = "%.9f")
+	return print("\n# Score saved in {}".format(score_path))
