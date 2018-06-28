@@ -23,7 +23,7 @@ log_path = "log/date_{}/GS_{}:{}/".format(now.day,now.hour,now.minute)
 params_path = log_path + "params/"
 score_path = log_path + "score/"
 model_path = log_path + "model/"
-as_path = "lib/answer_sheet.csv"
+
 
 # #####################Feature Preprocessing#############################
 imputer = Imputer(missing_values='NaN', strategy='mean') #mean ,median, most_frequent
