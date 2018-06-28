@@ -31,6 +31,8 @@ def custom_gridsearch(_train, _labels, pipe_clf, param):
 	print("\n{}\n# Tuning hyper-parameters for {}\n{}\n".format(str("##"*50),param,str("##"*50)))
 	clf = GridSearchCV(pipe_clf, param_grid  = param, scoring = 'roc_auc',
 	                   verbose = 1, n_jobs = 1, cv = 3)
+	print(_train)
+	print(_labels)
 	clf.fit(_train, _labels)
 	bst_params = clf.best_params_
 	bst_score = clf.best_score_
@@ -72,7 +74,7 @@ def custom_gridsearch(_train, _labels, pipe_clf, param):
 	return clf_initialize, bst_estimator
 
 
-def main(method, _train, _labels, _test_online, _test_offline, _test_offline_labels, fillna_value, params_path):
+def main(method, _train, _labels, _test_online, _test_offline_feature, _test_offline_labels, fillna_value, params_path):
 
 # #######################Make project path#####################################
 	warnings.filterwarnings(module = 'sklearn*',
@@ -99,7 +101,7 @@ def main(method, _train, _labels, _test_online, _test_offline, _test_offline_lab
 			_, best_est = custom_gridsearch(_train, _labels, best_est, param)
 	#save model, score
 	joblib.dump(best_est, model_path + "{}.pkl".format(method))
-	performance_score = offline_model_performance(best_est, _test_offline, _test_offline_labels, params_path)
+	performance_score = offline_model_performance(best_est, _test_offline_feature, _test_offline_labels, params_path)
 	print("\n# Best perfromance : ", performance_score)
 	with open(params_path  + "params.txt", 'a') as f:
 		f.write("**"*40 + "\n"*2
