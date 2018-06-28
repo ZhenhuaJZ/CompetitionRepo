@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 import math
 import datetime
+now = datetime.datetime.now()
 
 def creat_project_dirs():
     # #####################File path#########################################
@@ -29,7 +30,7 @@ def batch_data(data, split_ratio):
 
 # test_train_split_by_date split the test set by providing a range of dates in yyyymmdd
 def test_train_split_by_date(data, start_y_m_d, end_y_m_d):
-    now = datetime.datetime()
+
     log_path = "log/date_{}/GS_{}:{}/".format(now.day,now.hour,now.minute)
     params_path = log_path + "params/"
 
@@ -101,7 +102,6 @@ def replace_missing_by_custom_mode(train_data,test_data):
 # #############################Save score#######################################
 #pass preds and save score file path
 def save_score(preds, score_path):
-    now = datetime.datetime()
     as_path = "lib/answer_sheet.csv"
     answer_sheet = pd.read_csv(as_path)
     answer_sheet = pd.DataFrame(answer_sheet)

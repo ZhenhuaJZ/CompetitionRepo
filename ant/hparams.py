@@ -16,7 +16,6 @@ from sklearn.grid_search import GridSearchCV
 from tempfile import mkdtemp
 from shutil import rmtree
 cachedir = mkdtemp()
-now = datetime.datetime.now()
 
 # #####################Feature Preprocessing#############################
 imputer = Imputer(missing_values='NaN', strategy='mean') #mean ,median, most_frequent
