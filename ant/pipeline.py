@@ -46,17 +46,19 @@ def custom_gridsearch(_train, _labels, _test, pipe_clf, param):
 		plt.tick_params(axis='both', labelsize = '70')
 		plt.savefig(params_path + "{}_{}.png".format(plot_x, round(bst_score,2)))
 
-		with open(params_path  + "params.txt", 'a') as f:
-			f.write(
-					"**"*40 + "\n"*2
-					+ str(bst_estimator.steps[-2:]) + "\n"*2
-					+ "Tuned Params : " + str(bst_params) + "\n"*2
-					+ "Best ROC : " + str(bst_score) + "\n"*2
-					+"**"*40 + "\n"*2
-					)
+
 	except TypeError as e:
 		print("\n# Only one param in {}".format(plot_x))
 		pass
+
+	with open(params_path  + "params.txt", 'a') as f:
+		f.write(
+				"**"*40 + "\n"*2
+				+ str(bst_estimator.steps[-2:]) + "\n"*2
+				+ "Tuned Params : " + str(bst_params) + "\n"*2
+				+ "Best ROC : " + str(bst_score) + "\n"*2
+				+"**"*40 + "\n"*2
+				)
 
 	print("\n# >>>>Duration<<<< : {}min ".format(round((time.time()-start)/60,2)))
 	print("\n# Cleared est cache ")
@@ -70,7 +72,7 @@ def save_score(preds):
 	answer_sheet = pd.read_csv(as_path)
 	answer_sheet = pd.DataFrame(answer_sheet)
 	answer = answer_sheet.assign(score = preds)
-	answer.to_csv(score_path + "score_{}d{}m{}h.csv".format(now.day, now.month, now.hour), index = None, float_format = "%.9f")
+	answer.to_csv(score_path + "score_day{}_time{}:{}.csv".format(now.day, now.hour, now.minute), index = None, float_format = "%.9f")
 	return print("\n# Score saved in {}".format(score_path))
 
 def main(method, train_path, test_path, fillna_value):
@@ -81,6 +83,13 @@ def main(method, train_path, test_path, fillna_value):
 	os.makedirs(log_path)
 	os.makedirs(score_path)
 	os.makedirs(params_path)
+	with open(params_path  + "params.txt", 'a') as f:
+		f.write(
+				"**"*40 + "\n"*2
+				+"Filling missing data with <<<{}>>>".format(str(fillna_value)) + "\n"
+				+"Workflow in the order as <<<{}>>>".format(str(strategy[method][2])) + "\n"*2
+				+"**"*40 + "\n"*2
+				)
 	print("\n# Workflow in the order as {}".format(strategy[method][2]))
 	Hparams = strategy[method][0]
 	pipe = strategy[method][1]
@@ -89,8 +98,8 @@ def main(method, train_path, test_path, fillna_value):
 	train_data = pd.read_csv(train_path)
 	test_data = pd.read_csv(test_path)
 	train_data = train_data[(train_data.label==0)|(train_data.label==1)]
-	_train = train_data.iloc[:,3:]
-	_labels = train_data.iloc[:,1]
+	_train = train_data.iloc[:1000,3:]
+	_labels = train_data.iloc[:1000,1]
 	_test = test_data.iloc[:,2:]
 
 	#_train, _validation, _labels, _validation_labels = train_test_split(_train, labels, test_size = test_size, random_state = 42)

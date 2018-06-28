@@ -20,7 +20,7 @@ cachedir = mkdtemp()
 now = datetime.datetime.now()
 
 # #####################File path#########################################
-log_path = "log/month{_}day_{}/{}:{}/".format(now.month, now.day,now.hour,now.minute)
+log_path = "log/date_{}/GS_{}:{}/".format(now.day,now.hour,now.minute)
 params_path = log_path + "params/".format(now.month, now.day, now.hour, now.minute)
 score_path = log_path + "score/".format(now.month, now.day, now.hour, now.minute)
 as_path = "lib/answer_sheet.csv"
