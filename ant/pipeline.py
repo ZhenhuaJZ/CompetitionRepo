@@ -16,15 +16,9 @@ import warnings
 from hparams import *
 from data_processing import save_score, creat_project_dirs, test_train_split_by_date, custom_imputation
 from model_performance import offline_model_performance
+now = datetime.datetime.now()
 
-"""
-def custom_imputation(df_train, df_test, fillna_value = 0):
-	train = df_train.fillna(fillna_value)
-	test = df_test.fillna(fillna_value)
-	print("##"*50)
-	print("\n# Filling missing data with <<<{}>>>".format(fillna_value))
-	return train, test
-"""
+
 
 def custom_gridsearch(_train, _labels, pipe_clf, param, params_path):
 	start = time.time()
@@ -73,11 +67,31 @@ def custom_gridsearch(_train, _labels, pipe_clf, param, params_path):
 	return clf_initialize, bst_estimator
 
 
-def main(method, _train, _labels, _test_online, _test_offline_feature, _test_offline_labels, fillna_value, model_path, params_path):
-
+def main(method, train_path, test_path, fillna_value):
+	log_path = "log/date_{}/{}:{}_GS/".format(now.day,now.hour,now.minute)
+	params_path = log_path + "params/"
+	score_path = log_path + "score/"
+	model_path = log_path + "model/"
+	creat_project_dirs(log_path, params_path, score_path, model_path)
 # #######################Make project path#####################################
 	warnings.filterwarnings(module = 'sklearn*',
 	                        action = 'ignore', category = DeprecationWarning)
+
+# #########################Main data########################################
+	_train_data = pd.read_csv(train_path)
+	_test_online = pd.read_csv(test_path)
+	_train_data, _test_online = custom_imputation(_train_data, _test_online, fillna_value)
+	#change -1 label to 1
+	_train_data.loc[_train_data["label"] == -1] = 1
+	_train_data = _train_data[(_train_data.label==0)|(_train_data.label==1)]
+	_train_data,  _test_offline = test_train_split_by_date(_train_data, 20171020, 20171031, params_path)
+
+	_train = _train_data.iloc[1:2000,3:]
+	_labels = _train_data.iloc[1:2000,1]
+
+	_test_online = _test_online.iloc[:,2:]
+	_test_offline_feature = _test_offline.iloc[:,3:]
+	_test_offline_labels = _test_offline.iloc[:,1]
 
 	with open(params_path  + "params.txt", 'a') as f:
 		f.write(
@@ -101,11 +115,5 @@ def main(method, _train, _labels, _test_online, _test_offline_feature, _test_off
 	#save model, score
 	joblib.dump(best_est, model_path + "{}.pkl".format(method))
 	performance_score = offline_model_performance(best_est, _test_offline_feature, _test_offline_labels, params_path)
-	print("\n# Best perfromance : ", performance_score)
-	with open(params_path  + "params.txt", 'a') as f:
-		f.write("**"*40 + "\n"*2
-				+"Perfromance : <<<{}>>>".format(str(performance_score)) + "\n"
-				+"**"*40 + "\n"*2
-				)
 	probs = best_est.predict_proba(_test_online)
 	save_score(probs[:,1], score_path)
