@@ -1,6 +1,7 @@
 from hparams import *
 from pipeline import *
-
+#creat_project_dirs
+creat_project_dirs()
 #data path
 train_path = "data/train.csv" #train_heatmap , train_mode_fill, train,
 test_path = "data/test_b.csv" #test_a_heatmap, test_a_mode_fill, test_b
@@ -30,5 +31,5 @@ _test_offline_labels = _test_offline.iloc[:,1]
 _test_online = _test_online.iloc[:,2:]
 
 if __name__ == '__main__':
-    creat_project_dirs()
+
     main(method, _train, _labels, _test_online, _test_offline_feature, _test_offline_labels, fillna_value)
