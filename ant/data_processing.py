@@ -1,13 +1,12 @@
 import numpy as np
 import pandas as pd
 import math
-feature_starting_column = 2
-save_link = '../../data/replaced_missing_train_complete.csv'
 
 def round_to_whole(data, tolerance):
     p = 10**tolerance
     return int(data*p + 0.5)/p
-#################################### Split data #########################################
+
+#################################### Split data ################################
 def batch_data(data, split_ratio):
     size_per_batch = len(data.iloc[:,1]) * split_ratio
     num_batch = int(1/split_ratio)
@@ -16,18 +15,24 @@ def batch_data(data, split_ratio):
         batch["batch_{}".format(i)] = data.loc[(i*size_per_batch):(size_per_batch*(i+1))]
     return batch
 
+# test_train_split_by_date split the test set by providing a range of dates in yyyymmdd
 def test_train_split_by_date(data, start_y_m_d, end_y_m_d):
     split_data = data[(data["date"] >= start_y_m_d) & (data["date"] <= end_y_m_d)]
     data = data.drop(data.index[(data["date"] >= start_y_m_d) & (data["date"] <= end_y_m_d)])
     print("\n# Offline test percentiage {}%".format(len(split_data)/len(data.iloc[:,1]*100)))
     return data, split_data
 
-def file_merge(data_1, data_2, sort_by):
+# This function merges two dataframe and can be sort by provided string
+def file_merge(data_1, data_2, sort_by = 0, reset_index = False):
     merged_file = pd.concat([data_1,data_2], axis = 0)
-    merged_file = merged_file.sort_values(by = sort_by)
+    if sort_by != 0:
+        merged_file = merged_file.sort_values(by = sort_by)
+    if reset_index:
+        merged_file.reset_index()
     return merged_file
 
-############################## Replace_missing by mode ############################
+############################## Replace_missing by mode #########################
+# This function still having trouble
 def find_common_mode(black_frequency_list, white_frequency_list):
     min_freq_diff = 99999;
     min_mode_value = 0;
@@ -40,7 +45,6 @@ def find_common_mode(black_frequency_list, white_frequency_list):
                 break;
             # Calculate the difference in frequency, the number with smallest frequency is stored in min_mode_value
             freq_diff = abs((white_frequency_list.iloc[i] - black_frequency_list.iloc[j])*100)
-            #print(freq_diff)
             if (freq_diff < min_freq_diff) and (white_frequency_list.index[i] == black_frequency_list.index[j]):
                 min_mode_value = white_frequency_list.index[i]
     common_mode = min_mode_value
@@ -53,8 +57,6 @@ def replace_missing_by_custom_mode(train_data,test_data):
     for i in range(black_data.shape[1]-3):
         col_name = black_data.columns.values.tolist()[3:]
         if black_data[col_name[i]].mode()[0] == white_data[col_name[i]].mode()[0]:
-        #if black_data["f{}".format(i)].mode()[0] == white_data["f{}".format(i)].mode()[0]:
-            #common_mode = black_data["f{}".format(i)].mode()[0]
             common_mode = black_data[col_name[i]].mode()[0]
         else:
             # Calculate a list of occurrence in each feature
