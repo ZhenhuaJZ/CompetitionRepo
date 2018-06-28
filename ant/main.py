@@ -13,6 +13,26 @@ test_path = "data/test_b.csv" #test_a_heatmap, test_a_mode_fill, test_b
 ################################################################################
 method = "method_2"
 fillna_value = 0
+test_size = 0.2
+
+# #########################Main data########################################
+_train_data = pd.read_csv(train_path)
+_test_online = pd.read_csv(test_path)
+_train_data, _test_online = custom_imputation(_train_data, _test_online, fillna_value)
+
+_train_data = _train_data[(_train_data.label==0)|(_train_data.label==1)]
+_train,  _test_offline = jim(_train_data, 20170101, 20170209)
+
+_train = _train.iloc[:1000,3:]
+_labels = _train.iloc[:1000,1]
+_test_offline = _test_offline._train.iloc[:1000,3:]
+_test_offline_labels = _test_offline._train.iloc[:1000,1]
+_test_online = _test_online.iloc[:,2:]
 
 if __name__ == '__main__':
-    main(method, train_path, test_path, fillna_value)
+
+
+    #Split data
+    #_train, _test_offline, _labels, _test_offline_label = train_test_split(_train, labels, test_size = test_size, random_state = 42, shuffle = False)
+
+    main(method, _train, _labels, _test_online, _test_offline, _test_offline_labels, fillna_value)

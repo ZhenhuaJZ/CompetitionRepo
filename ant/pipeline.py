@@ -9,10 +9,12 @@ from sklearn.model_selection import train_test_split
 from sklearn.pipeline import Pipeline, make_pipeline
 from sklearn.metrics import roc_curve, roc_auc_score, accuracy_score
 from sklearn.grid_search import GridSearchCV
+from sklearn.externals import joblib
 from sklearn_evaluation import plot
 import operator
 from shutil import rmtree
 from hparams import *
+from jim import *
 import warnings
 
 def custom_imputation(df_train, df_test, fillna_value = 0):
@@ -22,7 +24,7 @@ def custom_imputation(df_train, df_test, fillna_value = 0):
 	print("\n# Filling missing data with <<<{}>>>".format(fillna_value))
 	return train, test
 
-def custom_gridsearch(_train, _labels, _test, pipe_clf, param):
+def custom_gridsearch(_train, _labels, pipe_clf, param):
 
 	start = time.time()
 	print("\n{}\n# Tuning hyper-parameters for {}\n{}\n".format(str("##"*50),param,str("##"*50)))
@@ -75,7 +77,7 @@ def save_score(preds):
 	answer.to_csv(score_path + "score_day{}_time{}:{}.csv".format(now.day, now.hour, now.minute), index = None, float_format = "%.9f")
 	return print("\n# Score saved in {}".format(score_path))
 
-def main(method, train_path, test_path, fillna_value):
+def main(method, _train, _labels, _test_online, _test_offline, _test_offline_labels, fillna_value):
 
 	# #######################Make project path##################################
 	warnings.filterwarnings(module = 'sklearn*',
@@ -83,6 +85,7 @@ def main(method, train_path, test_path, fillna_value):
 	os.makedirs(log_path)
 	os.makedirs(score_path)
 	os.makedirs(params_path)
+	os.makedirs(model_path)
 	with open(params_path  + "params.txt", 'a') as f:
 		f.write(
 				"**"*40 + "\n"*2
@@ -94,25 +97,17 @@ def main(method, train_path, test_path, fillna_value):
 	Hparams = strategy[method][0]
 	pipe = strategy[method][1]
 
-	# #########################Main data########################################
-	train_data = pd.read_csv(train_path)
-	test_data = pd.read_csv(test_path)
-	train_data = train_data[(train_data.label==0)|(train_data.label==1)]
-	_train = train_data.iloc[:1000,3:]
-	_labels = train_data.iloc[:1000,1]
-	_test = test_data.iloc[:,2:]
-
-	#_train, _validation, _labels, _validation_labels = train_test_split(_train, labels, test_size = test_size, random_state = 42)
-	_train, _test = custom_imputation(_train, _test, fillna_value)
-
 	# #########################GridSearch ######################################
 	print("\n# Start training")
 	clf_initialize = True
 	for param in Hparams:
 		if clf_initialize:
-			clf_initialize, best_est = custom_gridsearch(_train, _labels, _test, pipe, param)
+			clf_initialize, best_est = custom_gridsearch(_train, _labels, pipe, param)
 		else:
-			_, best_est = custom_gridsearch(_train, _labels, _test, best_est, param)
-	# save score
-	probs = best_est.predict_proba(_test) #selected_test
+			_, best_est = custom_gridsearch(_train, _labels, best_est, param)
+	#save model, score
+	joblib.dump(best_est, model_path + "{}.pkl".format(method))
+	offline_score = jim(best_est, _test_offline, _test_offline_labels)
+	print("\n# Best perfromance : ", offline_score)
+	probs = best_est.predict_proba(_test_online) #selected_test
 	save_score(probs[:,1])
