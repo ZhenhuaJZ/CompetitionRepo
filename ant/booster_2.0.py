@@ -51,8 +51,8 @@ def positive_unlabel_learning(classifier, unlabel_data, threshold):
 	score.loc[score >= threshold] = 1
 	score.loc[score < threshold] = 0
 	unlabel_data.insert(1, "label", score)
-	print("\n# After PU found {} potential black instances".format(len(unlabel_data[unlabel_data.label == 1])))
-	print("\n# After PU found {} potential white instances".format(len(unlabel_data[unlabel_data.label == 0])))
+	print("\n# After PU found <{}> potential black instances".format(len(unlabel_data[unlabel_data.label == 1])))
+	print("\n# After PU found <{}> potential white instances".format(len(unlabel_data[unlabel_data.label == 0])))
 	return unlabel_data
 
 def main():
@@ -97,19 +97,21 @@ def main():
 	unlabel_data = unlabel_data[unlabel_data.label == 1]
 	#80% train data
 	print(len(unlabel_data))
+	print(len(_train_data))
 	pu_train_data = file_merge(_train_data, unlabel_data, "date")
-	print(pu_train_data)
+	print(len(pu_train_data))
 	_new_train, _new_label = split_train_label(pu_train_data)
 
 	#recall clf
+	del clf
 	clf = classifier["random_forest"]
 	new_clf = clf.fit(_new_train, _new_label)
 	del _new_train, _new_label
 	probs = new_clf.predict_proba(_test_online)
+	save_score(probs[:,1], score_path)
 	joblib.dump(clf, model_path + "{}.pkl".format("model"))
 	#with PU offline score
 	offline_score = offline_model_performance(new_clf, _test_offline_feature, _test_offline_labels, params_path)
-	save_score(probs[:,1], score_path)
 
 	# NOTE: Original
 	"""
