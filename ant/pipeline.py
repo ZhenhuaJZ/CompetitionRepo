@@ -49,6 +49,7 @@ def custom_gridsearch(_train, _labels, pipe_clf, param, params_path):
 	with open(params_path  + "params.txt", 'a') as f:
 		f.write(
 				"**"*40 + "\n"*2
+				+"Tuning hyper-parameters for {}".format(param) + "\n"*2
 				+ str(bst_estimator.steps[-2:]) + "\n"*2
 				+ "Tuned Params : " + str(bst_params) + "\n"*2
 				+ "Best ROC : " + str(bst_score) + "\n"*2
