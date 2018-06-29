@@ -33,7 +33,7 @@ _test_offline_feature = _test_offline.iloc[:,3:]
 _test_offline_labels = _test_offline.iloc[:,1]
 
 xgb = XGBClassifier(max_depth = 4, n_estimators = 480, subsample = 0.8, gamma = 0.1,
-					min_child_weight = 2,
+					min_child_weight = 2, scale_pos_weight = 20,
 					colsample_bytree = 0.8, learning_rate = 0.08, n_jobs = -1)
 
 with open(params_path  + "params.txt", 'a') as f:
