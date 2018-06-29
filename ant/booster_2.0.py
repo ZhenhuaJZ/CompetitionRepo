@@ -134,7 +134,7 @@ for min_samples_leaf in range(1,70,10):
 						     solver='lbfgs', tol=0.0001, validation_fraction=0.1)
 	}
 
-	clf = classifier["XGB"]
+	clf = classifier["random_forest"]
 
 	with open(params_path  + "params.txt", 'a') as f:
 		print("\n# Training clf :{}".format(clf))
