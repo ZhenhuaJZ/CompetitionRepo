@@ -133,7 +133,7 @@ classifier = {
 					     solver='lbfgs', tol=0.0001, validation_fraction=0.1)
 }
 
-clf = classifier["XGB"]
+clf = classifier["rf"]
 
 with open(params_path  + "params.txt", 'a') as f:
 	print("\n# Training clf :{}".format(clf))
