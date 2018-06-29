@@ -94,7 +94,7 @@ def main():
 	offline_score = offline_model_performance(_clf, _test_offline_feature, _test_offline_labels, params_path)
 	unlabel_data = positive_unlabel_learning(_clf, _test_a, 0.8)
 	#Choose Black Label
-	unlabel_data = unlabel_data[unlabel_data.label == 1]
+	unlabel_data = unlabel_data[unlabel_data.label == 0]
 	#80% train data
 	print(len(unlabel_data))
 	print(len(_train_data))
