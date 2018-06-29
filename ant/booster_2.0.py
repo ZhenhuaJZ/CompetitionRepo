@@ -92,7 +92,7 @@ def main():
 		+"**"*40 + "\n"*2
 		)
 
-	if method = "single_model" :
+	if method == "single_model" :
 		# NOTE: Original
 		_clf = clf.fit(_train, _labels)
 		del _train, _labels
@@ -111,7 +111,7 @@ def main():
 		probs = new_clf.predict_proba(_test_online)
 		save_score(probs[:,1], score_path)
 		"""
-	elif method = "pu_method" :
+	elif method == "pu_method" :
 		# NOTE: PU learning
 		_clf = clf.fit(_train, _labels)
 		#without PU offline score
