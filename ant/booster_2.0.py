@@ -4,8 +4,8 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.neural_network import MLPClassifier
 from sklearn.externals import joblib
-from data_processing import save_score, test_train_split_by_date, creat_project_dirs, custom_imputation
-from model_performance import offline_model_performance
+from lib.data_processing import save_score, test_train_split_by_date, creat_project_dirs, custom_imputation
+from lib.model_performance import offline_model_performance
 import datetime
 now = datetime.datetime.now()
 
@@ -26,7 +26,7 @@ _train_data, _test_online = custom_imputation(_train_data, _test_online, fillna_
 #change -1 label to 1
 _train_data.loc[_train_data["label"] == -1] = 1
 #Split train and offine test
-_train_data, _test_offline =  test_train_split_by_date(_train_data, 20170905, 20170915, params_path)
+_train_data, _test_offline =  test_train_split_by_date(_train_data, 20171010, 20171020, params_path)
 #train data
 _train = _train_data.iloc[:,3:]
 _labels = _train_data.iloc[:,1]
