@@ -26,6 +26,7 @@ def hist_visualization(df_0, df_1, prefix, figure_1, figure_2):
 		print(col_name)
 		fig, axes = plt.subplots(1,2, sharey =True, sharex = True, figsize=(35,15))
 		feature_0 = df_0.loc[:,[col_name]]
+		print(feature_0)
 		#Statics info
 		mean = feature_0.mean().values[0]
 		std = feature_0.std().values[0]
@@ -81,6 +82,7 @@ def main():
 	_train_data, _test_offline =  test_train_split_by_date(_train_data, 20171010, 20171020)
 
 	_train = _train_data.iloc[:,3:]
+	del _train_data
 	_test_online = _test_online.iloc[:,2:]
 
 	#hist_visualization(_train, _test_online, "train_test_b", figure_1="train", figure_2="test_b")
