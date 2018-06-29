@@ -33,7 +33,6 @@ def split_train_label(data, cache = True):
     elif isinstance(data, pd.core.frame.DataFrame):
         feature = data.iloc[:,3:]
         label = data.iloc[:,1]
-
     if cache:
         del data
     return feature, label
