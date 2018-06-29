@@ -26,7 +26,6 @@ def hist_visualization(df_0, df_1, prefix, figure_1, figure_2):
 		print(col_name)
 		fig, axes = plt.subplots(1,2, sharey =True, sharex = True, figsize=(35,15))
 		feature_0 = df_0.loc[:,[col_name]]
-		print(feature_0)
 		#Statics info
 		mean = feature_0.mean().values[0]
 		std = feature_0.std().values[0]

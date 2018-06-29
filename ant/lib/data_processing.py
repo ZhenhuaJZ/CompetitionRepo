@@ -32,13 +32,14 @@ def test_train_split_by_date(data, start_y_m_d, end_y_m_d, params_path = ""):
     split_data = data[(data["date"] >= start_y_m_d) & (data["date"] <= end_y_m_d)]
     data = data.drop(data.index[(data["date"] >= start_y_m_d) & (data["date"] <= end_y_m_d)])
     split_data_percent = round(len(split_data)/len(data.iloc[:,1]*100),2)
-    print("\n# Offline test percentiage {}%".format(split_data_percent))
+    print("\n# Split by date from <<<{}>>> to <<<{}>>>".format(str(start_y_m_d), str(end_y_m_d)))
+    print("\n# Offline test percentage {}%".format(split_data_percent))
     if params_path != "" :
         with open(params_path  + "params.txt", 'a') as f:
             f.write(
             "**"*40 + "\n"*2
             +"Split by date from <<<{}>>> to <<<{}>>>".format(str(start_y_m_d), str(end_y_m_d)) + "\n"
-            +"Occupy {}%".format(str(split_data_percent)) + "\n"*2
+            +"Offline test percentage {}%".format(str(split_data_percent)) + "\n"*2
             +"**"*40 + "\n"*2
             )
     return data, split_data
