@@ -35,7 +35,11 @@ _train_data, _test_offline =  test_train_split_by_date(_train_data, 20171010, 20
 _train = _train_data.iloc[:,3:]
 _labels = _train_data.iloc[:,1]
 """
-_train, _labels = split_train_label(_train_data, cache = False)
+_train, _labels = split_train_label(_train_data)
+
+print(_train_data)
+del train_data
+print(_train_data)
 #online & offline data
 _test_online = _test_online.iloc[:,2:]
 
