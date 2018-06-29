@@ -30,7 +30,8 @@ kbest = SelectKBest(chi2)
 # #####################Classcifiers######################################
 xgb = XGBClassifier(max_depth = 4, n_estimators = 460, subsample = 0.9,min_child_weight = 2,
 					colsample_bytree = 0.8, learning_rate = 0.1)
-
+rf = RandomForestClassifier(n_estimators = 150, criterion = "entropy", max_depth = 13,
+		 			min_samples_split = 110, min_samples_leaf = 1, max_leaf_nodes = None)
 
 method_1_describ = ["MinMaxScaler", "Kbest", "Xgboost"]
 method_2_describ = ["StandardScaler", "Tree-Base Importance Feature", "Xgboost"]
