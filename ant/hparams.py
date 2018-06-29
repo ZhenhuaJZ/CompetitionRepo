@@ -36,6 +36,7 @@ rf = RandomForestClassifier(n_estimators = 150, criterion = "entropy", max_depth
 method_1_describ = ["MinMaxScaler", "Kbest", "Xgboost"]
 method_2_describ = ["StandardScaler", "Tree-Base Importance Feature", "Xgboost"]
 method_3_describ = ["Xgboost"]
+method_3_describ = ["rf"]
 
 # ###########################Tuning Params################################
 params_1 = [
@@ -106,15 +107,30 @@ params_3 = [
 		  #"xgb__reg_alpha" : [0.05, 0.07],
           #}]
          ]
+params_4 = [
+          [{
+           "rf__max_depth" : [12,16],
+           "rf__n_estimators" : [200, 300, 400],
+          }],
+
+          #[{
+           #"xgb__gamma" : [0, 0.1],
+		   #"xgb__scale_pos_weight" : [1, 20],
+		   #"xgb__n_estimators" : [3,4,5],
+          #}],
+
+         ]
 # ##########################PipeLine#####################################
 pipe_family = {
 			   "pipe_1" : Pipeline([('minmax_std', minmax_std), ('kbest', kbest), ('xgb', xgb)], memory = cachedir),
 			   "pipe_2" : Pipeline([('standar', standar), ('tbfs', SelectFromModel(xgb)), ('xgb', xgb)], memory = cachedir),
 			   "pipe_3" : Pipeline([('xgb', xgb)], memory = cachedir),
+			   "pipe_4" : Pipeline([('rf', rf)], memory = cachedir),
 			   }
 
 strategy = {
 			"method_1": (params_1, pipe_family["pipe_1"], method_1_describ),
 			"method_2": (params_2, pipe_family["pipe_2"], method_2_describ),
 			"method_3": (params_3, pipe_family["pipe_3"], method_3_describ),
+			"method_4": (params_4, pipe_family["pipe_4"], method_4_describ),
 			}
