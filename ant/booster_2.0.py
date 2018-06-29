@@ -25,7 +25,7 @@ _test_online = pd.read_csv(test_path)
 #Using test_a as
 _test_a = pd.read_csv(test_a_path)
 
-_train_data, _test_online, _test_a = custom_imputation(_train_data, _test_online, _test_a, fillna_value = fillna_value)
+_train_data, _test_online, _test_a = custom_imputation(_train_data, _test_online, _test_a, fillna_value)
 #change -1 label to 1
 _train_data.loc[_train_data["label"] == -1] = 1
 #Split train and offine test
