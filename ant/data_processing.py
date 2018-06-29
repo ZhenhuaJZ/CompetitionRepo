@@ -1,6 +1,14 @@
+import os
 import numpy as np
 import pandas as pd
 import math
+import datetime
+now = datetime.datetime.now()
+
+# #####################Creat path###############################################
+def creat_project_dirs(*args):
+    for a in args:
+        os.makedirs(a)
 
 def round_to_whole(data, tolerance):
     p = 10**tolerance
@@ -16,10 +24,22 @@ def batch_data(data, split_ratio):
     return batch
 
 # test_train_split_by_date split the test set by providing a range of dates in yyyymmdd
-def test_train_split_by_date(data, start_y_m_d, end_y_m_d):
+def test_train_split_by_date(data, start_y_m_d, end_y_m_d, params_path):
+
+    #log_path = "log/date_{}/GS_{}:{}/".format(now.day,now.hour,now.minute)
+    #params_path = log_path + "params/"
+
     split_data = data[(data["date"] >= start_y_m_d) & (data["date"] <= end_y_m_d)]
     data = data.drop(data.index[(data["date"] >= start_y_m_d) & (data["date"] <= end_y_m_d)])
-    print("\n# Offline test percentiage {}%".format(len(split_data)/len(data.iloc[:,1]*100)))
+    split_data_percent = round(len(split_data)/len(data.iloc[:,1]*100),2)
+    print("\n# Offline test percentiage {}%".format(split_data_percent))
+    with open(params_path  + "params.txt", 'a') as f:
+        f.write(
+        "**"*40 + "\n"*2
+        +"Split by date from <<<{}>>> to <<<{}>>>".format(str(start_y_m_d), str(end_y_m_d)) + "\n"
+        +"Occupy {}%".format(str(split_data_percent)) + "\n"*2
+        +"**"*40 + "\n"*2
+        )
     return data, split_data
 
 # This function merges two dataframe and can be sort by provided string
@@ -74,12 +94,19 @@ def replace_missing_by_custom_mode(train_data,test_data):
     train_data_merged = file_merge(black_data, white_data)
     return train_data_merged, test_data
 
+#custom_imputation
+def custom_imputation(df_train, df_test, fillna_value = 0):
+	train = df_train.fillna(fillna_value)
+	test = df_test.fillna(fillna_value)
+	print("##"*50)
+	print("\n# Filling missing data with <<<{}>>>".format(fillna_value))
+	return train, test
 # #############################Save score#######################################
 #pass preds and save score file path
 def save_score(preds, score_path):
     as_path = "lib/answer_sheet.csv"
-	answer_sheet = pd.read_csv(as_path)
-	answer_sheet = pd.DataFrame(answer_sheet)
-	answer = answer_sheet.assign(score = preds)
-	answer.to_csv(score_path + "score_day{}_time{}:{}.csv".format(now.day, now.hour, now.minute), index = None, float_format = "%.9f")
-	return print("\n# Score saved in {}".format(score_path))
+    answer_sheet = pd.read_csv(as_path)
+    answer_sheet = pd.DataFrame(answer_sheet)
+    answer = answer_sheet.assign(score = preds)
+    answer.to_csv(score_path + "score_day{}_time{}:{}.csv".format(now.day, now.hour, now.minute), index = None, float_format = "%.9f")
+    return print("\n# Score saved in {}".format(score_path))
