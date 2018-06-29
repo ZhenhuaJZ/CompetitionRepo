@@ -58,7 +58,7 @@ def positive_unlabel_learning(classifier, unlabel_data, threshold):
 	print("\n# After PU found <{}> potential white instances".format(len(unlabel_data[unlabel_data.label == 0])))
 	return unlabel_data
 
-def single_model():
+def single_model(clf):
 
 	# NOTE: Original
 	_clf = clf.fit(_train, _labels)
@@ -80,7 +80,7 @@ def single_model():
 	probs = new_clf.predict_proba(_test_online)
 	save_score(probs[:,1], score_path)
 
-def pu_method():
+def pu_method(clf):
 	# NOTE: PU learning
 	_clf = clf.fit(_train, _labels)
 	#without PU offline score
@@ -135,9 +135,9 @@ def main():
 		+ str(clf) + "\n"*2
 		+"**"*40 + "\n"*2
 		)
-		
-	pu_method()
-	#single_model()
+
+	pu_method(clf)
+	#single_model(clf)
 
 	print("\n# >>>>Duration<<<< : {}min ".format(round((time.time()-start)/60,2)))
 
