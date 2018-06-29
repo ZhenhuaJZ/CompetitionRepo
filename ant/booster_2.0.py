@@ -42,7 +42,8 @@ _test_offline_labels = _test_offline.iloc[:,1]
 """
 _test_offline_feature, _test_offline_labels = split_train_label(_test_offline)
 
-del _train_data, _test_offline
+#get rid off del train data not because the data sort after PU wanna to save coding
+#and release memory after
 
 def positive_unlabel_learning(classifier, unlabel_data, threshold):
 	score = classifier.predict_proba(unlabel_data.iloc[:,2:])
@@ -91,9 +92,8 @@ def main():
 	offline_score = offline_model_performance(_clf, _test_offline_feature, _test_offline_labels, params_path)
 	unlabel_data = positive_unlabel_learning(_clf, _test_a, 0.8)
 	## TODO: 80% train data
-	_train_data = file_merge(pd.read_csv(train_path), unlabel_data, "date", True)
-	_new_train, _new_label = split_train_label(_train_data)
-	del _train_data
+	pu_train_data = file_merge(_train_data, unlabel_data, "date", True)
+	_new_train, _new_label = split_train_label(pu_train_data)
 	print("test", clf)
 	new_clf = clf.fit(_new_train, _new_label)
 	del _new_train, _new_label
