@@ -23,6 +23,21 @@ def batch_data(data, split_ratio):
         batch["batch_{}".format(i)] = data.loc[(i*size_per_batch):(size_per_batch*(i+1))]
     return batch
 
+#Pass the training dataframe or datapath and split to feature and label
+def split_train_label(data):
+    print(type(data))
+    if isinstance(data, str):
+        data = pd.read_csv(data)
+        feature = data.iloc[:,3:]
+        label = data.iloc[:,1]
+        del data
+    elif isinstance(data, pd.core.frame.DataFrame):
+        feature = data.iloc[:,3:]
+        label = data.iloc[:,1]
+        del data
+
+    return feature, label
+
 # test_train_split_by_date split the test set by providing a range of dates in yyyymmdd
 def test_train_split_by_date(data, start_y_m_d, end_y_m_d, params_path = ""):
 
