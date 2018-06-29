@@ -121,7 +121,7 @@ classifier = {
   						 class_weight = "balanced", max_iter = 300, n_jobs = -1),
 
 	# NOTE:test min_samples_split and min_samples_leaf
-	"random_forest" : RandomForestClassifier(n_estimators = 150, criterion = "entropy", max_depth = 13,
+	"random_forest" : RandomForestClassifier(n_estimators = 300, criterion = "entropy", max_depth = 16,
 	 					 min_samples_split = 110, min_samples_leaf = 1, max_leaf_nodes = None,
 						 n_jobs = -1),
 
