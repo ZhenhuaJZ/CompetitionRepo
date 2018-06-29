@@ -66,8 +66,8 @@ def single_model(clf):
 	probs = _clf.predict_proba(_test_online)
 	#joblib.dump(clf, model_path + "{}.pkl".format("model"))
 	offline_score = offline_model_performance(_clf, _test_offline_feature, _test_offline_labels, params_path)
-	#save_score(probs[:,1], score_path)
-
+	save_score(probs[:,1], score_path)
+	"""
 	# NOTE:  Feed validation Back
 	print("\n#Feed validation set to the dataset")
 	all_train = file_merge(_train_data, _test_offline)
@@ -77,7 +77,7 @@ def single_model(clf):
 	new_clf = clf.fit(_new_train, _new_label)
 	probs = new_clf.predict_proba(_test_online)
 	save_score(probs[:,1], score_path)
-
+	"""
 def pu_method(clf):
 	# NOTE: PU learning
 	_clf = clf.fit(_train, _labels)
@@ -123,7 +123,7 @@ def main():
 						     solver='lbfgs', tol=0.0001, validation_fraction=0.1)
 	}
 
-	clf = classifier["random_forest"]
+	clf = classifier["XGB"]
 
 	with open(params_path  + "params.txt", 'a') as f:
 		print("\n# Training clf :{}".format(clf))
@@ -133,8 +133,8 @@ def main():
 		+"**"*40 + "\n"*2
 		)
 
-	pu_method(clf)
-	#single_model(clf)
+	#pu_method(clf)
+	single_model(clf)
 
 	print("\n# >>>>Duration<<<< : {}min ".format(round((time.time()-start)/60,2)))
 
