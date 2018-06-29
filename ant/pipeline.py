@@ -18,8 +18,6 @@ from lib.data_processing import save_score, creat_project_dirs, test_train_split
 from lib.model_performance import offline_model_performance
 now = datetime.datetime.now()
 
-
-
 def custom_gridsearch(_train, _labels, pipe_clf, param, params_path):
 	start = time.time()
 	print("\n{}\n# Tuning hyper-parameters for {}\n{}\n".format(str("##"*50),param,str("##"*50)))
@@ -93,10 +91,12 @@ def main(method, train_path, test_path, fillna_value):
 
 	_train = _train_data.iloc[:,3:]
 	_labels = _train_data.iloc[:,1]
+	del _train_data
 
 	_test_online = _test_online.iloc[:,2:]
 	_test_offline_feature = _test_offline.iloc[:,3:]
 	_test_offline_labels = _test_offline.iloc[:,1]
+	del _test_offline
 
 	with open(params_path  + "params.txt", 'a') as f:
 		f.write(

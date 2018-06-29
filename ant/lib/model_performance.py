@@ -26,6 +26,11 @@ def offline_model_performance(estimator, validation_feature, validation_label, p
             tpr3 = tpr[i]
     model_performance = 0.4 * tpr1 + 0.3 * tpr2 + 0.3 * tpr3
     print("\n# Offline model performance ROC : {}".format(model_performance))
+    print("\n# Perfromance ROC : <<<{}>>>".format(str(model_performance)) + "\n"
+          +"# fpr1 : {} ----> to tpr1: {}".format(str(fpr1), str(tpr1)) + "\n"
+          +"# fpr2 : {} ----> to tpr2: {}".format(str(fpr2), str(tpr2)) + "\n"
+          +"# fpr3 : {} ----> to tpr3: {}".format(str(fpr3), str(tpr3)) + "\n"
+    )
     with open(params_path  + "params.txt", 'a') as f:
         f.write(
         "**"*40 + "\n"*2
