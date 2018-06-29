@@ -36,7 +36,7 @@ rf = RandomForestClassifier(n_estimators = 150, criterion = "entropy", max_depth
 method_1_describ = ["MinMaxScaler", "Kbest", "Xgboost"]
 method_2_describ = ["StandardScaler", "Tree-Base Importance Feature", "Xgboost"]
 method_3_describ = ["Xgboost"]
-method_3_describ = ["rf"]
+method_4_describ = ["rf"]
 
 # ###########################Tuning Params################################
 params_1 = [
