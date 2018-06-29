@@ -24,7 +24,7 @@ def batch_data(data, split_ratio):
     return batch
 
 # test_train_split_by_date split the test set by providing a range of dates in yyyymmdd
-def test_train_split_by_date(data, start_y_m_d, end_y_m_d, params_path):
+def test_train_split_by_date(data, start_y_m_d, end_y_m_d, params_path = ""):
 
     #log_path = "log/date_{}/GS_{}:{}/".format(now.day,now.hour,now.minute)
     #params_path = log_path + "params/"
@@ -33,13 +33,14 @@ def test_train_split_by_date(data, start_y_m_d, end_y_m_d, params_path):
     data = data.drop(data.index[(data["date"] >= start_y_m_d) & (data["date"] <= end_y_m_d)])
     split_data_percent = round(len(split_data)/len(data.iloc[:,1]*100),2)
     print("\n# Offline test percentiage {}%".format(split_data_percent))
-    with open(params_path  + "params.txt", 'a') as f:
-        f.write(
-        "**"*40 + "\n"*2
-        +"Split by date from <<<{}>>> to <<<{}>>>".format(str(start_y_m_d), str(end_y_m_d)) + "\n"
-        +"Occupy {}%".format(str(split_data_percent)) + "\n"*2
-        +"**"*40 + "\n"*2
-        )
+    if params_path != "":
+        with open(params_path  + "params.txt", 'a') as f:
+            f.write(
+            "**"*40 + "\n"*2
+            +"Split by date from <<<{}>>> to <<<{}>>>".format(str(start_y_m_d), str(end_y_m_d)) + "\n"
+            +"Occupy {}%".format(str(split_data_percent)) + "\n"*2
+            +"**"*40 + "\n"*2
+            )
     return data, split_data
 
 # This function merges two dataframe and can be sort by provided string
@@ -91,7 +92,7 @@ def replace_missing_by_custom_mode(train_data,test_data):
               "***White Filled:{}".format(white_data[col_name[i]].mode()[0]) + "***Test Filled:{}".format(common_mode))
         print("******************************")
     print("End of custom mode filling")
-    train_data_merged = file_merge(black_data, white_data)
+    train_data_merged = file_merge(black_data, white_data, reset_index == True)
     return train_data_merged, test_data
 
 #custom_imputation
@@ -101,6 +102,29 @@ def custom_imputation(df_train, df_test, fillna_value = 0):
 	print("##"*50)
 	print("\n# Filling missing data with <<<{}>>>".format(fillna_value))
 	return train, test
+
+# Multi Variate feature imputation, waiting for sklearn 0.20
+# def multivariate_feature_imputation(df_train, df_test):
+#     train = df_train.iloc[:,3:]
+#     test = df_test.iloc[:,2:]
+#     imp_train_data = file_merge(train,test)
+#     imputator = ChainedImputer(n_imputations = 10, random_state = 0)
+#     imputator.fit(imp_train_data)
+#     df_train.iloc[:,3:] = imputator.tranform(train)
+#     df_test.iloc[:,2:] = imputator.tranform(test)
+#     return df_train, df_test
+#
+# train = pd.read_csv("data/train.csv")
+# test = pd.read_csv("data/test_b.csv")
+#
+# test_train = train.loc[1000:]
+# test_test = test.loc[500:]
+#
+# return_test_train, return_test_test = multivariate_feature_imputation(test_train,test_test)
+#
+# print(return_test_train)
+# print(return_test_test)
+
 # #############################Save score#######################################
 #pass preds and save score file path
 def save_score(preds, score_path):
