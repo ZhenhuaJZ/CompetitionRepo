@@ -36,10 +36,6 @@ _train = _train_data.iloc[:,3:]
 _labels = _train_data.iloc[:,1]
 """
 _train, _labels = split_train_label(_train_data)
-
-print(_train_data)
-del _train_data
-print(_train_data)
 #online & offline data
 _test_online = _test_online.iloc[:,2:]
 
@@ -103,10 +99,7 @@ def main():
 	#Choose Black Label
 	unlabel_data = unlabel_data[unlabel_data.label == 0]
 	#80% train data
-	print(len(unlabel_data))
-	print(len(_train_data))
 	pu_train_data = file_merge(_train_data, unlabel_data, "date")
-	print(len(pu_train_data))
 	_new_train, _new_label = split_train_label(pu_train_data)
 
 	#recall clf
@@ -115,7 +108,7 @@ def main():
 	new_clf = clf.fit(_new_train, _new_label)
 	del _new_train, _new_label
 	probs = new_clf.predict_proba(_test_online)
-	joblib.dump(clf, model_path + "{}.pkl".format("model"))
+	#joblib.dump(clf, model_path + "{}.pkl".format("model"))
 	#with PU offline score
 	offline_score = offline_model_performance(new_clf, _test_offline_feature, _test_offline_labels, params_path)
 	save_score(probs[:,1], score_path)
@@ -126,19 +119,23 @@ def main():
 	_clf = clf.fit(_train, _labels)
 	del _train, _labels
 	probs = clf.predict_proba(_test_online)
-	joblib.dump(clf, model_path + "{}.pkl".format("model"))
+	#joblib.dump(clf, model_path + "{}.pkl".format("model"))
 	offline_score = offline_model_performance(clf, _test_offline_feature, _test_offline_labels, params_path)
 	save_score(probs[:,1], score_path)
 	"""
 
 	# NOTE:  Feed validation Back
 	"""
-	# TODO: add xx in the future
-	_train_data = pd.read_csv(train_path)
-	_test_online = pd.read_csv(test_path)
-	_train_data, _test_online = custom_imputation(_train_data, _test_online, fillna_value)
-	#change -1 label to 1
-	_train_data.loc[_train_data["label"] == -1] = 1
+	# TODO:
+	all_train = file_merge(_train_data, _test_offline)
+	del _test_offline
+	_new_train, _new_label = split_train_label(all_train)
+	del all_train
+	del all_train
+	clf = classifier["random_forest"]
+	new_clf = clf.fit(_new_train, _new_label)
+	probs = new_clf.predict_proba(_test_online)
+	save_score(probs[:,1], score_path)
 	"""
 
 	print("\n# >>>>Duration<<<< : {}min ".format(round((time.time()-start)/60,2)))
