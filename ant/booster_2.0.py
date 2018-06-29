@@ -58,21 +58,21 @@ classifier = {
 
 clf = classifier["random_forest"]
 
- with open(params_path  + "params.txt", 'a') as f:
- 	f.write(
- 			"**"*40 + "\n"*2
- 			+ str(clf) + "\n"*2
- 			+"**"*40 + "\n"*2
- 			)
-
-clf = clf.fit(_train, _labels)
-probs = clf.predict_proba(_test_online)
-joblib.dump(clf, model_path + "{}.pkl".format("model"))
-offline_score = offline_model_performance(clf, _test_offline_feature, _test_offline_labels, params_path)
-save_score(probs[:,1], score_path)
-
 def main():
 
-	if __name__ == '__main__':
+	with open(params_path  + "params.txt", 'a') as f:
+		print("\n# Training clf :{}".format(clf))
+		f.write(
+		"**"*40 + "\n"*2
+		+ str(clf) + "\n"*2
+		+"**"*40 + "\n"*2
+		)
 
-		main()
+	clf = clf.fit(_train, _labels)
+	probs = clf.predict_proba(_test_online)
+	joblib.dump(clf, model_path + "{}.pkl".format("model"))
+	offline_score = offline_model_performance(clf, _test_offline_feature, _test_offline_labels, params_path)
+	save_score(probs[:,1], score_path)
+
+if __name__ == '__main__':
+	main()
