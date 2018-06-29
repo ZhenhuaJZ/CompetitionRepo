@@ -31,8 +31,8 @@ _train_data.loc[_train_data["label"] == -1] = 1
 #Split train and offine test
 _train_data, _test_offline =  test_train_split_by_date(_train_data, 20171020, 20171031, params_path)
 #train data
-_train = _train_data.iloc[:,3:]
-_labels = _train_data.iloc[:,1]
+_train = _train_data.iloc[1:1000,3:]
+_labels = _train_data.iloc[1:1000,1]
 
 #_train, _labels = split_train_label(_train_data)
 #online & offline data
@@ -54,6 +54,48 @@ def positive_unlabel_learning(classifier, unlabel_data, threshold):
 	print("\n# After PU found <{}> potential black instances".format(len(unlabel_data[unlabel_data.label == 1])))
 	print("\n# After PU found <{}> potential white instances".format(len(unlabel_data[unlabel_data.label == 0])))
 	return unlabel_data
+"""
+def single_model():
+	_clf = clf.fit(_train, _labels)
+	#del _train, _labels
+	probs = _clf.predict_proba(_test_online)
+	#joblib.dump(clf, model_path + "{}.pkl".format("model"))
+	offline_score = offline_model_performance(_clf, _test_offline_feature, _test_offline_labels, params_path)
+	save_score(probs[:,1], score_path)
+
+	# NOTE:  Feed validation Back
+	print("\n# Feed validation set to the dataset")
+	all_train = file_merge(_train_data, _test_offline)
+	del _test_offline, _train_data
+	_new_train, _new_label = split_train_label(all_train)
+	del all_train, _clf
+	new_clf = clf.fit(_new_train, _new_label)
+	probs = new_clf.predict_proba(_test_online)
+	save_score(probs[:,1], score_path)
+"""
+"""
+def pu_method():
+	# NOTE: PU learning
+	_clf = clf.fit(_train, _labels)
+	#without PU offline score
+	offline_score = offline_model_performance(_clf, _test_offline_feature, _test_offline_labels, params_path)
+	unlabel_data = positive_unlabel_learning(_clf, _test_a, 0.7)
+	#Choose Black Label
+	unlabel_data = unlabel_data[unlabel_data.label == 1]
+	#80% train data
+	pu_train_data = file_merge(_train_data, unlabel_data, "date")
+	_new_train, _new_label = split_train_label(pu_train_data)
+
+	#recall clf
+	del _clf
+	new_clf = clf.fit(_new_train, _new_label)
+	del _new_train, _new_label
+	probs = new_clf.predict_proba(_test_online)
+	#joblib.dump(clf, model_path + "{}.pkl".format("model"))
+	#with PU offline score
+	offline_score = offline_model_performance(new_clf, _test_offline_feature, _test_offline_labels, params_path)
+	save_score(probs[:,1], score_path)
+"""
 
 def main():
 	start = time.time()
@@ -89,25 +131,23 @@ def main():
 		+"**"*40 + "\n"*2
 		)
 
-	if method == "single_model" :
-
-		_clf = clf.fit(_train, _labels)
-		del _train, _labels
-		probs = _clf.predict_proba(_test_online)
-		#joblib.dump(clf, model_path + "{}.pkl".format("model"))
-		offline_score = offline_model_performance(_clf, _test_offline_feature, _test_offline_labels, params_path)
-		save_score(probs[:,1], score_path)
-		"""
-		# NOTE:  Feed validation Back
-		print("\n# Feed validation set to the dataset")
-		all_train = file_merge(_train_data, _test_offline)
-		del _test_offline, _train_data
-		_new_train, _new_label = split_train_label(all_train)
-		del all_train, _clf
-		new_clf = clf.fit(_new_train, _new_label)
-		probs = new_clf.predict_proba(_test_online)
-		save_score(probs[:,1], score_path)
-		"""
+	clf = clf.fit(_train, _labels)
+	#del _train, _labels
+	probs = clf.predict_proba(_test_online)
+	#joblib.dump(clf, model_path + "{}.pkl".format("model"))
+	offline_score = offline_model_performance(_clf, _test_offline_feature, _test_offline_labels, params_path)
+	save_score(probs[:,1], score_path)
+	"""
+	# NOTE:  Feed validation Back
+	print("\n# Feed validation set to the dataset")
+	all_train = file_merge(_train_data, _test_offline)
+	del _test_offline, _train_data
+	_new_train, _new_label = split_train_label(all_train)
+	del all_train, _clf
+	new_clf = clf.fit(_new_train, _new_label)
+	probs = new_clf.predict_proba(_test_online)
+	save_score(probs[:,1], score_path)
+	"""
 	elif method == "pu_method" :
 		# NOTE: PU learning
 		_clf = clf.fit(_train, _labels)
