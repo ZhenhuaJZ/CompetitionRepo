@@ -63,9 +63,9 @@ def single_model(clf):
 	# NOTE: Original
 	_clf = clf.fit(_train, _labels)
 	del _train, _labels
-	probs = clf.predict_proba(_test_online)
+	probs = _clf.predict_proba(_test_online)
 	#joblib.dump(clf, model_path + "{}.pkl".format("model"))
-	offline_score = offline_model_performance(clf, _test_offline_feature, _test_offline_labels, params_path)
+	offline_score = offline_model_performance(_clf, _test_offline_feature, _test_offline_labels, params_path)
 	#save_score(probs[:,1], score_path)
 
 	# NOTE:  Feed validation Back
@@ -73,9 +73,7 @@ def single_model(clf):
 	all_train = file_merge(_train_data, _test_offline)
 	del _test_offline, _train_data
 	_new_train, _new_label = split_train_label(all_train)
-	del all_train
-	del all_train
-	clf = classifier["random_forest"]
+	del all_train, _clf
 	new_clf = clf.fit(_new_train, _new_label)
 	probs = new_clf.predict_proba(_test_online)
 	save_score(probs[:,1], score_path)
@@ -93,8 +91,7 @@ def pu_method(clf):
 	_new_train, _new_label = split_train_label(pu_train_data)
 
 	#recall clf
-	del clf
-	clf = classifier["random_forest"]
+	del _clf
 	new_clf = clf.fit(_new_train, _new_label)
 	del _new_train, _new_label
 	probs = new_clf.predict_proba(_test_online)
