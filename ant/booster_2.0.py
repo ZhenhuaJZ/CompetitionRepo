@@ -135,7 +135,7 @@ def main():
 	#del _train, _labels
 	probs = clf.predict_proba(_test_online)
 	#joblib.dump(clf, model_path + "{}.pkl".format("model"))
-	offline_score = offline_model_performance(_clf, _test_offline_feature, _test_offline_labels, params_path)
+	offline_score = offline_model_performance(clf, _test_offline_feature, _test_offline_labels, params_path)
 	save_score(probs[:,1], score_path)
 	"""
 	# NOTE:  Feed validation Back
