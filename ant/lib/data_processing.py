@@ -114,7 +114,7 @@ def replace_missing_by_custom_mode(train_data,test_data):
     return train_data_merged, test_data
 
 #custom_imputation
-def custom_imputation(df_train, df_test_b, df_test_2, fillna_value = 0):
+def custom_imputation_3_inputs(df_train, df_test_b, df_test_2, fillna_value = 0):
     train = df_train.fillna(fillna_value)
     test_b = df_test.fillna(fillna_value)
     test_a = df_test_2.fillna(fillna_value)
