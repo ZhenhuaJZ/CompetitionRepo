@@ -66,7 +66,8 @@ def main():
 
 		# NOTE:test min_samples_split and min_samples_leaf
 		"random_forest" : RandomForestClassifier(n_estimators = 3, criterion = "entropy", max_depth = 13,
-		 					 min_samples_split = 110, min_samples_leaf = 20, max_leaf_nodes = None, verbose = 1),
+		 					 min_samples_split = 110, min_samples_leaf = 20, max_leaf_nodes = None,
+							 verbose = 1, n_jobs = -1),
 
 		"MLP" : MLPClassifier(activation='relu', alpha=1e-05, batch_size='auto',
 						     beta_1=0.9, beta_2=0.999, early_stopping=False,
@@ -97,6 +98,10 @@ def main():
 	pu_train_data = file_merge(_train_data, unlabel_data, "date", True)
 	print(pu_train_data)
 	_new_train, _new_label = split_train_label(pu_train_data)
+
+	
+	#recall clf
+	clf = classifier["random_forest"]
 	print("test", clf)
 	new_clf = clf.fit(_new_train, _new_label)
 	del _new_train, _new_label
