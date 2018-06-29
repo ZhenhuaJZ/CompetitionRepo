@@ -45,7 +45,7 @@ classifier = {
   	"logistic_regression" : LogisticRegression(penalty = "l2", C = 1, solver = "newton-cg",
   						 class_weight = "balanced", max_iter = 300, n_jobs = -1),
 
-	"random_forest" : RandomForestClassifier(n_estimators = 60, criterion = "entropy", max_depth = 13,
+	"random_forest" : RandomForestClassifier(n_estimators = 150, criterion = "entropy", max_depth = 13,
 	 					 min_samples_split = 110, min_samples_leaf = 1, max_leaf_nodes = None),
 
 	"MLP" : MLPClassifier(activation='relu', alpha=1e-05, batch_size='auto',
@@ -56,20 +56,20 @@ classifier = {
 					     solver='lbfgs', tol=0.0001, validation_fraction=0.1)
 }
 
-clf = classifier["logistic_regression"]
+clf = classifier["random_forest"]
 
-# with open(params_path  + "params.txt", 'a') as f:
-# 	f.write(
-# 			"**"*40 + "\n"*2
-# 			+ str(clf) + "\n"*2
-# 			+"**"*40 + "\n"*2
-# 			)
+ with open(params_path  + "params.txt", 'a') as f:
+ 	f.write(
+ 			"**"*40 + "\n"*2
+ 			+ str(clf) + "\n"*2
+ 			+"**"*40 + "\n"*2
+ 			)
 
 clf = clf.fit(_train, _labels)
 probs = clf.predict_proba(_test_online)
-# joblib.dump(clf, model_path + "{}.pkl".format("model"))
+joblib.dump(clf, model_path + "{}.pkl".format("model"))
 offline_score = offline_model_performance(clf, _test_offline_feature, _test_offline_labels, params_path)
-# save_score(probs[:,1], score_path)
+save_score(probs[:,1], score_path)
 
 def main():
 
