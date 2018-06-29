@@ -25,7 +25,7 @@ def batch_data(data, split_ratio):
 
 #Pass the training dataframe or datapath and split to feature and label
 def split_train_label(data):
-    print(type(data))
+    #print(type(data))
     if isinstance(data, str):
         data = pd.read_csv(data)
         feature = data.iloc[:,3:]
@@ -66,6 +66,7 @@ def file_merge(data_1, data_2, sort_by = 0, reset_index = False):
         merged_file = merged_file.sort_values(by = sort_by)
     if reset_index:
         merged_file.reset_index()
+    del data_1, data_2
     return merged_file
 
 ############################## Replace_missing by mode #########################
