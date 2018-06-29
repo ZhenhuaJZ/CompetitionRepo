@@ -83,7 +83,7 @@ def main(method, train_path, test_path, fillna_value):
 # #########################Main data########################################
 	_train_data = pd.read_csv(train_path)
 	_test_online = pd.read_csv(test_path)
-	_train_data, _test_online = custom_imputation(_train_data, _test_online, fillna_value)
+	_train_data, _test_online, _ = custom_imputation(_train_data, _test_online, fillna_value)
 	#change -1 label to 1
 	_train_data.loc[_train_data["label"] == -1] = 1
 	_train_data = _train_data[(_train_data.label==0)|(_train_data.label==1)]
