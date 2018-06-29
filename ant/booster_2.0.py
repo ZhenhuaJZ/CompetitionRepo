@@ -36,6 +36,7 @@ _train = _train_data.iloc[:,3:]
 _labels = _train_data.iloc[:,1]
 """
 _train, _labels = split_train_label(_train_data)
+print("_train!!!!", len(_train))
 #online & offline data
 _test_online = _test_online.iloc[:,2:]
 
@@ -61,7 +62,7 @@ def positive_unlabel_learning(classifier, unlabel_data, threshold):
 def main():
 	start = time.time()
 	classifier = {
-		"XGB" : XGBClassifier(max_depth = 3, n_estimators = 4, subsample = 0.8, gamma = 0.1,
+		"XGB" : XGBClassifier(max_depth = 4, n_estimators = 3, subsample = 0.8, gamma = 0.1,
 							 scale_pos_weight =1, min_child_weight = 2,
 							 colsample_bytree = 0.8, learning_rate = 0.08, n_jobs = -1),
 
@@ -93,7 +94,7 @@ def main():
 		)
 
 	if method == "single_model" :
-		# NOTE: Original
+
 		_clf = clf.fit(_train, _labels)
 		del _train, _labels
 		probs = _clf.predict_proba(_test_online)
