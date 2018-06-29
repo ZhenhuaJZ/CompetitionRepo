@@ -117,8 +117,9 @@ def replace_missing_by_custom_mode(train_data,test_data):
 def custom_imputation(df_train, df_test, fillna_value = 0, *args):
     train = df_train.fillna(fillna_value)
     test = df_test.fillna(fillna_value)
-    for arg in args:
-        dataframe = arg.fillna(fillna_value)
+    if args != None:
+        for arg in args:
+            dataframe = arg.fillna(fillna_value)
     print("##"*50)
     print("\n# Filling missing data with <<<{}>>>".format(fillna_value))
     return train, test, dataframe
