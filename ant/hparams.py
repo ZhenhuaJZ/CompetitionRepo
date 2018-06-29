@@ -28,7 +28,7 @@ kbest = SelectKBest(chi2)
 # #####################Feature Reduction#################################
 
 # #####################Classcifiers######################################
-xgb = XGBClassifier(max_depth = 3, n_estimators = 450, subsample = 0.9,
+xgb = XGBClassifier(max_depth = 4, n_estimators = 460, subsample = 0.9,min_child_weight = 2,
 					colsample_bytree = 0.8, learning_rate = 0.1)
 
 
@@ -85,13 +85,13 @@ params_2 = [
 
 params_3 = [
           [{
-           "xgb__max_depth" : [3,4],
-           "xgb__min_child_weight" : [1, 2],
+           #"xgb__max_depth" : [3,4],
+           #"xgb__min_child_weight" : [1, 2],
           }],
 
           [{
            "xgb__gamma" : [0, 0.1],
-		   "xgb__scale_pos_weight" : [20, 30],
+		   "xgb__scale_pos_weight" : [1, 20],
 		   #"xgb__n_estimators" : [3,4,5],
           }],
 
