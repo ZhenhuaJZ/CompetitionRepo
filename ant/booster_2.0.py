@@ -100,7 +100,7 @@ def pu_method():
 
 start = time.time()
 classifier = {
-	"XGB" : XGBClassifier(max_depth = 4, n_estimators = 3, subsample = 0.8, gamma = 0.1,
+	"XGB" : XGBClassifier(max_depth = 4, n_estimators = 480, subsample = 0.8, gamma = 0.1,
 						 scale_pos_weight =1, min_child_weight = 2,
 						 colsample_bytree = 0.8, learning_rate = 0.08, n_jobs = -1),
 
@@ -141,7 +141,8 @@ print("\n# Feed validation set to the dataset")
 all_train = file_merge(_train_data, _test_offline)
 del _test_offline, _train_data
 _new_train, _new_label = split_train_label(all_train)
-del all_train, _clf
+del all_train, clf
+clf = classifier["XGB"]
 new_clf = clf.fit(_new_train, _new_label)
 probs = new_clf.predict_proba(_test_online)
 save_score(probs[:,1], score_path)
