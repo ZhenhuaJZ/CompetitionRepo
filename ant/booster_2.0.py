@@ -29,7 +29,7 @@ _train_data, _test_online, _test_a = custom_imputation(_train_data, _test_online
 #change -1 label to 1
 _train_data.loc[_train_data["label"] == -1] = 1
 #Split train and offine test
-_train_data, _test_offline =  test_train_split_by_date(_train_data, 20171010, 20171020, params_path)
+_train_data, _test_offline =  test_train_split_by_date(_train_data, 20171020, 20171031, params_path)
 #train data
 """
 _train = _train_data.iloc[:,3:]
@@ -85,7 +85,7 @@ def pu_method(clf):
 	offline_score = offline_model_performance(_clf, _test_offline_feature, _test_offline_labels, params_path)
 	unlabel_data = positive_unlabel_learning(_clf, _test_a, 0.8)
 	#Choose Black Label
-	unlabel_data = unlabel_data[unlabel_data.label == 0]
+	unlabel_data = unlabel_data[unlabel_data.label == 1]
 	#80% train data
 	pu_train_data = file_merge(_train_data, unlabel_data, "date")
 	_new_train, _new_label = split_train_label(pu_train_data)
@@ -111,9 +111,9 @@ def main():
 	  						 class_weight = "balanced", max_iter = 300, n_jobs = -1),
 
 		# NOTE:test min_samples_split and min_samples_leaf
-		"random_forest" : RandomForestClassifier(n_estimators = 4, criterion = "entropy", max_depth = 13,
-		 					 min_samples_split = 110, min_samples_leaf = 20, max_leaf_nodes = None,
-							 verbose = 1, n_jobs = -1),
+		"random_forest" : RandomForestClassifier(n_estimators = 350, criterion = "entropy", max_depth = 13,
+		 					 min_samples_split = 110, min_samples_leaf = 1, max_leaf_nodes = None,
+							 n_jobs = -1),
 
 		"MLP" : MLPClassifier(activation='relu', alpha=1e-05, batch_size='auto',
 						     beta_1=0.9, beta_2=0.999, early_stopping=False,
