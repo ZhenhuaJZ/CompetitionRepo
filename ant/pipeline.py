@@ -47,7 +47,6 @@ def custom_gridsearch(_train, _labels, pipe_clf, param):
 		plt.tick_params(axis='both', labelsize = '70')
 		plt.savefig(params_path + "{}_{}.png".format(plot_x, round(bst_score,2)))
 
-
 	except TypeError as e:
 		print("\n# Only one param in {}".format(plot_x))
 		pass
@@ -69,6 +68,12 @@ def custom_gridsearch(_train, _labels, pipe_clf, param):
 	rmtree(cachedir)
 	return clf_initialize, bst_estimator
 
+def save_score(preds):
+	answer_sheet = pd.read_csv(as_path)
+	answer_sheet = pd.DataFrame(answer_sheet)
+	answer = answer_sheet.assign(score = preds)
+	answer.to_csv(score_path + "score_day{}_time{}:{}.csv".format(now.day, now.hour, now.minute), index = None, float_format = "%.9f")
+	return print("\n# Score saved in {}".format(score_path))
 
 def main(method, _train, _labels, _test_online, _test_offline, _test_offline_labels, fillna_value):
 
@@ -100,13 +105,7 @@ def main(method, _train, _labels, _test_online, _test_offline, _test_offline_lab
 			_, best_est = custom_gridsearch(_train, _labels, best_est, param)
 	#save model, score
 	joblib.dump(best_est, model_path + "{}.pkl".format(method))
-	performance_score = offline_model_performance(best_est, _test_offline, _test_offline_labels)
-	print("\n# Best perfromance : ", performance_score)
-	with open(params_path  + "params.txt", 'a') as f:
-		f.write("**"*40 + "\n"*2
-				+"Perfromance : <<<{}>>>".format(str(performance_score)) + "\n"
-
-				+"**"*40 + "\n"*2
-				)
-	probs = best_est.predict_proba(_test_online)
-	save_score(probs[:,1], score_path)
+	offline_score = offline_model_performance(best_est, _test_offline, _test_offline_labels)
+	print("\n# Best perfromance : ", offline_score)
+	probs = best_est.predict_proba(_test_online) #selected_test
+	save_score(probs[:,1])
