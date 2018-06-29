@@ -38,7 +38,7 @@ _labels = _train_data.iloc[:,1]
 _train, _labels = split_train_label(_train_data)
 
 print(_train_data)
-del train_data
+del _train_data
 print(_train_data)
 #online & offline data
 _test_online = _test_online.iloc[:,2:]
@@ -120,15 +120,18 @@ def main():
 	offline_score = offline_model_performance(new_clf, _test_offline_feature, _test_offline_labels, params_path)
 	save_score(probs[:,1], score_path)
 
+
 	# NOTE: Original
 	"""
 	_clf = clf.fit(_train, _labels)
+	del _train, _labels
 	probs = clf.predict_proba(_test_online)
 	joblib.dump(clf, model_path + "{}.pkl".format("model"))
 	offline_score = offline_model_performance(clf, _test_offline_feature, _test_offline_labels, params_path)
 	save_score(probs[:,1], score_path)
 	"""
-	# NOTE:  Feed Val Back
+
+	# NOTE:  Feed validation Back
 	"""
 	# TODO: add xx in the future
 	_train_data = pd.read_csv(train_path)
