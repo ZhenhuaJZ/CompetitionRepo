@@ -19,6 +19,13 @@ train_path = "data/train.csv" #train_heatmap , train_mode_fill, train,
 test_path = "data/test_b.csv" #test_a_heatmap, test_a_mode_fill, test_b
 fillna_value = 0
 
+def positive_unlabel_learning(classifier, unlabel_data, threshold):
+	score = classifier.predict_proba(unlabel_data.iloc[:,2:])
+	score = pd.Series(score)
+	score.loc[score >= threshold] = 1
+	score.loc[score < threshold] = 0
+	unlabel_data.insert(1, "label", score)
+
 _train_data = pd.read_csv(train_path)
 _test_online = pd.read_csv(test_path)
 
