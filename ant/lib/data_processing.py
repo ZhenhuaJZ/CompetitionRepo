@@ -63,10 +63,10 @@ def file_merge(data_1, data_2, sort_by = "", reset_index = False):
     merged_file = pd.concat([data_1,data_2], axis = 0)
     if sort_by != "":
         merged_file = merged_file.sort_values(by = str(sort_by))
-        print("# Merged data in <{}> order".format(sort_by))
+        print("\n# Merged data in <{}> order".format(sort_by))
     if reset_index:
         merged_file.reset_index()
-        print("# Merged data and sort in <Index Order>")
+        print("\n# Merged data and sort in <Index Order>")
     del data_1, data_2
     return merged_file
 
