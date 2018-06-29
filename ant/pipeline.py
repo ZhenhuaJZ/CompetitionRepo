@@ -63,13 +63,6 @@ def custom_gridsearch(_train, _labels, pipe_clf, param, params_path):
 	rmtree(cachedir)
 	return clf_initialize, bst_estimator
 
-def save_score(preds):
-	answer_sheet = pd.read_csv(as_path)
-	answer_sheet = pd.DataFrame(answer_sheet)
-	answer = answer_sheet.assign(score = preds)
-	answer.to_csv(score_path + "score_day{}_time{}:{}.csv".format(now.day, now.hour, now.minute), index = None, float_format = "%.9f")
-	return print("\n# Score saved in {}".format(score_path))
-
 def main(method, train_path, test_path, fillna_value):
 	log_path = "log/date_{}/{}:{}_GS/".format(now.day,now.hour,now.minute)
 	params_path = log_path + "params/"
