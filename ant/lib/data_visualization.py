@@ -23,6 +23,7 @@ def hist_visualization(df_0, df_1, prefix, figure_1, figure_2):
 	col_list = df_0.columns.values.tolist()
 	for i in range(len(col_list)):
 		col_name = col_list[i]
+		print(col_name)
 		fig, axes = plt.subplots(1,2, sharey =True, sharex = True, figsize=(35,15))
 		feature_0 = df_0.loc[:,[col_name]]
 		#Statics info
