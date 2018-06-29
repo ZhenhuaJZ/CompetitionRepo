@@ -110,7 +110,7 @@ params_3 = [
 params_4 = [
           [{
            "rf__max_depth" : [17, 20, 25],
-           #"rf__n_estimators" : [200, 300, 400],
+           "rf__n_estimators" : [260,330],
           }],
 
           #[{
