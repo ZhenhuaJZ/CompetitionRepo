@@ -14,8 +14,8 @@ import operator
 from shutil import rmtree
 import warnings
 from hparams import *
-from data_processing import save_score, creat_project_dirs, test_train_split_by_date, custom_imputation
-from model_performance import offline_model_performance
+from lib.data_processing import save_score, creat_project_dirs, test_train_split_by_date, custom_imputation
+from lib.model_performance import offline_model_performance
 now = datetime.datetime.now()
 
 
