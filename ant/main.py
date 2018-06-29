@@ -9,7 +9,7 @@ test_path = "data/test_b.csv"
 # #method_2_describ = ["StandardScaler", "Tree-Base Importance Feature", "Xgboost"]
 
 ################################################################################
-method = "method_4"
+method = "method_3"
 fillna_value = 0
 
 if __name__ == '__main__':
