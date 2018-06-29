@@ -100,7 +100,7 @@ def pu_method():
 
 start = time.time()
 classifier = {
-	"XGB" : XGBClassifier(max_depth = 4, n_estimators = 480, subsample = 0.8, gamma = 0.1,
+	"XGB" : XGBClassifier(max_depth = 4, n_estimators = 3, subsample = 0.8, gamma = 0.1,
 						 scale_pos_weight =1, min_child_weight = 2,
 						 colsample_bytree = 0.8, learning_rate = 0.08, n_jobs = -1),
 
@@ -135,8 +135,7 @@ del _train, _labels
 probs = clf.predict_proba(_test_online)
 #joblib.dump(clf, model_path + "{}.pkl".format("model"))
 offline_score = offline_model_performance(clf, _test_offline_feature, _test_offline_labels, params_path)
-save_score(probs[:,1], score_path)
-"""
+#save_score(probs[:,1], score_path)
 # NOTE:  Feed validation Back
 print("\n# Feed validation set to the dataset")
 all_train = file_merge(_train_data, _test_offline)
@@ -146,7 +145,7 @@ del all_train, _clf
 new_clf = clf.fit(_new_train, _new_label)
 probs = new_clf.predict_proba(_test_online)
 save_score(probs[:,1], score_path)
-"""
+
 """
 elif method == "pu_method" :
 	# NOTE: PU learning
