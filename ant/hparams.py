@@ -84,10 +84,10 @@ params_2 = [
          ]
 
 params_3 = [
-          [{
+          #[{
            #"xgb__max_depth" : [3,4],
            #"xgb__min_child_weight" : [1, 2],
-          }],
+          #}],
 
           [{
            "xgb__gamma" : [0, 0.1],
