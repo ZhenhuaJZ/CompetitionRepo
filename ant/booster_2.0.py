@@ -37,28 +37,30 @@ _test_offline_labels = _test_offline.iloc[:,1]
 
 del _train_data, _test_offline
 
-classifier = {
-	"XGB" : XGBClassifier(max_depth = 4, n_estimators = 480, subsample = 0.8, gamma = 0.1,
-						 scale_pos_weight =20, min_child_weight = 2,
-						 colsample_bytree = 0.8, learning_rate = 0.08, n_jobs = -1),
 
-  	"logistic_regression" : LogisticRegression(penalty = "l2", C = 1, solver = "newton-cg",
-  						 class_weight = "balanced", max_iter = 300, n_jobs = -1),
-
-	"random_forest" : RandomForestClassifier(n_estimators = 150, criterion = "entropy", max_depth = 13,
-	 					 min_samples_split = 110, min_samples_leaf = 1, max_leaf_nodes = None),
-
-	"MLP" : MLPClassifier(activation='relu', alpha=1e-05, batch_size='auto',
-					     beta_1=0.9, beta_2=0.999, early_stopping=False,
-					     epsilon=1e-08, hidden_layer_sizes=(5, 2), learning_rate='constant',
-					     learning_rate_init=0.001, max_iter=200, momentum=0.9,
-					     nesterovs_momentum=True, power_t=0.5, random_state=1, shuffle=True,
-					     solver='lbfgs', tol=0.0001, validation_fraction=0.1)
-}
-
-clf = classifier["random_forest"]
 
 def main():
+
+	classifier = {
+		"XGB" : XGBClassifier(max_depth = 4, n_estimators = 480, subsample = 0.8, gamma = 0.1,
+							 scale_pos_weight =20, min_child_weight = 2,
+							 colsample_bytree = 0.8, learning_rate = 0.08, n_jobs = -1),
+
+	  	"logistic_regression" : LogisticRegression(penalty = "l2", C = 1, solver = "newton-cg",
+	  						 class_weight = "balanced", max_iter = 300, n_jobs = -1),
+
+		"random_forest" : RandomForestClassifier(n_estimators = 150, criterion = "entropy", max_depth = 13,
+		 					 min_samples_split = 110, min_samples_leaf = 1, max_leaf_nodes = None),
+
+		"MLP" : MLPClassifier(activation='relu', alpha=1e-05, batch_size='auto',
+						     beta_1=0.9, beta_2=0.999, early_stopping=False,
+						     epsilon=1e-08, hidden_layer_sizes=(5, 2), learning_rate='constant',
+						     learning_rate_init=0.001, max_iter=200, momentum=0.9,
+						     nesterovs_momentum=True, power_t=0.5, random_state=1, shuffle=True,
+						     solver='lbfgs', tol=0.0001, validation_fraction=0.1)
+	}
+
+	clf = classifier["random_forest"]
 
 	with open(params_path  + "params.txt", 'a') as f:
 		print("\n# Training clf :{}".format(clf))
