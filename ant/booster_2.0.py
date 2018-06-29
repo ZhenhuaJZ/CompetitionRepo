@@ -46,7 +46,7 @@ del _train_data, _test_offline
 
 def positive_unlabel_learning(classifier, unlabel_data, threshold):
 	score = classifier.predict_proba(unlabel_data.iloc[:,2:])
-	score = pd.Series(score)
+	score = pd.Series(score[:,1])
 	score.loc[score >= threshold] = 1
 	score.loc[score < threshold] = 0
 	unlabel_data.insert(1, "label", score)
