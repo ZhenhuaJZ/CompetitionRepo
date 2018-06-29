@@ -81,10 +81,10 @@ def main():
 
 	_train_data, _test_offline =  test_train_split_by_date(_train_data, 20171010, 20171020)
 
-	_train = _train_data.iloc[:,3:]
+	#_train = _train_data.iloc[:,3:]
 	del _train_data
 	_test_online = _test_online.iloc[:,2:]
-
+	_test_offline = _test_offline.iloc[:,3:]
 	#hist_visualization(_train, _test_online, "train_test_b", figure_1="train", figure_2="test_b")
 	hist_visualization(_test_offline, _test_online, "on-off-1010-1020", figure_1="offline", figure_2="online")
 
