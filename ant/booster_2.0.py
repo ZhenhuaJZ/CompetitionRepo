@@ -58,7 +58,7 @@ def positive_unlabel_learning(classifier, unlabel_data, threshold):
 	print("\n# After PU found <{}> potential white instances".format(len(unlabel_data[unlabel_data.label == 0])))
 	return unlabel_data
 
-def single_model(clf):
+def single_model(clf, _train, _labels, _test_offline_feature, _test_offline_labels, _test_online, params_path):
 
 	# NOTE: Original
 	_clf = clf.fit(_train, _labels)
@@ -103,7 +103,7 @@ def pu_method(clf):
 def main():
 	start = time.time()
 	classifier = {
-		"XGB" : XGBClassifier(max_depth = 4, n_estimators = 480, subsample = 0.8, gamma = 0.1,
+		"XGB" : XGBClassifier(max_depth = 4, n_estimators = 4, subsample = 0.8, gamma = 0.1,
 							 scale_pos_weight =20, min_child_weight = 2,
 							 colsample_bytree = 0.8, learning_rate = 0.08, n_jobs = -1),
 
@@ -134,7 +134,7 @@ def main():
 		)
 
 	#pu_method(clf)
-	single_model(clf)
+	single_model(clf, _train, _labels, _test_offline_feature, _test_offline_labels, _test_online, params_path)
 
 	print("\n# >>>>Duration<<<< : {}min ".format(round((time.time()-start)/60,2)))
 
