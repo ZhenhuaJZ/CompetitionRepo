@@ -148,6 +148,7 @@ def main():
 	probs = new_clf.predict_proba(_test_online)
 	save_score(probs[:,1], score_path)
 	"""
+	"""
 	elif method == "pu_method" :
 		# NOTE: PU learning
 		_clf = clf.fit(_train, _labels)
@@ -169,7 +170,7 @@ def main():
 		#with PU offline score
 		offline_score = offline_model_performance(new_clf, _test_offline_feature, _test_offline_labels, params_path)
 		save_score(probs[:,1], score_path)
-
+	"""
 
 	print("\n# >>>>Duration<<<< : {}min ".format(round((time.time()-start)/60,2)))
 
