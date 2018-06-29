@@ -28,7 +28,7 @@ kbest = SelectKBest(chi2)
 # #####################Feature Reduction#################################
 
 # #####################Classcifiers######################################
-xgb = XGBClassifier(max_depth = 4, n_estimators = 460, subsample = 0.9,min_child_weight = 2,
+xgb = XGBClassifier(max_depth = 4, n_estimators = 460, subsample = 0.9,min_child_weight = 2,gamma = 0,
 					colsample_bytree = 0.8, learning_rate = 0.1)
 rf = RandomForestClassifier(n_estimators = 150, criterion = "entropy", max_depth = 13,
 		 			min_samples_split = 110, min_samples_leaf = 1, max_leaf_nodes = None)
@@ -90,16 +90,16 @@ params_3 = [
            #"xgb__min_child_weight" : [1, 2],
           #}],
 
-          [{
-           "xgb__gamma" : [0, 0.1],
-		   "xgb__scale_pos_weight" : [1, 20],
-		   #"xgb__n_estimators" : [3,4,5],
-          }],
-
           #[{
-		  #"xgb__subsample" : [0.7, 0.6],
-		  #"xgb__colsample_bytree" : [0.9, 0.8],
+           #"xgb__gamma" : [0, 0.1],
+		   #"xgb__scale_pos_weight" : [1, 20],
+		   #"xgb__n_estimators" : [3,4,5],
           #}],
+
+          [{
+		  "xgb__subsample" : [0.7, 0.6],
+		  "xgb__colsample_bytree" : [0.9, 0.8],
+          }],
 
           #[{
 		  #"xgb__learning_rate" : [i*0.01 for i in range(6,8)],
