@@ -24,7 +24,7 @@ def batch_data(data, split_ratio):
     return batch
 
 # test_train_split_by_date split the test set by providing a range of dates in yyyymmdd
-def test_train_split_by_date(data, start_y_m_d, end_y_m_d, params_path):
+def test_train_split_by_date(data, start_y_m_d, end_y_m_d, params_path = ""):
 
     #log_path = "log/date_{}/GS_{}:{}/".format(now.day,now.hour,now.minute)
     #params_path = log_path + "params/"
@@ -33,13 +33,14 @@ def test_train_split_by_date(data, start_y_m_d, end_y_m_d, params_path):
     data = data.drop(data.index[(data["date"] >= start_y_m_d) & (data["date"] <= end_y_m_d)])
     split_data_percent = round(len(split_data)/len(data.iloc[:,1]*100),2)
     print("\n# Offline test percentiage {}%".format(split_data_percent))
-    with open(params_path  + "params.txt", 'a') as f:
-        f.write(
-        "**"*40 + "\n"*2
-        +"Split by date from <<<{}>>> to <<<{}>>>".format(str(start_y_m_d), str(end_y_m_d)) + "\n"
-        +"Occupy {}%".format(str(split_data_percent)) + "\n"*2
-        +"**"*40 + "\n"*2
-        )
+    if params_path != "" :
+        with open(params_path  + "params.txt", 'a') as f:
+            f.write(
+            "**"*40 + "\n"*2
+            +"Split by date from <<<{}>>> to <<<{}>>>".format(str(start_y_m_d), str(end_y_m_d)) + "\n"
+            +"Occupy {}%".format(str(split_data_percent)) + "\n"*2
+            +"**"*40 + "\n"*2
+            )
     return data, split_data
 
 # This function merges two dataframe and can be sort by provided string

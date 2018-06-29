@@ -14,7 +14,7 @@ def correlation_map():
 	plt.show()
 
 #path pd data frame and save_hist path
-def hist_visualization(df_0, df_1, prefix):
+def hist_visualization(df_0, df_1, prefix, figure_1, figure_2):
 	save_path = "../data/hist/" + prefix + "/"
 	if not os.path.exists(save_path):
 		os.makedirs(save_path)
@@ -64,8 +64,8 @@ def hist_visualization(df_0, df_1, prefix):
 		axes[1].annotate("q.25 : " + str(most_quantile_low_1), xy = (0.80,0.86), xycoords = 'axes fraction' , size = 20)
 		axes[0].annotate("q.75 : " + str(most_quantile_high_0), xy = (0.80,0.83), xycoords = 'axes fraction', size = 20)
 		axes[1].annotate("q.75 : " + str(most_quantile_high_1), xy = (0.80,0.83), xycoords = 'axes fraction' , size = 20)
-		axes[0].set_title(col_name + "_white", fontsize = 25)
-		axes[1].set_title(col_name + "_black", fontsize = 25)
+		axes[0].set_title(col_name + str(figure_1), fontsize = 25)
+		axes[1].set_title(col_name + str(figure_2), fontsize = 25)
 		plt.savefig(save_path + "{}.png".format(col_name))
 		plt.figure()
 
@@ -76,11 +76,13 @@ def main():
 
 	_train_data = pd.read_csv(train_path)
 	_test_online = pd.read_csv(test_path)
-	_train = _train_data.iloc[1:1000,3:]
-	_test_online = _train_data.iloc[1:1000,2:]
-	_test_offline =
+	_train = _train_data.iloc[:,3:]
+	_test_online = _test_online.iloc[:,2:]
 
-	hist_visualization(_train, _test_online, "train_test_b_compare")
+	_train, _test_offline =  test_train_split_by_date(_train, 20171010, 20171020)
+
+	hist_visualization(_train, _test_online, "train_test_b", figure_1="train", figure_2="test_b")
+	hist_visualization(_test_offline, _test_online, "test_offlien_test_b", figure_1="offline", figure_2="online")
 
 if __name__ == '__main__':
 	main()
