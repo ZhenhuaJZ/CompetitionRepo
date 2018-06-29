@@ -16,65 +16,58 @@ def correlation_map():
 #path pd data frame and save_hist path
 def hist_visualization(df_0, df_1, prefix):
 	save_path = "../data/hist/" + prefix + "/"
-	os.makedirs(save_path)
+	if not os.path.exists(save_path):
+		os.makedirs(save_path)
 	#read data and choose column
 	nbins = 80
-	col_list = df_0.columns.values.tolist()[3:]
+	col_list = df_0.columns.values.tolist()
 	for i in range(len(col_list)):
-		try:
-			col = col_list
-		except Exception as e:
-			print(col_name + " : not in the list")
-			pass
-			col_name = col[i]
-			fig, axes = plt.subplots(1,2, sharey =True, sharex = True, figsize=(35,15))
-			feature_0 = df_0.loc[:,[col_name]]
-
-
-			#Statics info
-			mean = feature_0.mean().values[0]
-			std = feature_0.std().values[0]
-			most_frq_0 = feature_0.mode().values[0][0]
-			most_mean_0 = round(mean,2)
-			most_std_0 = round(std,2)
-			most_quantile_low_0 = feature_0.quantile(q=0.25).values[0]
-			most_quantile_high_0 = feature_0.quantile(q=0.75).values[0]
-			feature_0 = (feature_0 - mean) / (std)
-			feature_0.hist(ax = axes[0], bins= nbins,  xlabelsize= 25 , ylabelsize = 25 ,density = True)
-			#feature_0.plot(ax = axes[0], color = 'green')
-			#axes[0].plot(feature_0.index, feature_0.values, 'b.')
-			#axes[0].tick_params(labelsize = 25)
-
-			feature_1 = df_1.loc[:,[col_name]]
-			mean = feature_1.mean().values[0]
-			std = feature_1.std().values[0]
-			most_frq_1 = feature_1.mode().values[0][0]
-			most_mean_1 = round(feature_1.mean().values[0],2)
-			most_std_1 = round(feature_1.std().values[0],2)
-			most_quantile_low_1 = feature_1.quantile(q=0.25).values[0]
-			most_quantile_high_1 = feature_1.quantile(q=0.75).values[0]
-			feature_1 = (feature_1 - mean) / (std)
-			feature_1.hist(ax = axes[1], bins= nbins, xlabelsize = 25 , ylabelsize = 25, density = True, color = 'r')
-			#feature_1.plot(ax = axes[1], color = 'r')
-			#axes[1].plot(feature_1.index, feature_1.values, 'r.')
-			#axes[1].tick_params(labelsize = 25)
-			#axes[1].hist(feature_1.values, bins = nbins, density =True, color = 'r')
-			#plt.legend([axes[0], axes[1]], ["white, "black"], loc = "upper right")
-			#Plot annotate
-			axes[0].annotate("mode : " + str(most_frq_0), xy = (0.80,0.95), xycoords = 'axes fraction', size = 20)
-			axes[1].annotate("mode : " + str(most_frq_1), xy = (0.80,0.95), xycoords = 'axes fraction' , size = 20)
-			axes[0].annotate("mean : " + str(most_mean_0), xy = (0.80,0.92), xycoords = 'axes fraction', size = 20)
-			axes[1].annotate("mean : " + str(most_mean_1), xy = (0.80,0.92), xycoords = 'axes fraction' , size = 20)
-			axes[0].annotate("std : " + str(most_std_0), xy = (0.80,0.89), xycoords = 'axes fraction', size = 20)
-			axes[1].annotate("std : " + str(most_std_1), xy = (0.80,0.89), xycoords = 'axes fraction' , size = 20)
-			axes[0].annotate("q.25 : " + str(most_quantile_low_0), xy = (0.80,0.86), xycoords = 'axes fraction', size = 20)
-			axes[1].annotate("q.25 : " + str(most_quantile_low_1), xy = (0.80,0.86), xycoords = 'axes fraction' , size = 20)
-			axes[0].annotate("q.75 : " + str(most_quantile_high_0), xy = (0.80,0.83), xycoords = 'axes fraction', size = 20)
-			axes[1].annotate("q.75 : " + str(most_quantile_high_1), xy = (0.80,0.83), xycoords = 'axes fraction' , size = 20)
-			axes[0].set_title(col_name + "_white", fontsize = 25)
-			axes[1].set_title(col_name + "_black", fontsize = 25)
-			plt.savefig(save_path + "{}.png".format(col_name))
-			plt.figure()
+		col_name = col_list[i]
+		fig, axes = plt.subplots(1,2, sharey =True, sharex = True, figsize=(35,15))
+		feature_0 = df_0.loc[:,[col_name]]
+		#Statics info
+		mean = feature_0.mean().values[0]
+		std = feature_0.std().values[0]
+		most_frq_0 = feature_0.mode().values[0][0]
+		most_mean_0 = round(mean,2)
+		most_std_0 = round(std,2)
+		most_quantile_low_0 = feature_0.quantile(q=0.25).values[0]
+		most_quantile_high_0 = feature_0.quantile(q=0.75).values[0]
+		feature_0 = (feature_0 - mean) / (std)
+		feature_0.hist(ax = axes[0], bins= nbins,  xlabelsize= 25 , ylabelsize = 25 ,density = True)
+		#feature_0.plot(ax = axes[0], color = 'green')
+		#axes[0].plot(feature_0.index, feature_0.values, 'b.')
+		#axes[0].tick_params(labelsize = 25)
+		feature_1 = df_1.loc[:,[col_name]]
+		mean = feature_1.mean().values[0]
+		std = feature_1.std().values[0]
+		most_frq_1 = feature_1.mode().values[0][0]
+		most_mean_1 = round(feature_1.mean().values[0],2)
+		most_std_1 = round(feature_1.std().values[0],2)
+		most_quantile_low_1 = feature_1.quantile(q=0.25).values[0]
+		most_quantile_high_1 = feature_1.quantile(q=0.75).values[0]
+		feature_1 = (feature_1 - mean) / (std)
+		feature_1.hist(ax = axes[1], bins= nbins, xlabelsize = 25 , ylabelsize = 25, density = True, color = 'r')
+		#feature_1.plot(ax = axes[1], color = 'r')
+		#axes[1].plot(feature_1.index, feature_1.values, 'r.')
+		#axes[1].tick_params(labelsize = 25)
+		#axes[1].hist(feature_1.values, bins = nbins, density =True, color = 'r')
+		#plt.legend([axes[0], axes[1]], ["white, "black"], loc = "upper right")
+		#Plot annotate
+		axes[0].annotate("mode : " + str(most_frq_0), xy = (0.80,0.95), xycoords = 'axes fraction', size = 20)
+		axes[1].annotate("mode : " + str(most_frq_1), xy = (0.80,0.95), xycoords = 'axes fraction' , size = 20)
+		axes[0].annotate("mean : " + str(most_mean_0), xy = (0.80,0.92), xycoords = 'axes fraction', size = 20)
+		axes[1].annotate("mean : " + str(most_mean_1), xy = (0.80,0.92), xycoords = 'axes fraction' , size = 20)
+		axes[0].annotate("std : " + str(most_std_0), xy = (0.80,0.89), xycoords = 'axes fraction', size = 20)
+		axes[1].annotate("std : " + str(most_std_1), xy = (0.80,0.89), xycoords = 'axes fraction' , size = 20)
+		axes[0].annotate("q.25 : " + str(most_quantile_low_0), xy = (0.80,0.86), xycoords = 'axes fraction', size = 20)
+		axes[1].annotate("q.25 : " + str(most_quantile_low_1), xy = (0.80,0.86), xycoords = 'axes fraction' , size = 20)
+		axes[0].annotate("q.75 : " + str(most_quantile_high_0), xy = (0.80,0.83), xycoords = 'axes fraction', size = 20)
+		axes[1].annotate("q.75 : " + str(most_quantile_high_1), xy = (0.80,0.83), xycoords = 'axes fraction' , size = 20)
+		axes[0].set_title(col_name + "_white", fontsize = 25)
+		axes[1].set_title(col_name + "_black", fontsize = 25)
+		plt.savefig(save_path + "{}.png".format(col_name))
+		plt.figure()
 
 def main():
 
@@ -85,7 +78,7 @@ def main():
 	_test_online = pd.read_csv(test_path)
 	_train = _train_data.iloc[1:1000,3:]
 	_test_online = _train_data.iloc[1:1000,2:]
-	#_test_offline =
+	_test_offline =
 
 	hist_visualization(_train, _test_online, "train_test_b_compare")
 
