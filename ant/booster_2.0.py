@@ -108,10 +108,10 @@ def main():
 	new_clf = clf.fit(_new_train, _new_label)
 	del _new_train, _new_label
 	probs = new_clf.predict_proba(_test_online)
-	save_score(probs[:,1], score_path)
 	joblib.dump(clf, model_path + "{}.pkl".format("model"))
 	#with PU offline score
 	offline_score = offline_model_performance(new_clf, _test_offline_feature, _test_offline_labels, params_path)
+	save_score(probs[:,1], score_path)
 
 	# NOTE: Original
 	"""
