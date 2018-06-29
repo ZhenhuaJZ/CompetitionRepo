@@ -1,5 +1,8 @@
 import pandas as pd
 from xgboost import XGBClassifier
+from sklearn.linear_model import LogisticRegression
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.neural_network import MLPClassifier
 from sklearn.externals import joblib
 from data_processing import save_score, test_train_split_by_date, creat_project_dirs, custom_imputation
 from model_performance import offline_model_performance
@@ -32,22 +35,41 @@ _test_online = _test_online.iloc[:,2:]
 _test_offline_feature = _test_offline.iloc[:,3:]
 _test_offline_labels = _test_offline.iloc[:,1]
 
-xgb = XGBClassifier(max_depth = 4, n_estimators = 480, subsample = 0.8, gamma = 0.1,
-					scale_pos_weight =20, min_child_weight = 2,
-					colsample_bytree = 0.8, learning_rate = 0.08, n_jobs = -1)
+del _train_data, _test_offline
 
-with open(params_path  + "params.txt", 'a') as f:
-	f.write(
-			"**"*40 + "\n"*2
-			+ str(xgb) + "\n"*2
-			+"**"*40 + "\n"*2
-			)
+classifier = {
+	"XGB" : XGBClassifier(max_depth = 4, n_estimators = 480, subsample = 0.8, gamma = 0.1,
+						 scale_pos_weight =20, min_child_weight = 2,
+						 colsample_bytree = 0.8, learning_rate = 0.08, n_jobs = -1),
 
-xgb = xgb.fit(_train, _labels)
-probs = xgb.predict_proba(_test_online)
-joblib.dump(xgb, model_path + "{}.pkl".format("model"))
-offline_score = offline_model_performance(xgb, _test_offline_feature, _test_offline_labels, params_path)
-save_score(probs[:,1], score_path)
+  	"logistic_regression" : LogisticRegression(penalty = "l2", C = 1, solver = "newton-cg",
+  						 class_weight = "balanced", max_iter = 300, n_jobs = -1),
+
+	"random_forest" : RandomForestClassifier(n_estimators = 60, criterion = "entropy", max_depth = 13,
+	 					 min_samples_split = 110, min_samples_leaf = 1, max_leaf_nodes = None),
+
+	"MLP" : MLPClassifier(activation='relu', alpha=1e-05, batch_size='auto',
+					     beta_1=0.9, beta_2=0.999, early_stopping=False,
+					     epsilon=1e-08, hidden_layer_sizes=(5, 2), learning_rate='constant',
+					     learning_rate_init=0.001, max_iter=200, momentum=0.9,
+					     nesterovs_momentum=True, power_t=0.5, random_state=1, shuffle=True,
+					     solver='lbfgs', tol=0.0001, validation_fraction=0.1)
+}
+
+clf = classifier["logistic_regression"]
+
+# with open(params_path  + "params.txt", 'a') as f:
+# 	f.write(
+# 			"**"*40 + "\n"*2
+# 			+ str(clf) + "\n"*2
+# 			+"**"*40 + "\n"*2
+# 			)
+
+clf = clf.fit(_train, _labels)
+probs = clf.predict_proba(_test_online)
+# joblib.dump(clf, model_path + "{}.pkl".format("model"))
+offline_score = offline_model_performance(clf, _test_offline_feature, _test_offline_labels, params_path)
+# save_score(probs[:,1], score_path)
 
 def main():
 
