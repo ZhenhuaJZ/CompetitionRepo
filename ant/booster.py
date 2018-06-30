@@ -108,7 +108,9 @@ def main():
         probs = clf.predict_proba(_test_online)
         offline_score = offline_model_performance(clf, _test_offline_feature, _test_offline_labels, params_path)
         clear_mermory(_test_offline_feature, _test_offline_labels)
+        save_score(probs[:,1], score_path)
         # NOTE:  Feed validation Back
+        """
         print("\n# Feed validation set to the dataset")
         all_train = file_merge(_train_data, _test_offline, "date")
         clear_mermory(_test_offline, _train_data)
@@ -119,7 +121,7 @@ def main():
         clear_mermory(_new_train, _new_label)
         probs = new_clf.predict_proba(_test_online)
         save_score(probs[:,1], score_path)
-
+        """
     elif method == "pu_method" :
         # NOTE: PU learning
         _clf = clf.fit(_train, _labels)
