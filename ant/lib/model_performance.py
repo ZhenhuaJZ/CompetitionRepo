@@ -197,8 +197,8 @@ def get_tpr_from_fpr(fpr_array, tpr_array, target):
             tpr_index = tmp_index - 1
         return tpr_array[tpr_index]
 
-def offline_model_performance_2(pred, labels, params_path):
-    fpr, tpr, _ = roc_curve(labels, pred)
+def offline_model_performance_2(estimator, validation_feature, validation_label, params_path):
+    fpr, tpr, _ = roc_curve(validation_label, estimator.predict_proba(validation_feature)[:,1], pos_label=1)
     tpr1 = get_tpr_from_fpr(fpr, tpr, 0.001)
     tpr2 = get_tpr_from_fpr(fpr, tpr, 0.005)
     tpr3 = get_tpr_from_fpr(fpr, tpr, 0.01)
