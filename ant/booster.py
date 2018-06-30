@@ -31,7 +31,6 @@ def positive_unlabel_learning(classifier, unlabel_data, threshold):
 	print("\n# After PU found <{}> potential black instances".format(len(unlabel_data[unlabel_data.label == 1])))
 	print("\n# After PU found <{}> potential white instances".format(len(unlabel_data[unlabel_data.label == 0])))
 	return unlabel_data
-
 """
 def pu_method():
 	# NOTE: PU learning
@@ -72,7 +71,7 @@ def main():
 
     start = time.time()
     classifier = {
-    	"XGB" : XGBClassifier(max_depth = 4, n_estimators = 480, subsample = 0.8, gamma = 0.1,
+    	"XGB" : XGBClassifier(max_depth = 4, n_estimators = 4, subsample = 0.8, gamma = 0.1,
                                 min_child_weight = 2,
     						 colsample_bytree = 0.8, learning_rate = 0.08, n_jobs = -1),
 
