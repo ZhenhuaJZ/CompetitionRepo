@@ -203,7 +203,7 @@ def main():
             clear_mermory(_train, _labels)
             probs = clf.predict_proba(_test_online)
             offline_score_1 = offline_model_performance(clf, _test_offline_feature, _test_offline_labels, params_path)
-            offline_score_2 = offline_model_performance_2(probs[:,1], _test_offline_labels, params_path)
+            offline_score_2 = offline_model_performance_2(clf, _test_offline_feature, _test_offline_labels, params_path)
             if offline_score_2 > offline_score_1:
                 print("Goog performance_1")
             else:
