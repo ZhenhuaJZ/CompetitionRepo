@@ -61,9 +61,9 @@ def main():
             					     solver='lbfgs', tol=0.0001, validation_fraction=0.1)
                         }
 
-            clf = classifier["random_forest"]
+            clf = classifier["logistic_regression"]
             now = datetime.datetime.now()
-            log_path = "log/date_{}/Tuning_random_forest/{}:{}_SM/".format(now.day,now.hour,now.minute)
+            log_path = "log/date_{}/Tuning_logistic_regression/{}:{}_SM/".format(now.day,now.hour,now.minute)
             params_path = log_path + "params/"
             score_path = log_path + "score/"
             model_path = log_path + "model/"
