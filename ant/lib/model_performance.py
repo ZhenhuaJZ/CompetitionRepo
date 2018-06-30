@@ -171,7 +171,7 @@ def offline_model_performance(estimator, validation_feature, validation_label, p
     with open(params_path  + "params.txt", 'a') as f:
         f.write(
         "**"*40 + "\n"*2
-        +"Perfromance ROC : <<<{:9f}>>>".format(str(model_performance)) + "\n"
+        +"Perfromance ROC : <<<{}>>>".format(str(model_performance)) + "\n"
         +"fpr1 : {} ----> to tpr1: {}".format(str(0.001), str(tpr1)) + "\n"
         +"fpr2 : {} ----> to tpr2: {}".format(str(0.005), str(tpr2)) + "\n"
         +"fpr3 : {} ----> to tpr3: {}".format(str(0.01), str(tpr3)) + "\n"
