@@ -10,9 +10,9 @@ def offline_model_performance(estimator, validation_feature, validation_label, p
     #params_path = log_path + "params/"
     # Obtain array of false positive rate and true positive rate
     fpr, tpr, thresholds = roc_curve(validation_label, estimator.predict_proba(validation_feature)[:,1])
-    print("fpr list", fpr)
+    print("fpr list", fpr[:20])
 
-    print("tpr list", tpr)
+    print("tpr list", tpr[:20])
     # Search for tpr at fpr = 0.001,0.005,0.01
     fpr1 = 99
     fpr2 = 99
