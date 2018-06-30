@@ -40,6 +40,7 @@ test_path = "data/test_b.csv" #test_a_heatmap, test_a_mode_fill, test_b
 test_a_path = "data/test_a.csv"
 fillna_value = 0
 
+
 _train_data = pd.read_csv(train_path)
 _test_online = pd.read_csv(test_path)
 _test_a = pd.read_csv(test_a_path)
@@ -127,7 +128,7 @@ def main():
     }
 
     clf = classifier["XGB"]
-
+    method = "single_model"
     with open(params_path  + "params.txt", 'a') as f:
     	print("\n# Training clf :{}".format(clf))
     	f.write(
@@ -135,7 +136,7 @@ def main():
     	+ str(clf) + "\n"*2
     	+"**"*40 + "\n"*2
     	)
-    if meothod = "single_model":
+    if meothod == "single_model":
         clf = clf.fit(_train, _labels)
         del _train, _labels
         probs = clf.predict_proba(_test_online)
