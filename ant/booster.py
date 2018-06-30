@@ -34,14 +34,14 @@ def positive_unlabel_learning(classifier, unlabel_data, threshold):
 def main():
     # #####################################################################
     #Tunning params
-    tunning = False
+    tunning = True
     method = "single_model"
     if tunning:
-        for p in range(400,500,10):
+        for p in range(1,40,5):
 
             classifier = {
 
-            	"XGB" : XGBClassifier(max_depth = 4, n_estimators = p, subsample = 0.8, gamma = 0.1,
+            	"XGB" : XGBClassifier(max_depth = 4, n_estimators = 480, subsample = 0.8, gamma = 0.1,
                                         min_child_weight = 1, scale_pos_weight = 1,
             						 colsample_bytree = 0.8, learning_rate = 0.07, n_jobs = -1),
 
@@ -63,7 +63,7 @@ def main():
 
             clf = classifier["XGB"]
             now = datetime.datetime.now()
-            log_path = "log/date_{}/Tuning_XGB_n_estimators/{}:{}_SM/".format(now.day,now.hour,now.minute)
+            log_path = "log/date_{}/Tuning_XGB_weight/{}:{}_SM/".format(now.day,now.hour,now.minute)
             params_path = log_path + "params/"
             score_path = log_path + "score/"
             model_path = log_path + "model/"
