@@ -1,4 +1,4 @@
-import os
+fpr_2import os
 import pandas as pd
 from sklearn.model_selection import cross_val_score
 from sklearn.metrics import roc_curve
@@ -21,14 +21,32 @@ def offline_model_performance(estimator, validation_feature, validation_label, p
             tpr_1 = tpr[i]
             if fpr[i] - fpr[i-1] > fpr[i] - fpr[i+1]:
                 fpr_2 = fpr[i+1]
-
-
+                tpr_2 = tpr[i+1]
+            else:
+                fpr_2 = fpr[i-1]
+                tpr_2 = tpr[i-1]
+            fpr1 = (((tpr_2-tpr_1)/(fpr_2-fpr_1))*(0.001-fpr_1))+tpr_1
         elif fpr[i] >= 0.005 and fpr[i] <= fpr2:
-            fpr2 = fpr[i]
-            tpr2 = tpr[i]
+            fpr_1 = fpr[i]
+            tpr_1 = tpr[i]
+            if fpr[i] - fpr[i-1] > fpr[i] - fpr[i+1]:
+                fpr_2 = fpr[i+1]
+                tpr_2 = tpr[i+1]
+            else:
+                fpr_2 = fpr[i-1]
+                tpr_2 = tpr[i-1]
+            fpr2 = (((tpr_2-tpr_1)/(fpr_2-fpr_1))*(0.005-fpr_1))+tpr_1
         elif fpr[i] >= 0.01 and fpr[i] <= fpr3:
-            fpr3 = fpr[i]
-            tpr3 = tpr[i]
+            fpr_1 = fpr[i]
+            tpr_1 = tpr[i]
+            if fpr[i] - fpr[i-1] > fpr[i] - fpr[i+1]:
+                fpr_2 = fpr[i+1]
+                tpr_2 = tpr[i+1]
+            else:
+                fpr_2 = fpr[i-1]
+                tpr_2 = tpr[i-1]
+            fpr3 = (((tpr_2-tpr_1)/(fpr_2-fpr_1))*(0.001-fpr_1))+tpr_1
+
     model_performance = 0.4 * tpr1 + 0.3 * tpr2 + 0.3 * tpr3
     print("\n# Offline model performance ROC : {}".format(model_performance))
     with open(params_path  + "params.txt", 'a') as f:
