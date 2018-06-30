@@ -34,7 +34,7 @@ def positive_unlabel_learning(classifier, unlabel_data, threshold):
 def main():
     # #####################################################################
     #Tunning params
-    tunning = True
+    tunning = False
     method = "single_model"
     if tunning:
         for p in range(400,500,10):
@@ -146,7 +146,7 @@ def main():
 
         classifier = {
 
-            "XGB" : XGBClassifier(max_depth = 4, n_estimators = 480, subsample = 0.9, gamma = 0.1,
+            "XGB" : XGBClassifier(max_depth = 4, n_estimators = 480, subsample = 0.8, gamma = 0.1,
                                     min_child_weight = 1, scale_pos_weight = 1,
                                  colsample_bytree = 0.8, learning_rate = 0.07, n_jobs = -1),
 
@@ -182,7 +182,7 @@ def main():
         #change -1 label to 1
         _train_data.loc[_train_data["label"] == -1] = 1
         #Split train and offine test
-        _train_data, _test_offline =  test_train_split_by_date(_train_data, 20171020, 20171031, params_path)
+        _train_data, _test_offline =  test_train_split_by_date(_train_data, 20171025, 20171105, params_path)
         _train, _labels = split_train_label(_train_data)
         #online & offline data
         _test_online = _test_online.iloc[:,2:]
