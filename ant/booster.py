@@ -32,6 +32,7 @@ def positive_unlabel_learning(classifier, unlabel_data, threshold):
 
 def main():
     # #####################################################################
+    tunning = True
     if tunning:
         #Tunning params
         clf = classifier["XGB"]
