@@ -19,26 +19,7 @@ train_path = "data/train.csv" #train_heatmap , train_mode_fill, train,
 test_path = "data/test_b.csv" #test_a_heatmap, test_a_mode_fill, test_b
 test_a_path = "data/test_a.csv"
 fillna_value = 0
-"""
-_train_data = pd.read_csv(train_path)
-_test_online = pd.read_csv(test_path)
-_test_a = pd.read_csv(test_a_path)
 
-_train_data, _test_online, _test_a = custom_imputation_3_inputs(_train_data, _test_online, _test_a, fillna_value)
-#change -1 label to 1
-_train_data.loc[_train_data["label"] == -1] = 1
-#Split train and offine test
-_train_data, _test_offline =  test_train_split_by_date(_train_data, 20171020, 20171031, params_path)
-#train data
-_train, _labels = split_train_label(_train_data)
-#_train = _train_data.iloc[:,3:]
-#_labels = _train_data.iloc[:,1]
-#online & offline data
-_test_online = _test_online.iloc[:,2:]
-_test_offline_feature, _test_offline_labels = split_train_label(_test_offline)
-#_test_offline_feature = _test_offline.iloc[:,3:]
-#_test_offline_labels = _test_offline.iloc[:,1]
-"""
 #get rid off del train data not because the data sort after PU wanna to save coding
 #and release memory after
 def positive_unlabel_learning(classifier, unlabel_data, threshold):
@@ -51,24 +32,6 @@ def positive_unlabel_learning(classifier, unlabel_data, threshold):
 	print("\n# After PU found <{}> potential white instances".format(len(unlabel_data[unlabel_data.label == 0])))
 	return unlabel_data
 
-"""
-def single_model():
-	_clf = clf.fit(_train, _labels)
-	#del _train, _labels
-	probs = _clf.predict_proba(_test_online)
-	#joblib.dump(clf, model_path + "{}.pkl".format("model"))
-	offline_score = offline_model_performance(_clf, _test_offline_feature, _test_offline_labels, params_path)
-	save_score(probs[:,1], score_path)
-	# NOTE:  Feed validation Back
-	print("\n# Feed validation set to the dataset")
-	all_train = file_merge(_train_data, _test_offline)
-	del _test_offline, _train_data
-	_new_train, _new_label = split_train_label(all_train)
-	del all_train, _clf
-	new_clf = clf.fit(_new_train, _new_label)
-	probs = new_clf.predict_proba(_test_online)
-	save_score(probs[:,1], score_path)
-"""
 """
 def pu_method():
 	# NOTE: PU learning
@@ -102,7 +65,6 @@ def main():
     _train_data.loc[_train_data["label"] == -1] = 1
     #Split train and offine test
     _train_data, _test_offline =  test_train_split_by_date(_train_data, 20171020, 20171031, params_path)
-    #train data
     _train, _labels = split_train_label(_train_data)
     #online & offline data
     _test_online = _test_online.iloc[:,2:]
@@ -146,7 +108,7 @@ def main():
         clear_mermory(_train, _labels)
         probs = clf.predict_proba(_test_online)
         offline_score = offline_model_performance(clf, _test_offline_feature, _test_offline_labels, params_path)
-
+        clear_mermory(_test_offline_feature, _test_offline_labels)
         # NOTE:  Feed validation Back
         print("\n# Feed validation set to the dataset")
         all_train = file_merge(_train_data, _test_offline, "date")
@@ -155,13 +117,14 @@ def main():
         clear_mermory(all_train)
         #joblib.dump(clf, model_path + "{}.pkl".format("model"))
         new_clf = clf.fit(_new_train, _new_label)
+        clear_mermory(_new_train, _new_label)
         probs = new_clf.predict_proba(_test_online)
         save_score(probs[:,1], score_path)
-
 
     elif method == "pu_method" :
         # NOTE: PU learning
         _clf = clf.fit(_train, _labels)
+        clear_mermory(_train, _labels)
         #without PU offline score
         offline_score = offline_model_performance(_clf, _test_offline_feature, _test_offline_labels, params_path)
         unlabel_data = positive_unlabel_learning(_clf, _test_a, 0.7)
@@ -178,7 +141,6 @@ def main():
         #with PU offline score
         offline_score = offline_model_performance(new_clf, _test_offline_feature, _test_offline_labels, params_path)
         save_score(probs[:,1], score_path)
-
 
     print("\n# >>>>Duration<<<< : {}min ".format(round((time.time()-start)/60,2)))
 
