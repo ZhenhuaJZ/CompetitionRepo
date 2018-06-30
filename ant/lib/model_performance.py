@@ -22,39 +22,51 @@ def offline_model_performance(estimator, validation_feature, validation_label, p
         if fpr[i] >= 0.001 and fpr[i] <= fpr1:
             fpr_1 = fpr[i]
             tpr_1 = tpr[i]
-            if fpr[i] - fpr[i-1] > fpr[i] - fpr[i+1]:
+            diff_n_1 = abs(fpr[i] - fpr[i-1])
+            diff_p_1 = abs(fpr[i] - fpr[i+1])
+            if (diff_p_1 < diff_n_1) and (diff_p_1 != 0):
                 fpr_2 = fpr[i+1]
                 tpr_2 = tpr[i+1]
-            else:
+            else if (diff_n_1 < diff_p_1) and (diff_n_1 != 0):
                 fpr_2 = fpr[i-1]
                 tpr_2 = tpr[i-1]
+            else:
+                continue
             fpr1 = fpr_1
             print("tpr at 0.001 selected tpr_1:{}, fpr_1:{}, fpr_2:{}, tpr_2:{}".format(tpr_1, fpr_1, fpr_2, tpr_2))
-            tpr1 = (((tpr_2-tpr_1)/(fpr_2-fpr_1))*(0.001-fpr_1))+tpr_1
+            tpr1 = (((tpr_2-tpr_1)/(fpr_2-fpr_1))*(float(0.001)-fpr_1))+tpr_1
         elif fpr[i] >= 0.005 and fpr[i] <= fpr2:
             fpr_1 = fpr[i]
             tpr_1 = tpr[i]
-            if fpr[i] - fpr[i-1] > fpr[i] - fpr[i+1]:
+            diff_n_1 = abs(fpr[i] - fpr[i-1])
+            diff_p_1 = abs(fpr[i] - fpr[i+1])
+            if (diff_p_1 < diff_n_1) and (diff_p_1 != 0):
                 fpr_2 = fpr[i+1]
                 tpr_2 = tpr[i+1]
-            else:
+            else if (diff_n_1 < diff_p_1) and (diff_n_1 != 0):
                 fpr_2 = fpr[i-1]
                 tpr_2 = tpr[i-1]
+            else:
+                continue
             fpr2 = fpr_1
             print("tpr at 0.005 selected tpr_1:{}, fpr_1:{}, fpr_2:{}, tpr_2:{}".format(tpr_1, fpr_1, fpr_2, tpr_2))
-            tpr2 = (((tpr_2-tpr_1)/(fpr_2-fpr_1))*(0.005-fpr_1))+tpr_1
+            tpr2 = (((tpr_2-tpr_1)/(fpr_2-fpr_1))*(float(0.005)-fpr_1))+tpr_1
         elif fpr[i] >= 0.01 and fpr[i] <= fpr3:
             fpr_1 = fpr[i]
             tpr_1 = tpr[i]
-            if fpr[i] - fpr[i-1] > fpr[i] - fpr[i+1]:
+            diff_n_1 = abs(fpr[i] - fpr[i-1])
+            diff_p_1 = abs(fpr[i] - fpr[i+1])
+            if (diff_p_1 < diff_n_1) and (diff_p_1 != 0):
                 fpr_2 = fpr[i+1]
                 tpr_2 = tpr[i+1]
-            else:
+            else if (diff_n_1 < diff_p_1) and (diff_n_1 != 0):
                 fpr_2 = fpr[i-1]
                 tpr_2 = tpr[i-1]
+            else:
+                continue
             fpr3 = fpr_1
             print("tpr at 0.01 selected tpr_1:{}, fpr_1:{}, fpr_2:{}, tpr_2:{}".format(tpr_1, fpr_1, fpr_2, tpr_2))
-            tpr3 = (((tpr_2-tpr_1)/(fpr_2-fpr_1))*(0.01-fpr_1))+tpr_1
+            tpr3 = (((tpr_2-tpr_1)/(fpr_2-fpr_1))*(float(0.01)-fpr_1))+tpr_1
     model_performance = 0.4 * tpr1 + 0.3 * tpr2 + 0.3 * tpr3
     print("\n# Offline model performance ROC : {}".format(model_performance))
     print("\n# Perfromance ROC : <<<{}>>>".format(str(model_performance)) + "\n"
