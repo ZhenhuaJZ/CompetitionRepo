@@ -23,6 +23,20 @@ def batch_data(data, split_ratio):
         batch["batch_{}".format(i)] = data.loc[(i*size_per_batch):(size_per_batch*(i+1))]
     return batch
 
+#Pass the training dataframe or datapath and split to feature and label
+def split_train_label(data, cache = True):
+    #print(type(data))
+    if isinstance(data, str):
+        data = pd.read_csv(data)
+        feature = data.iloc[:,3:]
+        label = data.iloc[:,1]
+    elif isinstance(data, pd.core.frame.DataFrame):
+        feature = data.iloc[:,3:]
+        label = data.iloc[:,1]
+    if cache:
+        del data
+    return feature, label
+
 # test_train_split_by_date split the test set by providing a range of dates in yyyymmdd
 def test_train_split_by_date(data, start_y_m_d, end_y_m_d, params_path = ""):
 
@@ -45,12 +59,15 @@ def test_train_split_by_date(data, start_y_m_d, end_y_m_d, params_path = ""):
     return data, split_data
 
 # This function merges two dataframe and can be sort by provided string
-def file_merge(data_1, data_2, sort_by = 0, reset_index = False):
+def file_merge(data_1, data_2, sort_by = "", reset_index = False):
     merged_file = pd.concat([data_1,data_2], axis = 0)
-    if sort_by != 0:
-        merged_file = merged_file.sort_values(by = sort_by)
+    if sort_by != "":
+        merged_file = merged_file.sort_values(by = str(sort_by))
+        print("\n# Merged data in <{}> order".format(sort_by))
     if reset_index:
         merged_file.reset_index()
+        print("\n# Merged data and sort in <Index Order>")
+    del data_1, data_2
     return merged_file
 
 ############################## Replace_missing by mode #########################
@@ -97,12 +114,21 @@ def replace_missing_by_custom_mode(train_data,test_data):
     return train_data_merged, test_data
 
 #custom_imputation
+def custom_imputation_3_inputs(df_train, df_test_b, df_test_a, fillna_value = 0):
+    train = df_train.fillna(fillna_value)
+    test_b = df_test_b.fillna(fillna_value)
+    test_a = df_test_a.fillna(fillna_value)
+    print("##"*50)
+    print("\n# Filling missing data with <<<{}>>>".format(fillna_value))
+    return train, test_b, test_a
+
+#custom_imputation
 def custom_imputation(df_train, df_test, fillna_value = 0):
-	train = df_train.fillna(fillna_value)
-	test = df_test.fillna(fillna_value)
-	print("##"*50)
-	print("\n# Filling missing data with <<<{}>>>".format(fillna_value))
-	return train, test
+    train = df_train.fillna(fillna_value)
+    test = df_test.fillna(fillna_value)
+    print("##"*50)
+    print("\n# Filling missing data with <<<{}>>>".format(fillna_value))
+    return train, test
 # #############################Save score#######################################
 #pass preds and save score file path
 def save_score(preds, score_path):

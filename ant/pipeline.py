@@ -22,7 +22,7 @@ def custom_gridsearch(_train, _labels, pipe_clf, param, params_path):
 	start = time.time()
 	print("\n{}\n# Tuning hyper-parameters for {}\n{}\n".format(str("##"*50),param,str("##"*50)))
 	clf = GridSearchCV(pipe_clf, param_grid  = param, scoring = 'roc_auc',
-	                   verbose = 1, n_jobs = 1, cv = 5)
+	                   verbose = 1, n_jobs = 2, cv = 5)
 
 	clf.fit(_train, _labels)
 	bst_params = clf.best_params_
@@ -49,6 +49,7 @@ def custom_gridsearch(_train, _labels, pipe_clf, param, params_path):
 	with open(params_path  + "params.txt", 'a') as f:
 		f.write(
 				"**"*40 + "\n"*2
+				+"Tuning hyper-parameters for {}".format(param) + "\n"*2
 				+ str(bst_estimator.steps[-2:]) + "\n"*2
 				+ "Tuned Params : " + str(bst_params) + "\n"*2
 				+ "Best ROC : " + str(bst_score) + "\n"*2
@@ -62,13 +63,6 @@ def custom_gridsearch(_train, _labels, pipe_clf, param, params_path):
 
 	rmtree(cachedir)
 	return clf_initialize, bst_estimator
-
-def save_score(preds):
-	answer_sheet = pd.read_csv(as_path)
-	answer_sheet = pd.DataFrame(answer_sheet)
-	answer = answer_sheet.assign(score = preds)
-	answer.to_csv(score_path + "score_day{}_time{}:{}.csv".format(now.day, now.hour, now.minute), index = None, float_format = "%.9f")
-	return print("\n# Score saved in {}".format(score_path))
 
 def main(method, train_path, test_path, fillna_value):
 	log_path = "log/date_{}/{}:{}_GS/".format(now.day,now.hour,now.minute)
