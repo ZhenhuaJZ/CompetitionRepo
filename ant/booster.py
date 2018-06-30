@@ -37,13 +37,13 @@ def main():
     tunning = True
     method = "single_model"
     if tunning:
-        for p in range(1,3,1):
+        for p in range(6,10,1):
 
             classifier = {
 
-            	"XGB" : XGBClassifier(max_depth = 4, n_estimators = 480, subsample = 0.8, gamma = p*0.1,
+            	"XGB" : XGBClassifier(max_depth = 4, n_estimators = 480, subsample = 0.8, gamma = 0.1,
                                         min_child_weight = 1, scale_pos_weight = 1,
-            						 colsample_bytree = 0.8, learning_rate = 0.07, n_jobs = -1),
+            						 colsample_bytree = p*0.1, learning_rate = 0.07, n_jobs = -1),
 
               	"logistic_regression" : LogisticRegression(#penalty = "l2", C = p, solver = "sag",
               						 class_weight = "balanced", max_iter = 100, n_jobs = -1),
@@ -63,7 +63,7 @@ def main():
 
             clf = classifier["XGB"]
             now = datetime.datetime.now()
-            log_path = "log/date_{}/Tuning_XGB/{}:{}_SM/".format(now.day,now.hour,now.minute)
+            log_path = "log/date_{}/Tuning_XGB_col/{}:{}_SM/".format(now.day,now.hour,now.minute)
             params_path = log_path + "params/"
             score_path = log_path + "score/"
             model_path = log_path + "model/"
