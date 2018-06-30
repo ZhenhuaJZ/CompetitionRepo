@@ -10,23 +10,6 @@ import datetime, time
 now = datetime.datetime.now()
 
 
-class data(object):
-	train_path = "data/train.csv" #train_heatmap , train_mode_fill, train,
-	test_path = "data/test_b.csv" #test_a_heatmap, test_a_mode_fill, test_b
-	test_a_path = "data/test_a.csv"
-	_train_data = pd.read_csv(train_path)
-	_test_online = pd.read_csv(test_path)
-
-
-def positive_unlabel_learning(classifier, unlabel_data, threshold):
-	score = classifier.predict_proba(unlabel_data.iloc[:,2:])
-	score = pd.Series(score[:,1])
-	score.loc[score >= threshold] = 1
-	score.loc[score < threshold] = 0
-	unlabel_data.insert(1, "label", score)
-	print("\n# After PU found <{}> potential black instances".format(len(unlabel_data[unlabel_data.label == 1])))
-	print("\n# After PU found <{}> potential white instances".format(len(unlabel_data[unlabel_data.label == 0])))
-	return unlabel_data
 
 
 log_path = "log/date_{}/{}:{}_SM/".format(now.day,now.hour,now.minute)
@@ -62,7 +45,15 @@ _test_offline_feature, _test_offline_labels = split_train_label(_test_offline)
 
 #get rid off del train data not because the data sort after PU wanna to save coding
 #and release memory after
-
+def positive_unlabel_learning(classifier, unlabel_data, threshold):
+	score = classifier.predict_proba(unlabel_data.iloc[:,2:])
+	score = pd.Series(score[:,1])
+	score.loc[score >= threshold] = 1
+	score.loc[score < threshold] = 0
+	unlabel_data.insert(1, "label", score)
+	print("\n# After PU found <{}> potential black instances".format(len(unlabel_data[unlabel_data.label == 1])))
+	print("\n# After PU found <{}> potential white instances".format(len(unlabel_data[unlabel_data.label == 0])))
+	return unlabel_data
 
 """
 def single_model():
