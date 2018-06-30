@@ -37,7 +37,7 @@ def main():
     tunning = True
     method = "single_model"
     if tunning:
-        for p in range(1,20):
+        for p in range(1,20,4):
 
             classifier = {
 
@@ -45,8 +45,8 @@ def main():
                                         min_child_weight = 1, scale_pos_weight = 1,
             						 colsample_bytree = 0.8, learning_rate = 0.07, n_jobs = -1),
 
-              	"logistic_regression" : LogisticRegression(penalty = "l2", C = 1, solver = "newton-cg",
-              						 class_weight = "balanced", max_iter = 300, n_jobs = -1),
+              	"logistic_regression" : LogisticRegression(penalty = "l2", C = p, solver = "sag",
+              						 class_weight = "balanced", max_iter = 100, n_jobs = -1),
 
             	# NOTE:test min_samples_split and min_samples_leaf
             	"random_forest" : RandomForestClassifier(n_estimators = 300, criterion = "entropy", max_depth = 16,
