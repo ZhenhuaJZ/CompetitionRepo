@@ -172,7 +172,7 @@ def main():
     	_new_train, _new_label = split_train_label(pu_train_data)
     	#recall clf
     	new_clf = clf.fit(_new_train, _new_label)
-        clear_mermory(_new_train, _new_label))
+        clear_mermory(_new_train, _new_label)
     	probs = new_clf.predict_proba(_test_online)
     	#joblib.dump(clf, model_path + "{}.pkl".format("model"))
     	#with PU offline score
