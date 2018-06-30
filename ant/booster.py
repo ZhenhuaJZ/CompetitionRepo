@@ -35,7 +35,6 @@ def main():
     tunning = True
     if tunning:
         #Tunning params
-        clf = classifier["XGB"]
         method = "single_model"
 
         for p in range(6,10):
@@ -61,7 +60,8 @@ def main():
             					     nesterovs_momentum=True, power_t=0.5, random_state=1, shuffle=True,
             					     solver='lbfgs', tol=0.0001, validation_fraction=0.1)
                         }
-
+                        
+            clf = classifier["XGB"]
             now = datetime.datetime.now()
             log_path = "log/date_{}/{}:{}_SM/".format(now.day,now.hour,now.minute)
             params_path = log_path + "params/"
