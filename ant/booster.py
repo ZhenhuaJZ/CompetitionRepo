@@ -71,8 +71,8 @@ def main():
 
     start = time.time()
     classifier = {
-    	"XGB" : XGBClassifier(max_depth = 4, n_estimators = 480, subsample = 0.8, gamma = 0.1,
-                                min_child_weight = 1, scale_pos_weight = 20,
+    	"XGB" : XGBClassifier(max_depth = 4, n_estimators = 4, subsample = 0.8, gamma = 0.1,
+                                min_child_weight = 1, scale_pos_weight = 1,
     						 colsample_bytree = 0.8, learning_rate = 0.08, n_jobs = -1),
 
       	"logistic_regression" : LogisticRegression(penalty = "l2", C = 1, solver = "newton-cg",
@@ -92,7 +92,7 @@ def main():
     }
 
     clf = classifier["XGB"]
-    method = "single_model"
+    method = "pu_method"
 
     with open(params_path  + "params.txt", 'a') as f:
     	print("\n# Training clf :{}".format(clf))
@@ -128,7 +128,7 @@ def main():
         clear_mermory(_train, _labels)
         #without PU offline score
         offline_score = offline_model_performance(_clf, _test_offline_feature, _test_offline_labels, params_path)
-        unlabel_data = positive_unlabel_learning(_clf, _test_a, 0.7)
+        unlabel_data = positive_unlabel_learning(_clf, _test_a, 0.5)
         #Choose Black Label
         unlabel_data = unlabel_data[unlabel_data.label == 1]
         #80% train data
