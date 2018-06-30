@@ -107,7 +107,7 @@ def pu_method():
 
 start = time.time()
 classifier = {
-	"XGB" : XGBClassifier(max_depth = 4, n_estimators = 480, subsample = 0.6, gamma = 0,
+	"XGB" : XGBClassifier(max_depth = 4, n_estimators = 480, subsample = 0.7, gamma = 0,
 						 scale_pos_weight =1, min_child_weight = 2,
 						 colsample_bytree = 0.9, learning_rate = 0.08, n_jobs = -1),
 
