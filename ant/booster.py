@@ -108,7 +108,7 @@ def pu_method():
 start = time.time()
 classifier = {
 	"XGB" : XGBClassifier(max_depth = 4, n_estimators = 480, subsample = 0.8, gamma = 0.1,
-						 
+
 						 colsample_bytree = 0.8, learning_rate = 0.08, n_jobs = -1),
 
   	"logistic_regression" : LogisticRegression(penalty = "l2", C = 1, solver = "newton-cg",
@@ -127,7 +127,7 @@ classifier = {
 					     solver='lbfgs', tol=0.0001, validation_fraction=0.1)
 }
 
-clf = classifier["random_forest"]
+clf = classifier["XGB"]
 
 with open(params_path  + "params.txt", 'a') as f:
 	print("\n# Training clf :{}".format(clf))
