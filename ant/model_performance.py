@@ -15,9 +15,14 @@ def offline_model_performance(estimator, validation_feature, validation_label, p
     fpr2 = 99
     fpr3 = 99
     for i in range(len(fpr)):
+        min_dist_val = 0
         if fpr[i] >= 0.001 and fpr[i] <= fpr1:
-            fpr1 = fpr[i]
-            tpr1 = tpr[i]
+            fpr_1 = fpr[i]
+            tpr_1 = tpr[i]
+            if fpr[i] - fpr[i-1] > fpr[i] - fpr[i+1]:
+                fpr_2 = fpr[i+1]
+
+
         elif fpr[i] >= 0.005 and fpr[i] <= fpr2:
             fpr2 = fpr[i]
             tpr2 = tpr[i]

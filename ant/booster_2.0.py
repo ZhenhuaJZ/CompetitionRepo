@@ -26,6 +26,8 @@ def positive_unlabel_learning(classifier, unlabel_data, threshold):
 	score.loc[score < threshold] = 0
 	unlabel_data.insert(1, "label", score)
 
+	return unlabel_data
+
 _train_data = pd.read_csv(train_path)
 _test_online = pd.read_csv(test_path)
 
