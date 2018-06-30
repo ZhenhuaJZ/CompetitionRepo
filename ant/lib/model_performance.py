@@ -15,16 +15,18 @@ def offline_model_performance(estimator, validation_feature, validation_label, p
     tpr = list(set(tpr))
     fpr.sort()
     tpr.sort()
+    for i in range(len(fpr)):
+        if fpr[i] <= 0.01:
+            print("fpr list : ", fpr[i])
+            print("tpr list : ", tpr[i])
 
-    print("fpr list", fpr[:20])
-    print("tpr list", tpr[:20])
     print("fpr list lens{}".format(len(fpr)))
     print("tpr list lens{}".format(len(tpr)))
     # Search for tpr at fpr = 0.001,0.005,0.01
     fpr1 = 99
     fpr2 = 99
     fpr3 = 99
-    for i in range(len(fpr)):
+    for i in range(len(tpr)):
         min_dist_val = 0
         if fpr[i] >= 0.001 and fpr[i] <= fpr1:
             fpr_1 = fpr[i]
