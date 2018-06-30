@@ -73,7 +73,7 @@ def main():
     start = time.time()
     classifier = {
     	"XGB" : XGBClassifier(max_depth = 4, n_estimators = 480, subsample = 0.8, gamma = 0.1,
-                                min_child_weight = 1,
+                                min_child_weight = 2,
     						 colsample_bytree = 0.8, learning_rate = 0.08, n_jobs = -1),
 
       	"logistic_regression" : LogisticRegression(penalty = "l2", C = 1, solver = "newton-cg",
