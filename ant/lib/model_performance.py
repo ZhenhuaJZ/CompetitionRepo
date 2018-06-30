@@ -15,15 +15,37 @@ def offline_model_performance(estimator, validation_feature, validation_label, p
     fpr2 = 99
     fpr3 = 99
     for i in range(len(fpr)):
+        min_dist_val = 0
         if fpr[i] >= 0.001 and fpr[i] <= fpr1:
-            fpr1 = fpr[i]
-            tpr1 = tpr[i]
+            fpr_1 = fpr[i]
+            tpr_1 = tpr[i]
+            if fpr[i] - fpr[i-1] > fpr[i] - fpr[i+1]:
+                fpr_2 = fpr[i+1]
+                tpr_2 = tpr[i+1]
+            else:
+                fpr_2 = fpr[i-1]
+                tpr_2 = tpr[i-1]
+            tpr1 = (((tpr_2-tpr_1)/(fpr_2-fpr_1))*(0.001-fpr_1))+tpr_1
         elif fpr[i] >= 0.005 and fpr[i] <= fpr2:
-            fpr2 = fpr[i]
-            tpr2 = tpr[i]
+            fpr_1 = fpr[i]
+            tpr_1 = tpr[i]
+            if fpr[i] - fpr[i-1] > fpr[i] - fpr[i+1]:
+                fpr_2 = fpr[i+1]
+                tpr_2 = tpr[i+1]
+            else:
+                fpr_2 = fpr[i-1]
+                tpr_2 = tpr[i-1]
+            tpr2 = (((tpr_2-tpr_1)/(fpr_2-fpr_1))*(0.005-fpr_1))+tpr_1
         elif fpr[i] >= 0.01 and fpr[i] <= fpr3:
-            fpr3 = fpr[i]
-            tpr3 = tpr[i]
+            fpr_1 = fpr[i]
+            tpr_1 = tpr[i]
+            if fpr[i] - fpr[i-1] > fpr[i] - fpr[i+1]:
+                fpr_2 = fpr[i+1]
+                tpr_2 = tpr[i+1]
+            else:
+                fpr_2 = fpr[i-1]
+                tpr_2 = tpr[i-1]
+            tpr3 = (((tpr_2-tpr_1)/(fpr_2-fpr_1))*(0.01-fpr_1))+tpr_1
     model_performance = 0.4 * tpr1 + 0.3 * tpr2 + 0.3 * tpr3
     print("\n# Offline model performance ROC : {}".format(model_performance))
     print("\n# Perfromance ROC : <<<{}>>>".format(str(model_performance)) + "\n"
