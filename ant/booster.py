@@ -146,7 +146,7 @@ def main():
 
         classifier = {
 
-            "XGB" : XGBClassifier(max_depth = 4, n_estimators = 4, subsample = 0.8, gamma = 0.1,
+            "XGB" : XGBClassifier(max_depth = 4, n_estimators = 480, subsample = 0.9, gamma = 0.1,
                                     min_child_weight = 1, scale_pos_weight = 1,
                                  colsample_bytree = 0.8, learning_rate = 0.07, n_jobs = -1),
 
@@ -205,9 +205,9 @@ def main():
             offline_score_1 = offline_model_performance(clf, _test_offline_feature, _test_offline_labels, params_path)
             offline_score_2 = offline_model_performance_2(clf, _test_offline_feature, _test_offline_labels, params_path)
             if offline_score_2 > offline_score_1:
-                print("Goog performance_1")
+                print("Goog performance_nobody")
             else:
-                print("Goog performance_2")
+                print("Goog performance_jim&leo")
             clear_mermory(_test_offline_feature, _test_offline_labels)
             save_score(probs[:,1], score_path)
             # NOTE:  Feed validation Back
