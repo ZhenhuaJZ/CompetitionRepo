@@ -7,13 +7,14 @@ from sklearn.externals import joblib
 from lib.data_processing import *
 from lib.model_performance import offline_model_performance
 import datetime, time
+"""
 now = datetime.datetime.now()
-
 log_path = "log/date_{}/{}:{}_SM/".format(now.day,now.hour,now.minute)
 params_path = log_path + "params/"
 score_path = log_path + "score/"
 model_path = log_path + "model/"
 creat_project_dirs(log_path, params_path, score_path, model_path)
+"""
 # #####################Data path###########################################
 train_path = "data/train.csv" #train_heatmap , train_mode_fill, train,
 test_path = "data/test_b.csv" #test_a_heatmap, test_a_mode_fill, test_b
@@ -32,11 +33,10 @@ def positive_unlabel_learning(classifier, unlabel_data, threshold):
 
 def main():
     # #####################################################################
+    #Tunning params
     tunning = True
+    method = "single_model"
     if tunning:
-        #Tunning params
-        method = "single_model"
-
         for p in range(6,10):
 
             classifier = {
@@ -60,10 +60,10 @@ def main():
             					     nesterovs_momentum=True, power_t=0.5, random_state=1, shuffle=True,
             					     solver='lbfgs', tol=0.0001, validation_fraction=0.1)
                         }
-                        
+
             clf = classifier["XGB"]
             now = datetime.datetime.now()
-            log_path = "log/date_{}/{}:{}_SM/".format(now.day,now.hour,now.minute)
+            log_path = "log/date_{}/{}:{}_SM/Tuning/".format(now.day,now.hour,now.minute)
             params_path = log_path + "params/"
             score_path = log_path + "score/"
             model_path = log_path + "model/"
