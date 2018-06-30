@@ -72,7 +72,7 @@ def main():
     start = time.time()
     classifier = {
     	"XGB" : XGBClassifier(max_depth = 4, n_estimators = 480, subsample = 0.8, gamma = 0.1,
-                                min_child_weight = 1, scale_pos_weight = 1,
+                                min_child_weight = 1, scale_pos_weight = 20,
     						 colsample_bytree = 0.8, learning_rate = 0.08, n_jobs = -1),
 
       	"logistic_regression" : LogisticRegression(penalty = "l2", C = 1, solver = "newton-cg",
@@ -92,7 +92,7 @@ def main():
     }
 
     clf = classifier["XGB"]
-    method = "pu_method"
+    method = "single_model"
 
     with open(params_path  + "params.txt", 'a') as f:
     	print("\n# Training clf :{}".format(clf))
