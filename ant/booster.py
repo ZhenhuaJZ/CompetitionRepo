@@ -33,6 +33,10 @@ def positive_unlabel_learning(classifier, unlabel_data, threshold):
 	return unlabel_data
 
 def main():
+    #for p in range():
+
+    now = datetime.datetime.now()
+    log_path = "log/date_{}/{}:{}_SM/".format(now.day,now.hour,now.minute)
 
     _train_data = pd.read_csv(train_path)
     _test_online = pd.read_csv(test_path)
@@ -42,7 +46,7 @@ def main():
     #change -1 label to 1
     _train_data.loc[_train_data["label"] == -1] = 1
     #Split train and offine test
-    _train_data, _test_offline =  test_train_split_by_date(_train_data, 20171005, 20171015, params_path)
+    _train_data, _test_offline =  test_train_split_by_date(_train_data, 20171010, 20171020, params_path)
     _train, _labels = split_train_label(_train_data)
     #online & offline data
     _test_online = _test_online.iloc[:,2:]
@@ -122,6 +126,7 @@ def main():
         offline_score = offline_model_performance(new_clf, _test_offline_feature, _test_offline_labels, params_path)
         save_score(probs[:,1], score_path)
 
+    #clear_mermory(now)
     print("\n# >>>>Duration<<<< : {}min ".format(round((time.time()-start)/60,2)))
 
 if __name__ == '__main__':#
