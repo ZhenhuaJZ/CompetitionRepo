@@ -34,7 +34,7 @@ def positive_unlabel_learning(classifier, unlabel_data, threshold):
 def main():
     # #####################################################################
     #Tunning params
-    tunning = True
+    tunning = False
     method = "single_model"
     if tunning:
         for p in range(1,20,4):
