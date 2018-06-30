@@ -5,7 +5,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.neural_network import MLPClassifier
 from sklearn.externals import joblib
 from lib.data_processing import *
-from lib.model_performance import offline_model_performance
+from lib.model_performance import offline_model_performance, offline_model_performance_2
 import datetime, time
 """
 now = datetime.datetime.now()
