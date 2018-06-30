@@ -198,7 +198,7 @@ def get_tpr_from_fpr(fpr_array, tpr_array, target):
         return tpr_array[tpr_index]
 
 def offline_model_performance_2(pred, labels, params_path):
-    fpr, tpr, _ = metrics.roc_curve(labels, pred, pos_label=1)
+    fpr, tpr, _ = roc_curve(labels, pred, pos_label=1)
     tpr1 = get_tpr_from_fpr(fpr, tpr, 0.001)
     tpr2 = get_tpr_from_fpr(fpr, tpr, 0.005)
     tpr3 = get_tpr_from_fpr(fpr, tpr, 0.01)
