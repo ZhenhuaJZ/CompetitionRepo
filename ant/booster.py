@@ -136,7 +136,7 @@ def main():
     	+ str(clf) + "\n"*2
     	+"**"*40 + "\n"*2
     	)
-    if meothod == "single_model":
+    if method == "single_model":
         clf = clf.fit(_train, _labels)
         del _train, _labels
         probs = clf.predict_proba(_test_online)
