@@ -45,7 +45,7 @@ def main():
                                         min_child_weight = 1, scale_pos_weight = 1,
             						 colsample_bytree = 0.8, learning_rate = 0.07, n_jobs = -1),
 
-              	"logistic_regression" : LogisticRegression(penalty = "l2", C = p, solver = "sag",
+              	"logistic_regression" : LogisticRegression(#penalty = "l2", C = p, solver = "sag",
               						 class_weight = "balanced", max_iter = 100, n_jobs = -1),
 
             	# NOTE:test min_samples_split and min_samples_leaf
@@ -98,7 +98,7 @@ def main():
                 clear_mermory(_train, _labels)
                 probs = clf.predict_proba(_test_online)
                 offline_score_1 = offline_model_performance(clf, _test_offline_feature, _test_offline_labels, params_path)
-                offline_score_2 = offline_model_performance_2(probs[:,1], _test_offline_labels, params_path)
+                offline_score_2 = offline_model_performance_2(clf, _test_offline_feature, _test_offline_labels, params_path)
                 if offline_score_2 > offline_score_1:
                     print("Goog performance_1")
                 else:
