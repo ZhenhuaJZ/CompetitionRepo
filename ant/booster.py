@@ -92,6 +92,7 @@ def pu_method():
 	save_score(probs[:,1], score_path)
 """
 def main():
+
     _train_data = pd.read_csv(train_path)
     _test_online = pd.read_csv(test_path)
     _test_a = pd.read_csv(test_a_path)
@@ -103,13 +104,10 @@ def main():
     _train_data, _test_offline =  test_train_split_by_date(_train_data, 20171020, 20171031, params_path)
     #train data
     _train, _labels = split_train_label(_train_data)
-    #_train = _train_data.iloc[:,3:]
-    #_labels = _train_data.iloc[:,1]
     #online & offline data
     _test_online = _test_online.iloc[:,2:]
     _test_offline_feature, _test_offline_labels = split_train_label(_test_offline)
-    #_test_offline_feature = _test_offline.iloc[:,3:]
-    #_test_offline_labels = _test_offline.iloc[:,1]
+
     start = time.time()
     classifier = {
     	"XGB" : XGBClassifier(max_depth = 4, n_estimators = 480, subsample = 0.8, gamma = 0.1,
@@ -134,6 +132,7 @@ def main():
 
     clf = classifier["XGB"]
     method = "single_model"
+
     with open(params_path  + "params.txt", 'a') as f:
     	print("\n# Training clf :{}".format(clf))
     	f.write(
@@ -141,19 +140,19 @@ def main():
     	+ str(clf) + "\n"*2
     	+"**"*40 + "\n"*2
     	)
+
     if method == "single_model":
         clf = clf.fit(_train, _labels)
-        del _train, _labels
+        clear_mermory(_train, _labels)
         probs = clf.predict_proba(_test_online)
         offline_score = offline_model_performance(clf, _test_offline_feature, _test_offline_labels, params_path)
 
         # NOTE:  Feed validation Back
         print("\n# Feed validation set to the dataset")
         all_train = file_merge(_train_data, _test_offline, "date")
-        del _test_offline, _train_data
+        clear_mermory(_test_offline, _train_data)
         _new_train, _new_label = split_train_label(all_train)
-        del all_train, clf
-        clf = classifier["XGB"]
+        clear_mermory(all_train)
         #joblib.dump(clf, model_path + "{}.pkl".format("model"))
         new_clf = clf.fit(_new_train, _new_label)
         probs = new_clf.predict_proba(_test_online)
@@ -172,9 +171,8 @@ def main():
     	pu_train_data = file_merge(_train_data, unlabel_data, "date")
     	_new_train, _new_label = split_train_label(pu_train_data)
     	#recall clf
-    	del _clf
     	new_clf = clf.fit(_new_train, _new_label)
-    	del _new_train, _new_label
+        clear_mermory(_new_train, _new_label))
     	probs = new_clf.predict_proba(_test_online)
     	#joblib.dump(clf, model_path + "{}.pkl".format("model"))
     	#with PU offline score
