@@ -27,7 +27,13 @@ def offline_model_performance(estimator, validation_feature, validation_label, p
             if (diff_p_1 < diff_n_1) and (diff_p_1 != 0):
                 fpr_2 = fpr[i+1]
                 tpr_2 = tpr[i+1]
-            else if (diff_n_1 < diff_p_1) and (diff_n_1 != 0):
+            elif (diff_n_1 < diff_p_1) and (diff_n_1 != 0):
+                fpr_2 = fpr[i-1]
+                tpr_2 = tpr[i-1]
+            elif diff_p_1:
+                fpr_2 = fpr[i+1]
+                tpr_2 = tpr[i+1]
+            elif diff_n_1:
                 fpr_2 = fpr[i-1]
                 tpr_2 = tpr[i-1]
             else:
@@ -43,7 +49,13 @@ def offline_model_performance(estimator, validation_feature, validation_label, p
             if (diff_p_1 < diff_n_1) and (diff_p_1 != 0):
                 fpr_2 = fpr[i+1]
                 tpr_2 = tpr[i+1]
-            else if (diff_n_1 < diff_p_1) and (diff_n_1 != 0):
+            elif (diff_n_1 < diff_p_1) and (diff_n_1 != 0):
+                fpr_2 = fpr[i-1]
+                tpr_2 = tpr[i-1]
+            elif diff_p_1:
+                fpr_2 = fpr[i+1]
+                tpr_2 = tpr[i+1]
+            elif diff_n_1:
                 fpr_2 = fpr[i-1]
                 tpr_2 = tpr[i-1]
             else:
@@ -59,7 +71,13 @@ def offline_model_performance(estimator, validation_feature, validation_label, p
             if (diff_p_1 < diff_n_1) and (diff_p_1 != 0):
                 fpr_2 = fpr[i+1]
                 tpr_2 = tpr[i+1]
-            else if (diff_n_1 < diff_p_1) and (diff_n_1 != 0):
+            elif (diff_n_1 < diff_p_1) and (diff_n_1 != 0):
+                fpr_2 = fpr[i-1]
+                tpr_2 = tpr[i-1]
+            elif diff_p_1:
+                fpr_2 = fpr[i+1]
+                tpr_2 = tpr[i+1]
+            elif diff_n_1:
                 fpr_2 = fpr[i-1]
                 tpr_2 = tpr[i-1]
             else:
