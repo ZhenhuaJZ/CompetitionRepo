@@ -11,40 +11,33 @@ def offline_model_performance(estimator, validation_feature, validation_label, p
     # Obtain array of false positive rate and true positive rate
     fpr, tpr, thresholds = roc_curve(validation_label, estimator.predict_proba(validation_feature)[:,1])
 
-    fpr = list(set(fpr))
-    tpr = list(set(tpr))
-    fpr.sort()
-    tpr.sort()
-    for i in range(len(fpr)):
-        if fpr[i] <= 0.01:
-            print("fpr list : ", fpr[i])
-            print("tpr list : ", tpr[i])
-
+    print("fpr list", fpr[:20])
+    print("tpr list", tpr[:20])
     print("fpr list lens{}".format(len(fpr)))
     print("tpr list lens{}".format(len(tpr)))
     # Search for tpr at fpr = 0.001,0.005,0.01
     fpr1 = 99
     fpr2 = 99
     fpr3 = 99
-    for i in range(len(tpr)):
+    for i in range(0,len(fpr),2):
         min_dist_val = 0
         if fpr[i] >= 0.001 and fpr[i] <= fpr1:
             fpr_1 = fpr[i]
             tpr_1 = tpr[i]
-            diff_n_1 = abs(fpr[i] - fpr[i-1])
-            diff_p_1 = abs(fpr[i] - fpr[i+1])
+            diff_n_1 = abs(fpr[i] - fpr[i-2])
+            diff_p_1 = abs(fpr[i] - fpr[i+2])
             if (diff_p_1 < diff_n_1) and (diff_p_1 != 0):
-                fpr_2 = fpr[i+1]
-                tpr_2 = tpr[i+1]
+                fpr_2 = fpr[i+2]
+                tpr_2 = tpr[i+2]
             elif (diff_n_1 < diff_p_1) and (diff_n_1 != 0):
-                fpr_2 = fpr[i-1]
-                tpr_2 = tpr[i-1]
+                fpr_2 = fpr[i-2]
+                tpr_2 = tpr[i-2]
             elif diff_p_1:
-                fpr_2 = fpr[i+1]
-                tpr_2 = tpr[i+1]
+                fpr_2 = fpr[i+2]
+                tpr_2 = tpr[i+2]
             elif diff_n_1:
-                fpr_2 = fpr[i-1]
-                tpr_2 = tpr[i-1]
+                fpr_2 = fpr[i-2]
+                tpr_2 = tpr[i-2]
             else:
                 continue
             fpr1 = fpr_1
@@ -53,20 +46,20 @@ def offline_model_performance(estimator, validation_feature, validation_label, p
         elif fpr[i] >= 0.005 and fpr[i] <= fpr2:
             fpr_1 = fpr[i]
             tpr_1 = tpr[i]
-            diff_n_1 = abs(fpr[i] - fpr[i-1])
-            diff_p_1 = abs(fpr[i] - fpr[i+1])
+            diff_n_1 = abs(fpr[i] - fpr[i-2])
+            diff_p_1 = abs(fpr[i] - fpr[i+2])
             if (diff_p_1 < diff_n_1) and (diff_p_1 != 0):
-                fpr_2 = fpr[i+1]
-                tpr_2 = tpr[i+1]
+                fpr_2 = fpr[i+2]
+                tpr_2 = tpr[i+2]
             elif (diff_n_1 < diff_p_1) and (diff_n_1 != 0):
-                fpr_2 = fpr[i-1]
-                tpr_2 = tpr[i-1]
+                fpr_2 = fpr[i-2]
+                tpr_2 = tpr[i-2]
             elif diff_p_1:
-                fpr_2 = fpr[i+1]
-                tpr_2 = tpr[i+1]
+                fpr_2 = fpr[i+2]
+                tpr_2 = tpr[i+2]
             elif diff_n_1:
-                fpr_2 = fpr[i-1]
-                tpr_2 = tpr[i-1]
+                fpr_2 = fpr[i-2]
+                tpr_2 = tpr[i-2]
             else:
                 continue
             fpr2 = fpr_1
@@ -75,20 +68,20 @@ def offline_model_performance(estimator, validation_feature, validation_label, p
         elif fpr[i] >= 0.01 and fpr[i] <= fpr3:
             fpr_1 = fpr[i]
             tpr_1 = tpr[i]
-            diff_n_1 = abs(fpr[i] - fpr[i-1])
-            diff_p_1 = abs(fpr[i] - fpr[i+1])
+            diff_n_1 = abs(fpr[i] - fpr[i-2])
+            diff_p_1 = abs(fpr[i] - fpr[i+2])
             if (diff_p_1 < diff_n_1) and (diff_p_1 != 0):
-                fpr_2 = fpr[i+1]
-                tpr_2 = tpr[i+1]
+                fpr_2 = fpr[i+2]
+                tpr_2 = tpr[i+2]
             elif (diff_n_1 < diff_p_1) and (diff_n_1 != 0):
-                fpr_2 = fpr[i-1]
-                tpr_2 = tpr[i-1]
+                fpr_2 = fpr[i-2]
+                tpr_2 = tpr[i-2]
             elif diff_p_1:
-                fpr_2 = fpr[i+1]
-                tpr_2 = tpr[i+1]
+                fpr_2 = fpr[i+2]
+                tpr_2 = tpr[i+2]
             elif diff_n_1:
-                fpr_2 = fpr[i-1]
-                tpr_2 = tpr[i-1]
+                fpr_2 = fpr[i-2]
+                tpr_2 = tpr[i-2]
             else:
                 continue
             fpr3 = fpr_1
