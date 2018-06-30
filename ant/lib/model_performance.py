@@ -11,11 +11,13 @@ def offline_model_performance(estimator, validation_feature, validation_label, p
     # Obtain array of false positive rate and true positive rate
     fpr, tpr, thresholds = roc_curve(validation_label, estimator.predict_proba(validation_feature)[:,1])
 
-    fpr = list(set(fpr))
-    tpr = list(set(tpr))
+    fpr = list(set(fpr)).sort()
+    tpr = list(set(tpr)).sort()
 
     print("fpr list", fpr[:20])
     print("tpr list", tpr[:20])
+    print("fpr list lens{}".format(len(fpr)))
+    print("tpr list lens{}".format(len(tpr)))
     # Search for tpr at fpr = 0.001,0.005,0.01
     fpr1 = 99
     fpr2 = 99
