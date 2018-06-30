@@ -37,7 +37,7 @@ def main():
     tunning = True
     method = "single_model"
     if tunning:
-        for p in range(6,10):
+        for p in range(1,20):
 
             classifier = {
 
@@ -50,7 +50,7 @@ def main():
 
             	# NOTE:test min_samples_split and min_samples_leaf
             	"random_forest" : RandomForestClassifier(n_estimators = 300, criterion = "entropy", max_depth = 16,
-            	 					 min_samples_split = 110, min_samples_leaf = 1, max_leaf_nodes = None,
+            	 					 min_samples_split = 110, min_samples_leaf = p*1, max_leaf_nodes = None,
             						 n_jobs = -1),
 
             	"MLP" : MLPClassifier(activation='relu', alpha=1e-05, batch_size='auto',
@@ -61,9 +61,9 @@ def main():
             					     solver='lbfgs', tol=0.0001, validation_fraction=0.1)
                         }
 
-            clf = classifier["XGB"]
+            clf = classifier["random_forest"]
             now = datetime.datetime.now()
-            log_path = "log/date_{}/Tuning/{}:{}_SM/".format(now.day,now.hour,now.minute)
+            log_path = "log/date_{}/Tuning_random_forest/{}:{}_SM/".format(now.day,now.hour,now.minute)
             params_path = log_path + "params/"
             score_path = log_path + "score/"
             model_path = log_path + "model/"
