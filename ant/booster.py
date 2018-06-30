@@ -63,7 +63,7 @@ def main():
 
             clf = classifier["XGB"]
             now = datetime.datetime.now()
-            log_path = "log/date_{}/{}:{}_SM/Tuning/".format(now.day,now.hour,now.minute)
+            log_path = "log/date_{}/Tuning/{}:{}_SM/".format(now.day,now.hour,now.minute)
             params_path = log_path + "params/"
             score_path = log_path + "score/"
             model_path = log_path + "model/"
