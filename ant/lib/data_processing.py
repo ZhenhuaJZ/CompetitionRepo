@@ -3,8 +3,15 @@ import numpy as np
 import pandas as pd
 import math
 import datetime
+import gc
 now = datetime.datetime.now()
 
+
+
+def clear_mermory(*args):
+    for a in args:
+        del a
+    gc.collect()
 # #####################Creat path###############################################
 def creat_project_dirs(*args):
     for a in args:
