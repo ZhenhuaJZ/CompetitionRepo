@@ -222,14 +222,14 @@ def offline_model_performance_2(estimator, validation_feature, validation_label,
 
 # #############################Log all the data ################################
 
-def log_parmas(valset, roc_1, roc_2, mode, filename):
+def log_parmas(clf, valset, roc_1, roc_2, mode, filename):
     #formate log
     valset = str(valset[0]) + "-" + str(valset[1])
     roc_1 = round(roc_1, 6)
     roc_1 = round(roc_2, 6)
     filename = re.split('log/', filename)[-1]
 
-    split_string = re.split('[(,' '\n)' ']', str(rf))
+    split_string = re.split('[(,' '\n)' ']', str(clf))
     f = csv.writer(open("log/log.csv", "a"))
     log = [] #clf name
     header = [] #header
