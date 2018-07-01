@@ -2,6 +2,7 @@ import os
 import pandas as pd
 from sklearn.model_selection import cross_val_score
 from sklearn.metrics import roc_curve
+from sklearn.metrics.scorer import make_scorer
 import datetime
 import numpy as np
 import bisect
@@ -9,11 +10,11 @@ import re, csv
 
 now = datetime.datetime.now()
 
-def offline_model_performance(estimator, validation_feature, validation_label, params_path):
+def offline_model_performance(ground_truth, predict, **kwargs):
     #log_path = "log/date_{}/GS_{}:{}/".format(now.day,now.hour,now.minute)
     #params_path = log_path + "params/"
     # Obtain array of false positive rate and true positive rate
-    fpr, tpr, thresholds = roc_curve(validation_label, estimator.predict_proba(validation_feature)[:,1])
+    fpr, tpr, thresholds = roc_curve(ground_truth, predict)
     # NOTE: upper line
     fpr = fpr[2::2] #[1::2] #odd line (lower line)
     tpr = tpr[2::2]
@@ -171,7 +172,7 @@ def offline_model_performance(estimator, validation_feature, validation_label, p
           +"# fpr2 : {} ----> to tpr2: {:9f}".format(0.005, tpr2) + "\n"
           +"# fpr3 : {} ----> to tpr3: {:9f}".format(0.01, tpr3) + "\n"
     )
-    with open(params_path  + "params.txt", 'a') as f:
+    with open(kwargs['params_path']  + "params.txt", 'a') as f:
         f.write(
         "**"*40 + "\n"*2
         +"Perfromance ROC_1(JL) : <<<{}>>>".format(str(model_performance)) + "\n"
@@ -197,8 +198,8 @@ def get_tpr_from_fpr(fpr_array, tpr_array, target):
             tpr_index = tmp_index - 1
         return tpr_array[tpr_index]
 
-def offline_model_performance_2(estimator, validation_feature, validation_label, params_path):
-    fpr, tpr, _ = roc_curve(validation_label, estimator.predict_proba(validation_feature)[:,1], pos_label=1)
+def offline_model_performance_2(ground_truth, predict, **kwargs):
+    fpr, tpr, _ = roc_curve(ground_truth, predict, pos_label=1)
     tpr1 = get_tpr_from_fpr(fpr, tpr, 0.001)
     tpr2 = get_tpr_from_fpr(fpr, tpr, 0.005)
     tpr3 = get_tpr_from_fpr(fpr, tpr, 0.01)
@@ -209,7 +210,7 @@ def offline_model_performance_2(estimator, validation_feature, validation_label,
           +"# fpr2 : {} ----> to tpr2: {:9f}".format(0.005, tpr2) + "\n"
           +"# fpr3 : {} ----> to tpr3: {:9f}".format(0.01, tpr3) + "\n"
     )
-    with open(params_path  + "params.txt", 'a') as f:
+    with open(kwargs['params_path']  + "params.txt", 'a') as f:
         f.write(
         "**"*40 + "\n"*2
         +"Perfromance ROC_2 : <<<{}>>>".format(str(model_performance)) + "\n"
