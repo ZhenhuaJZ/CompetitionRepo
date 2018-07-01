@@ -236,14 +236,6 @@ def offline_model_performance_2(ground_truth, predict, **kwargs):
         )
     return model_performance
 
-def offline_model_performance_3(ground_truth, predict):
-    fpr, tpr, _ = roc_curve(ground_truth, predict, pos_label=1)
-    tpr1 = get_tpr_from_fpr(fpr, tpr, 0.001)
-    tpr2 = get_tpr_from_fpr(fpr, tpr, 0.005)
-    tpr3 = get_tpr_from_fpr(fpr, tpr, 0.01)
-    model_performance = 0.4*tpr1 + 0.3*tpr2 + 0.3*tpr3
-    return model_performance
-
 # #############################Log all the data ################################
 
 def log_parmas(clf, valset, roc_1, roc_2, mode, filename, fillna):
