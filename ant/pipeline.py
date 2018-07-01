@@ -92,11 +92,11 @@ def main(method, train_path, test_path, fillna_value):
 	_train_data = _train_data[(_train_data.label==0)|(_train_data.label==1)]
 	_train_data,  _test_offline = test_train_split_by_date(_train_data, 20171025, 20171105, params_path)
 
-	_train, _labels = split_train_label(_train_data[:])
+	_train, _labels = split_train_label(_train_data[:3000])
 	clear_mermory(_train_data)
 
 	_test_online = _test_online.iloc[:,2:]
-	_test_offline_feature, _test_offline_labels = split_train_label(_test_offline[:])
+	_test_offline_feature, _test_offline_labels = split_train_label(_test_offline[:3000])
 	clear_mermory(_test_offline)
 
 	with open(params_path  + "params.txt", 'a') as f:
