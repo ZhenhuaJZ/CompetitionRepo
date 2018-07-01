@@ -48,7 +48,7 @@ def core(fillna, log_path, offline_validation, method, clf, train_path, test_pat
 	if method == "single_model":
 		clf = clf.fit(_train, _labels)
 		clear_mermory(_train, _labels)
-		offline_probs = clf.predict_proba(_test_offline)
+		offline_probs = clf.predict_proba(_test_offline_feature)
 		clear_mermory(_test_offline)
 		offline_score_1 = offline_model_performance(_test_offline_labels, offline_probs[:,1], params_path = params_path)
 		offline_score_2 = offline_model_performance_2(_test_offline_labels, offline_probs[:,1], params_path = params_path)
@@ -77,7 +77,9 @@ def core(fillna, log_path, offline_validation, method, clf, train_path, test_pat
 		_clf = clf.fit(_train, _labels)
 		clear_mermory(_train, _labels)
 		#without PU offline score
-		offline_score = offline_model_performance(_test_offline_labels, probs[:,1], params_path = params_path)
+		offline_probs = clf.predict_proba(_test_offline_feature)
+		clear_mermory(_test_offline)
+		offline_score = offline_model_performance(_test_offline_labels, offline_probs[:,1], params_path = params_path)
 		unlabel_data = positive_unlabel_learning(_clf, _test_a, 0.6)
 		#Choose Black Label
 		unlabel_data = unlabel_data[unlabel_data.label == 1]
