@@ -26,6 +26,7 @@ def custom_gridsearch(_train, _labels, pipe_clf, param, params_path):
 	                   verbose = 1, n_jobs = 2, cv = 5)
 
 	clf.fit(_train, _labels)
+	clear_mermory(_train, _labels)
 	bst_params = clf.best_params_
 	bst_score = clf.best_score_
 	bst_estimator = clf.best_estimator_
@@ -115,5 +116,6 @@ def main(method, train_path, test_path, fillna_value):
 	#joblib.dump(best_est, model_path + "{}.pkl".format(method))
 	offline_probs = best_est.predict_proba(_test_offline_feature)
 	performance_score = offline_model_performance(_test_offline_labels, offline_probs[:,1], params_path = params_path)
+	performance_score = offline_model_performance_2(_test_offline_labels, offline_probs[:,1], params_path = params_path)
 	probs = best_est.predict_proba(_test_online)
 	save_score(probs[:,1], score_path)
