@@ -22,13 +22,12 @@ def main():
 	clf_name = "XGB" #LR,MLP,RF
 	tuning_name = "alpha"
 	#loop_start, loop_end, loop_step
-	range = np.arange(0, 0.08, 0.02)
+	range = np.arange(3, 5, 1)
 	method = "single_model" #pu_method
 	offline_validation = [20171025, 20171105]
 
 	if tunning:
 		for p in range:
-
 			classifier = {
 			"XGB" : XGBClassifier(max_depth = 4, n_estimators = 480, subsample = 0.8, gamma = 0,
 			min_child_weight = 1, scale_pos_weight = 1, reg_alpha = p,
@@ -49,7 +48,7 @@ def main():
 			nesterovs_momentum=True, power_t=0.5, random_state=1, shuffle=True,
 			solver='lbfgs', tol=0.0001, validation_fraction=0.1)
 			}
-
+			print("\n# Tuning : {} current at {}".format(tuning_name, p))
 			clf = classifier[clf_name]
 			now = datetime.datetime.now()
 			log_path = "log/date_{}/Tuning_{}_{}/{}:{}_GS/".format(now.day, clf_name, tuning_name, now.hour,now.minute)
