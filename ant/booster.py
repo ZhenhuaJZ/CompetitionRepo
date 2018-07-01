@@ -58,63 +58,63 @@ def core(log_path, offline_validation, method, params_path, score_path, clf, tra
 	_test_offline_feature, _test_offline_labels = split_train_label(_test_offline)
 
 	start = time.time()
-    with open(params_path  + "params.txt", 'a') as f:
-        print("\n# Training clf :{}".format(clf))
-        f.write(
-        "**"*40 + "\n"*2
-        + str(clf) + "\n"*2
-        +"**"*40 + "\n"*2
-        )
+	with open(params_path  + "params.txt", 'a') as f:
+		print("\n# Training clf :{}".format(clf))
+		f.write(
+		"**"*40 + "\n"*2
+		+ str(clf) + "\n"*2
+		+"**"*40 + "\n"*2
+		)
 
-    if method == "single_model":
-        clf = clf.fit(_train, _labels)
-        clear_mermory(_train, _labels)
-        probs = clf.predict_proba(_test_online)
-        offline_score_1 = offline_model_performance(clf, _test_offline_feature, _test_offline_labels, params_path)
-        offline_score_2 = offline_model_performance_2(clf, _test_offline_feature, _test_offline_labels, params_path)
-        if offline_score_2 > offline_score_1:
-            print("Goog performance_2")
-        else:
-            print("Goog performance_1(JL)")
-        clear_mermory(_test_offline_feature, _test_offline_labels)
-        save_score(probs[:,1], score_path)
-        # NOTE:  Feed validation Back
-        """
-        print("\n# Feed validation set to the dataset")
-        all_train = file_merge(_train_data, _test_offline, "date")
-        clear_mermory(_test_offline, _train_data)
-        _new_train, _new_label = split_train_label(all_train)
-        clear_mermory(all_train)
-        #joblib.dump(clf, model_path + "{}.pkl".format("model"))
-        new_clf = clf.fit(_new_train, _new_label)
-        clear_mermory(_new_train, _new_label)
-        probs = new_clf.predict_proba(_test_online)
-        save_score(probs[:,1], score_path)
-        """
-    elif method == "pu_method" :
-        # NOTE: PU learning
-        _clf = clf.fit(_train, _labels)
-        clear_mermory(_train, _labels)
-        #without PU offline score
-        offline_score = offline_model_performance(_clf, _test_offline_feature, _test_offline_labels, params_path)
-        unlabel_data = positive_unlabel_learning(_clf, _test_a, 0.6)
-        #Choose Black Label
-        unlabel_data = unlabel_data[unlabel_data.label == 1]
-        #80% train data
-        pu_train_data = file_merge(_train_data, unlabel_data, "date")
-        _new_train, _new_label = split_train_label(pu_train_data)
-        #recall clf
-        new_clf = clf.fit(_new_train, _new_label)
-        clear_mermory(_new_train, _new_label)
-        probs = new_clf.predict_proba(_test_online)
-        #joblib.dump(clf, model_path + "{}.pkl".format("model"))
-        #with PU offline score
-        offline_score = offline_model_performance(new_clf, _test_offline_feature, _test_offline_labels, params_path)
-        save_score(probs[:,1], score_path)
+	if method == "single_model":
+		clf = clf.fit(_train, _labels)
+		clear_mermory(_train, _labels)
+		probs = clf.predict_proba(_test_online)
+		offline_score_1 = offline_model_performance(clf, _test_offline_feature, _test_offline_labels, params_path)
+		offline_score_2 = offline_model_performance_2(clf, _test_offline_feature, _test_offline_labels, params_path)
+		if offline_score_2 > offline_score_1:
+			print("Goog performance_2")
+		else:
+			print("Goog performance_1(JL)")
+			clear_mermory(_test_offline_feature, _test_offline_labels)
+			save_score(probs[:,1], score_path)
+			# NOTE:  Feed validation Back
+		"""
+		print("\n# Feed validation set to the dataset")
+		all_train = file_merge(_train_data, _test_offline, "date")
+		clear_mermory(_test_offline, _train_data)
+		_new_train, _new_label = split_train_label(all_train)
+		clear_mermory(all_train)
+		#joblib.dump(clf, model_path + "{}.pkl".format("model"))
+		new_clf = clf.fit(_new_train, _new_label)
+		clear_mermory(_new_train, _new_label)
+		probs = new_clf.predict_proba(_test_online)
+		save_score(probs[:,1], score_path)
+		"""
+	elif method == "pu_method" :
+		# NOTE: PU learning
+		_clf = clf.fit(_train, _labels)
+		clear_mermory(_train, _labels)
+		#without PU offline score
+		offline_score = offline_model_performance(_clf, _test_offline_feature, _test_offline_labels, params_path)
+		unlabel_data = positive_unlabel_learning(_clf, _test_a, 0.6)
+		#Choose Black Label
+		unlabel_data = unlabel_data[unlabel_data.label == 1]
+		#80% train data
+		pu_train_data = file_merge(_train_data, unlabel_data, "date")
+		_new_train, _new_label = split_train_label(pu_train_data)
+		#recall clf
+		new_clf = clf.fit(_new_train, _new_label)
+		clear_mermory(_new_train, _new_label)
+		probs = new_clf.predict_proba(_test_online)
+		#joblib.dump(clf, model_path + "{}.pkl".format("model"))
+		#with PU offline score
+		offline_score = offline_model_performance(new_clf, _test_offline_feature, _test_offline_labels, params_path)
+		save_score(probs[:,1], score_path)
 
-    log_parmas(clf, offline_validation, offline_score_1, offline_score_2, method, log_path)
-    clear_mermory(now)
-    print("\n# >>>>Duration<<<< : {}min ".format(round((time.time()-start)/60,2)))
+	log_parmas(clf, offline_validation, offline_score_1, offline_score_2, method, log_path)
+	clear_mermory(now)
+	print("\n# >>>>Duration<<<< : {}min ".format(round((time.time()-start)/60,2)))
 
 def main():
 	# #####################################################################
