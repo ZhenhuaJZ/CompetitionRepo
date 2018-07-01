@@ -5,7 +5,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.neural_network import MLPClassifier
 from sklearn.externals import joblib
 from lib.data_processing import *
-from lib.model_performance import offline_model_performance, offline_model_performance_2
+from lib.model_performance import *
 import datetime, time
 """
 now = datetime.datetime.now()
@@ -139,6 +139,7 @@ def main():
                 offline_score = offline_model_performance(new_clf, _test_offline_feature, _test_offline_labels, params_path)
                 save_score(probs[:,1], score_path)
 
+            log_parmas(valset, offline_score_1, offline_score_2, method, log_path)
             clear_mermory(now)
             print("\n# >>>>Duration<<<< : {}min ".format(round((time.time()-start)/60,2)))
 
@@ -244,6 +245,7 @@ def main():
             offline_score = offline_model_performance(new_clf, _test_offline_feature, _test_offline_labels, params_path)
             save_score(probs[:,1], score_path)
 
+        log_parmas(valset, offline_score_1, offline_score_2, method, log_path)
         clear_mermory(now)
         print("\n# >>>>Duration<<<< : {}min ".format(round((time.time()-start)/60,2)))
 
