@@ -19,18 +19,18 @@ def main():
 	#Tunning params
 	fillna = 0
 	tunning = True
-	clf_name = "RF" #LR,MLP,RF,XGB
-	tuning_name = "min_samples_split"
+	clf_name = "XGB" #LR,MLP,RF,XGB
+	tuning_name = "n_estimators"
 	#loop_start, loop_end, loop_step
 	#range = np.arange(1, 30, 4)
-	range = [110,130,150,170]
+	range = [400,470,480,485,490]
 	method = "single_model" #pu_method
 	offline_validation = [20171025, 20171105]
 
 	if tunning:
 		for p in range:
 			classifier = {
-			"XGB" : XGBClassifier(max_depth = p, n_estimators = 480, subsample = 0.8, gamma = 0,
+			"XGB" : XGBClassifier(max_depth = 5, n_estimators = p, subsample = 0.8, gamma = 0,
 			min_child_weight = 1, scale_pos_weight = 1, reg_alpha = 0,
 			colsample_bytree = 0.8, learning_rate = 0.07, n_jobs = -1),
 

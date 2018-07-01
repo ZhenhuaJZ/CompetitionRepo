@@ -55,9 +55,9 @@ def core(fillna, log_path, offline_validation, method, clf, train_path, test_pat
 			print("Goog performance_2")
 		else:
 			print("Goog performance_1(JL)")
-			clear_mermory(_test_offline_feature, _test_offline_labels)
-			save_score(probs[:,1], score_path)
-			# NOTE:  Feed validation Back
+		clear_mermory(_test_offline_feature, _test_offline_labels)
+		save_score(probs[:,1], score_path)
+		# NOTE:  Feed validation Back
 		"""
 		print("\n# Feed validation set to the dataset")
 		all_train = file_merge(_train_data, _test_offline, "date")
