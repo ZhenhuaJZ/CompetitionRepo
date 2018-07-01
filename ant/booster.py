@@ -41,8 +41,23 @@ def data_edit(params_path, train_path, test_path, test_a_path, offline_validatio
 
 	return _train, _labels, _test_offline_feature, _test_offline_labels, _test_online, _test_a, _train_data
 
-def core(log_path, offline_validation, method, params_path, score_path, clf, _train, _labels, _test_offline_feature, _test_offline_labels, _test_online):
-    start = time.time()
+def core(log_path, offline_validation, method, params_path, score_path, clf, train_path, test_path, test_a_path):
+
+	_train_data = pd.read_csv(train_path)
+	_test_online = pd.read_csv(test_path)
+	_test_a = pd.read_csv(test_a_path)
+
+	_train_data, _test_online, _test_a = custom_imputation_3_inputs(_train_data, _test_online, _test_a, fillna_value)
+	#change -1 label to 1
+	_train_data.loc[_train_data["label"] == -1] = 1
+	#Split train and offine test
+	_train_data, _test_offline =  test_train_split_by_date(_train_data, offline_validation[0], offline_validation[1], params_path)
+	_train, _labels = split_train_label(_train_data)
+	#online & offline data
+	_test_online = _test_online.iloc[:,2:]
+	_test_offline_feature, _test_offline_labels = split_train_label(_test_offline)
+
+	start = time.time()
     with open(params_path  + "params.txt", 'a') as f:
         print("\n# Training clf :{}".format(clf))
         f.write(
@@ -138,9 +153,7 @@ def main():
 			score_path = log_path + "score/"
 			model_path = log_path + "model/"
 			creat_project_dirs(log_path, params_path, score_path, model_path)
-
-			_train, _labels, _test_offline_feature, _test_offline_labels, _test_online, _test_a, _train_data = data_edit(params_path,train_path, test_path, test_a_path, offline_validation)
-			core(log_path, offline_validation, params_path, score_path, clf, _train, _labels, _test_offline_feature, _test_offline_labels, _test_online)
+			core(log_path, offline_validation, method, params_path, score_path, clf, train_path, test_path, test_a_path)
 	else:
 		classifier = {
 		"XGB" : XGBClassifier(max_depth = 4, n_estimators = 4, subsample = 0.8, gamma = 0,
@@ -170,9 +183,7 @@ def main():
 		score_path = log_path + "score/"
 		model_path = log_path + "model/"
 		creat_project_dirs(log_path, params_path, score_path, model_path)
-
-		_train, _labels, _test_offline_feature, _test_offline_labels, _test_online, _test_a, _train_data = data_edit(params_path, train_path, test_path, test_a_path, offline_validation)
-		core(log_path, offline_validation, method, params_path, score_path, clf, _train, _labels, _test_offline_feature, _test_offline_labels, _test_online)
+		core(log_path, offline_validation, method, params_path, score_path, clf, train_path, test_path, test_a_path)
 
 if __name__ == '__main__':
 	main()
