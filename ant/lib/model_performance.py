@@ -222,7 +222,7 @@ def offline_model_performance_2(estimator, validation_feature, validation_label,
 
 # #############################Log all the data ################################
 
-def log_parmas(clf, valset, roc_1, roc_2, mode, filename):
+def log_parmas(clf, valset, roc_1, roc_2, mode, filename, fillna):
     #formate log
     valset = str(valset[0]) + "-" + str(valset[1])
     roc_1 = round(roc_1, 6)
@@ -252,6 +252,7 @@ def log_parmas(clf, valset, roc_1, roc_2, mode, filename):
     header.append("mode")
     header.append("file name")
     header.append("PU(threshold)")
+    header.append("fillna")
 
     #add content
     parmas.append(valset)
@@ -261,6 +262,7 @@ def log_parmas(clf, valset, roc_1, roc_2, mode, filename):
     parmas.append(mode)
     parmas.append(filename)
     parmas.append('n/a')
+    parmas.append(fillna)
 
     f.writerow(log)
     f.writerow(header)
