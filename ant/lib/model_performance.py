@@ -226,7 +226,7 @@ def log_parmas(clf, valset, roc_1, roc_2, mode, filename):
     #formate log
     valset = str(valset[0]) + "-" + str(valset[1])
     roc_1 = round(roc_1, 6)
-    roc_1 = round(roc_2, 6)
+    roc_2 = round(roc_2, 6)
     filename = re.split('log/', filename)[-1]
 
     split_string = re.split('[(,' '\n)' ']', str(clf))
