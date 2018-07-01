@@ -18,7 +18,7 @@ def main():
 	# #####################################################################
 	#Tunning params
 	fillna = 0
-	tunning = True
+	tunning = False
 	clf_name = "XGB" #LR,MLP,RF,XGB
 	tuning_name = "n_estimators"
 	#loop_start, loop_end, loop_step
