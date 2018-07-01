@@ -13,7 +13,7 @@ import datetime, time
 train_path = "data/train.csv" #train_heatmap , train_mode_fill, train,
 test_path = "data/test_b.csv" #test_a_heatmap, test_a_mode_fill, test_b
 test_a_path = "data/test_a.csv"
-fillna_value = 0
+
 
 def main():
 	# #####################################################################
@@ -21,6 +21,8 @@ def main():
 	tunning = False
 	method = "single_model"
 	offline_validation = [20171025, 20171105]
+	fillna = 0
+
 	if tunning:
 		for p in range(1,40,5):
 
@@ -49,7 +51,7 @@ def main():
 			now = datetime.datetime.now()
 			log_path = "log/date_{}/Tuning_XGB_weight/{}:{}_GS/".format(now.day,now.hour,now.minute)
 			creat_project_dirs(log_path)
-			core(log_path, offline_validation, method, clf, train_path, test_path, test_a_path)
+			core(fillna, log_path, offline_validation, method, clf, train_path, test_path, test_a_path)
 	else:
 		classifier = {
 		"XGB" : XGBClassifier(max_depth = 4, n_estimators = 4, subsample = 0.8, gamma = 0,
@@ -76,7 +78,7 @@ def main():
 		now = datetime.datetime.now()
 		log_path = "log/date_{}/{}:{}_SM/".format(now.day,now.hour,now.minute)
 		creat_project_dirs(log_path)
-		core(log_path, offline_validation, method, clf, train_path, test_path, test_a_path)
+		core(fillna, log_path, offline_validation, method, clf, train_path, test_path, test_a_path)
 
 if __name__ == '__main__':
 	main()

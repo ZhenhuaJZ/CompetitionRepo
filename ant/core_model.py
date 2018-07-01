@@ -14,8 +14,8 @@ def positive_unlabel_learning(classifier, unlabel_data, threshold):
 	print("\n# After PU found <{}> potential white instances".format(len(unlabel_data[unlabel_data.label == 0])))
 	return unlabel_data
 
-    
-def core(log_path, offline_validation, method, clf, train_path, test_path, test_a_path):
+
+def core(fillna, log_path, offline_validation, method, clf, train_path, test_path, test_a_path):
 
 	params_path = log_path + "params/"
 	score_path = log_path + "score/"
@@ -25,7 +25,7 @@ def core(log_path, offline_validation, method, clf, train_path, test_path, test_
 	_test_online = pd.read_csv(test_path)
 	_test_a = pd.read_csv(test_a_path)
 
-	_train_data, _test_online, _test_a = custom_imputation_3_inputs(_train_data, _test_online, _test_a, fillna_value)
+	_train_data, _test_online, _test_a = custom_imputation_3_inputs(_train_data, _test_online, _test_a, fillna)
 	#change -1 label to 1
 	_train_data.loc[_train_data["label"] == -1] = 1
 	#Split train and offine test
