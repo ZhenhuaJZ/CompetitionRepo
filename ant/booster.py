@@ -20,14 +20,17 @@ def main():
 	fillna = 0
 	tunning = True
 	clf_name = "XGB" #LR,MLP,RF
-	method = "single_model"
+	method = "single_model" #pu_method
 	offline_validation = [20171025, 20171105]
 
 	if tunning:
-		for p in range(1,10,1):
+		#loop_start, loop_end, loop_step
+		range = np.arange(0.1, 1, 0.1)
+		for p in range:
+			
 			classifier = {
 			"XGB" : XGBClassifier(max_depth = 4, n_estimators = 4, subsample = 0.8, gamma = 0,
-			min_child_weight = 1, scale_pos_weight = 1, reg_alpha = p*0.01,
+			min_child_weight = 1, scale_pos_weight = 1, reg_alpha = p,
 			colsample_bytree = 0.8, learning_rate = 0.07, n_jobs = -1),
 
 			"LR" : LogisticRegression(#penalty = "l2", C = p, solver = "sag",
@@ -73,7 +76,7 @@ def main():
 		solver='lbfgs', tol=0.0001, validation_fraction=0.1)
 		}
 
-		clf = classifier["XGB"]
+		clf = classifier[clf_name]
 		now = datetime.datetime.now()
 		log_path = "log/date_{}/{}:{}_SM/".format(now.day,now.hour,now.minute)
 		creat_project_dirs(log_path)
