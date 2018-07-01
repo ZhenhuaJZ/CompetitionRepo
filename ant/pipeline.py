@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import datetime, time
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import TimeSeriesSplit
 from sklearn.pipeline import Pipeline, make_pipeline
 from sklearn.metrics import roc_curve, roc_auc_score, accuracy_score
 from sklearn.grid_search import GridSearchCV
@@ -22,8 +22,9 @@ def custom_gridsearch(_train, _labels, pipe_clf, param, params_path):
 	start = time.time()
 	print("\n{}\n# Tuning hyper-parameters for {}\n{}\n".format(str("##"*50),param,str("##"*50)))
 	my_scorer = make_scorer(offline_model_performance_2, params_path = params_path)
+	cv = TimeSeriesSplit(n_splits=5)
 	clf = GridSearchCV(pipe_clf, param_grid  = param, scoring = my_scorer,
-	                   verbose = 1, n_jobs = 2, cv = 5)
+	                   verbose = 1, n_jobs = 2, cv = cv)
 
 	clf.fit(_train, _labels)
 	clear_mermory(_train, _labels)
