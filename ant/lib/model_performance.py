@@ -173,7 +173,7 @@ def offline_model_performance(estimator, validation_feature, validation_label, p
     with open(params_path  + "params.txt", 'a') as f:
         f.write(
         "**"*40 + "\n"*2
-        +"Perfromance ROC_2 : <<<{}>>>".format(str(model_performance)) + "\n"
+        +"Perfromance ROC_1(JL) : <<<{}>>>".format(str(model_performance)) + "\n"
         +"fpr1 : {} ----> to tpr1: {}".format(str(0.001), str(tpr1)) + "\n"
         +"fpr2 : {} ----> to tpr2: {}".format(str(0.005), str(tpr2)) + "\n"
         +"fpr3 : {} ----> to tpr3: {}".format(str(0.01), str(tpr3)) + "\n"
@@ -223,6 +223,7 @@ def offline_model_performance_2(estimator, validation_feature, validation_label,
 
 def log_parmas(valset, roc_1, roc_2, mode, filename):
     #formate log
+    valset = str(valset[0]) + "-" + str(valset[1])
     roc_1 = roung(roc_1, 6)
     roc_1 = roung(roc_2, 6)
     filename = re.split('log/', filename)[-1]
