@@ -6,6 +6,7 @@ from sklearn.neural_network import MLPClassifier
 from sklearn.externals import joblib
 from lib.data_processing import *
 from lib.model_performance import *
+from core_model import *
 import datetime, time
 
 # #####################Data path###########################################
