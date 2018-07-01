@@ -10,8 +10,8 @@ from core_model import *
 import datetime, time
 
 # #####################Data path###########################################
-train_path = "data/train.csv" #train_heatmap , train_mode_fill, train,
-test_path = "data/test_b.csv" #test_a_heatmap, test_a_mode_fill, test_b
+train_path = "data/train.csv" #train_heatmap , train,
+test_path = "data/test_b.csv" #test_a_heatmap, test_b
 test_a_path = "data/test_a.csv"
 
 def main():
@@ -25,7 +25,7 @@ def main():
 	if tunning:
 		for p in range(1,10,1):
 			classifier = {
-			"XGB" : XGBClassifier(max_depth = 4, n_estimators = 480, subsample = 0.8, gamma = 0,
+			"XGB" : XGBClassifier(max_depth = 4, n_estimators = 4, subsample = 0.8, gamma = 0,
 			min_child_weight = 1, scale_pos_weight = 1, reg_alpha = p*0.01,
 			colsample_bytree = 0.8, learning_rate = 0.07, n_jobs = -1),
 
