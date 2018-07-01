@@ -181,7 +181,6 @@ def offline_model_performance(estimator, validation_feature, validation_label, p
         )
     return model_performance
 
-
 def get_tpr_from_fpr(fpr_array, tpr_array, target):
     fpr_index = np.where(fpr_array == target)
     assert target <= 0.01, 'the value of fpr in the custom metric function need lt 0.01'
@@ -219,3 +218,47 @@ def offline_model_performance_2(estimator, validation_feature, validation_label,
         +"**"*40 + "\n"*2
         )
     return model_performance
+
+# #############################Log all the data ################################
+
+def log_parmas(valset, roc_1, roc_2, mode, filename):
+    #formate log
+    roc_1 = roung(roc_1, 6)
+    roc_1 = roung(roc_2, 6)
+    filename = re.split('log/', filename)[-1]
+
+    split_string = re.split('[(,' '\n)' ']', str(rf))
+    f = csv.writer(open("log/log.csv", "a"))
+    log = [] #clf name
+    header = [] #header
+    parmas = [] #parmas
+
+    for i in split_string:
+        if len(i)>0:
+            new = i.strip().split('=')
+            if len(new) <= 1:
+                log.append(new[0])
+            if len(new) > 1:
+                header.append(new[0])
+                parmas.append(new[1])
+
+    #add header
+    header.append("Validation set")
+    header.append("ROC_1")
+    header.append("ROC_2")
+    header.append("Score")
+    header.append("mode")
+    header.append("file name")
+
+    #add content
+    parmas.append(valset)
+    parmas.append(roc_1)
+    parmas.append(roc_2)
+    parmas.append('')
+    parmas.append(mode)
+    parmas.append(filename)
+
+    f.writerow(log)
+    f.writerow(header)
+    f.writerow(parmas)
+    f.writerow([])
