@@ -22,15 +22,8 @@ def custom_gridsearch(_train, _labels, pipe_clf, param, params_path):
 	start = time.time()
 	print("\n{}\n# Tuning hyper-parameters for {}\n{}\n".format(str("##"*50),param,str("##"*50)))
 	my_scorer = make_scorer(offline_model_performance_2, params_path = params_path)
-
-	print("\n# Using TimeSeriesSplit CV method")
-	#tscv =
-
 	clf = GridSearchCV(pipe_clf, param_grid  = param, scoring = my_scorer,
-	verbose = 1, n_jobs = 2, cv = TimeSeriesSplit())
-
-	print(clf.get_params())
-
+	verbose = 1, n_jobs = 2, cv = 5)
 	clf.fit(_train, _labels)
 	clear_mermory(_train, _labels)
 	bst_params = clf.best_params_
