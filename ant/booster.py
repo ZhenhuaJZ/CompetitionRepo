@@ -139,7 +139,7 @@ def main():
                 offline_score = offline_model_performance(new_clf, _test_offline_feature, _test_offline_labels, params_path)
                 save_score(probs[:,1], score_path)
 
-            log_parmas(valset, offline_score_1, offline_score_2, method, log_path)
+            log_parmas(clf, valset, offline_score_1, offline_score_2, method, log_path)
             clear_mermory(now)
             print("\n# >>>>Duration<<<< : {}min ".format(round((time.time()-start)/60,2)))
 
@@ -245,7 +245,7 @@ def main():
             offline_score = offline_model_performance(new_clf, _test_offline_feature, _test_offline_labels, params_path)
             save_score(probs[:,1], score_path)
 
-        log_parmas(offline_validation, offline_score_1, offline_score_2, method, log_path)
+        log_parmas(clf, offline_validation, offline_score_1, offline_score_2, method, log_path)
         clear_mermory(now)
         print("\n# >>>>Duration<<<< : {}min ".format(round((time.time()-start)/60,2)))
 
