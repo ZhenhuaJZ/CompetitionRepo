@@ -19,11 +19,11 @@ def main():
 	#Tunning params
 	fillna = 0
 	tunning = True
-	clf_name = "XGB" #LR,MLP,RF,XGB
-	tuning_name = "max_depth"
+	clf_name = "RF" #LR,MLP,RF,XGB
+	tuning_name = "min_samples_split"
 	#loop_start, loop_end, loop_step
 	#range = np.arange(1, 30, 4)
-	range = [5,6]
+	range = [110,130,150,170]
 	method = "single_model" #pu_method
 	offline_validation = [20171025, 20171105]
 
@@ -39,7 +39,7 @@ def main():
 
 			# NOTE:test min_samples_split and min_samples_leaf
 			"RF" : RandomForestClassifier(n_estimators = 300, criterion = "entropy", max_depth = 16,
-			min_samples_split = 110, min_samples_leaf = p, max_leaf_nodes = None,
+			min_samples_split = p, min_samples_leaf = 16, max_leaf_nodes = None,
 			n_jobs = -1),
 
 			"MLP" : MLPClassifier(activation='relu', alpha=1e-05, batch_size='auto',
