@@ -251,6 +251,7 @@ def log_parmas(clf, valset, roc_1, roc_2, mode, filename):
     header.append("Score")
     header.append("mode")
     header.append("file name")
+    header.append("PU(threshold)")
 
     #add content
     parmas.append(valset)
@@ -259,6 +260,7 @@ def log_parmas(clf, valset, roc_1, roc_2, mode, filename):
     parmas.append('')
     parmas.append(mode)
     parmas.append(filename)
+    parmas.append('n/a')
 
     f.writerow(log)
     f.writerow(header)
