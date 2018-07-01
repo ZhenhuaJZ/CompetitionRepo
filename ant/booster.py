@@ -100,9 +100,9 @@ def main():
                 offline_score_1 = offline_model_performance(clf, _test_offline_feature, _test_offline_labels, params_path)
                 offline_score_2 = offline_model_performance_2(clf, _test_offline_feature, _test_offline_labels, params_path)
                 if offline_score_2 > offline_score_1:
-                    print("Goog performance_1")
-                else:
                     print("Goog performance_2")
+                else:
+                    print("Goog performance_1(JL)")
                 clear_mermory(_test_offline_feature, _test_offline_labels)
                 save_score(probs[:,1], score_path)
                 # NOTE:  Feed validation Back
@@ -206,9 +206,9 @@ def main():
             offline_score_1 = offline_model_performance(clf, _test_offline_feature, _test_offline_labels, params_path)
             offline_score_2 = offline_model_performance_2(clf, _test_offline_feature, _test_offline_labels, params_path)
             if offline_score_2 > offline_score_1:
-                print("Goog performance_nobody")
+                print("Goog performance_2")
             else:
-                print("Goog performance_jim&leo")
+                print("Goog performance_1(JL)")
             clear_mermory(_test_offline_feature, _test_offline_labels)
             save_score(probs[:,1], score_path)
             # NOTE:  Feed validation Back
