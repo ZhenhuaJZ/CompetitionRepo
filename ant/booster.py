@@ -25,7 +25,7 @@ def main():
 	#range = np.arange(1, 30, 4)
 	range = [0.8,0.7,0.6]
 	method = "single_model" #pu_method
-	offline_validation = [20171025, 20171105]
+	offline_validation = [20171028, 20171105]
 
 	if tunning:
 		for p in range:
