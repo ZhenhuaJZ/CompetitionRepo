@@ -18,10 +18,6 @@ from lib.data_processing import *
 from lib.model_performance import *
 now = datetime.datetime.now()
 
-
-
-
-
 def custom_gridsearch(_train, _labels, pipe_clf, param, params_path):
 	start = time.time()
 	print("\n{}\n# Tuning hyper-parameters for {}\n{}\n".format(str("##"*50),param,str("##"*50)))
@@ -71,10 +67,8 @@ def custom_gridsearch(_train, _labels, pipe_clf, param, params_path):
 
 def main(method, train_path, test_path, fillna_value):
 	log_path = "log/date_{}/{}:{}_GS/".format(now.day,now.hour,now.minute)
-	params_path = log_path + "params/"
-	score_path = log_path + "score/"
-	model_path = log_path + "model/"
-	creat_project_dirs(log_path, params_path, score_path, model_path)
+	creat_project_dirs(log_path)
+
 # #######################Make project path#####################################
 	warnings.filterwarnings(module = 'sklearn*',
 	                        action = 'ignore', category = DeprecationWarning)
@@ -86,16 +80,14 @@ def main(method, train_path, test_path, fillna_value):
 	#change -1 label to 1
 	_train_data.loc[_train_data["label"] == -1] = 1
 	_train_data = _train_data[(_train_data.label==0)|(_train_data.label==1)]
-	_train_data,  _test_offline = test_train_split_by_date(_train_data, 20171020, 20171031, params_path)
+	_train_data,  _test_offline = test_train_split_by_date(_train_data, 20171025, 20171105, params_path)
 
-	_train = _train_data.iloc[:,3:]
-	_labels = _train_data.iloc[:,1]
-	del _train_data
+	_train, _labels = split_train_label(_train_data)
+	clear_mermory(_train_data)
 
 	_test_online = _test_online.iloc[:,2:]
-	_test_offline_feature = _test_offline.iloc[:,3:]
-	_test_offline_labels = _test_offline.iloc[:,1]
-	del _test_offline
+	_test_offline_feature, _test_offline_labels = split_train_label(_test_offline)
+	clear_mermory(_test_offline)
 
 	with open(params_path  + "params.txt", 'a') as f:
 		f.write(
@@ -117,7 +109,8 @@ def main(method, train_path, test_path, fillna_value):
 		else:
 			_, best_est = custom_gridsearch(_train, _labels, best_est, param, params_path)
 	#save model, score
-	joblib.dump(best_est, model_path + "{}.pkl".format(method))
-	performance_score = offline_model_performance(best_est, _test_offline_feature, _test_offline_labels, params_path)
+	#joblib.dump(best_est, model_path + "{}.pkl".format(method))
+	offline_probs = clf.predict_proba(_test_offline_feature)
+	performance_score = offline_model_performance(_test_offline_labels, offline_probs[:,1], params_path = params_path)
 	probs = best_est.predict_proba(_test_online)
 	save_score(probs[:,1], score_path)
