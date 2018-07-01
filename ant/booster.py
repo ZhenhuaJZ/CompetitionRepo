@@ -18,7 +18,7 @@ def main():
 	# #####################################################################
 	#Tunning params
 	fillna = 0
-	tunning = True
+	tunning = False
 	clf_name = "XGB" #LR,MLP,RF,XGB
 	tuning_name = "max_depth"
 	#loop_start, loop_end, loop_step
@@ -57,7 +57,7 @@ def main():
 			core(fillna, log_path, offline_validation, method, clf, train_path, test_path, test_a_path)
 	else:
 		classifier = {
-		"XGB" : XGBClassifier(max_depth = 6, n_estimators = 480, subsample = 0.8, gamma = 0,
+		"XGB" : XGBClassifier(max_depth = 4, n_estimators = 480, subsample = 0.8, gamma = 0,
 		min_child_weight = 1, scale_pos_weight = 1,
 		colsample_bytree = 0.8, learning_rate = 0.07, n_jobs = -1),
 
