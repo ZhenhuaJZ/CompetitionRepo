@@ -14,21 +14,19 @@ train_path = "data/train.csv" #train_heatmap , train_mode_fill, train,
 test_path = "data/test_b.csv" #test_a_heatmap, test_a_mode_fill, test_b
 test_a_path = "data/test_a.csv"
 
-
 def main():
 	# #####################################################################
 	#Tunning params
-	tunning = False
+	fillna = 0
+	tunning = True
 	method = "single_model"
 	offline_validation = [20171025, 20171105]
-	fillna = 0
 
 	if tunning:
-		for p in range(1,40,5):
-
+		for p in range(1,10,1):
 			classifier = {
 			"XGB" : XGBClassifier(max_depth = 4, n_estimators = 480, subsample = 0.8, gamma = 0,
-			min_child_weight = 1, scale_pos_weight = p,
+			min_child_weight = 1, scale_pos_weight = 1, reg_alpha = p*0.01
 			colsample_bytree = 0.8, learning_rate = 0.07, n_jobs = -1),
 
 			"logistic_regression" : LogisticRegression(#penalty = "l2", C = p, solver = "sag",
