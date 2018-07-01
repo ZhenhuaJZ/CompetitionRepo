@@ -13,9 +13,14 @@ def clear_mermory(*args):
         del a
     gc.collect()
 # #####################Creat path###############################################
-def creat_project_dirs(*args):
-    for a in args:
-        os.makedirs(a)
+def creat_project_dirs(log_path):
+    params_path = log_path + "params/"
+    score_path = log_path + "score/"
+    model_path = log_path + "model/"
+    os.makedirs(log_path)
+    os.makedirs(params_path)
+    os.makedirs(score_path)
+    os.makedirs(model_path)
 
 def round_to_whole(data, tolerance):
     p = 10**tolerance
