@@ -119,8 +119,6 @@ def save_features(data_path, prefix, mode = "train"):
 		plt.savefig(save_path + "{}.png".format(col_name))
 		plt.figure()
 
-		return
-
 def main():
 
 	train_path = "../data/train.csv"
