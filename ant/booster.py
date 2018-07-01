@@ -49,7 +49,7 @@ def data_edit(train_path, test_path, test_a_path, offline_validation):
 
 	return _train, _labels, _test_offline_feature, _test_offline_labels, _test_online, _test_a, _train_data
 
-def core(params_path, score_path, clf, _train, _labels, _test_offline_feature, _test_offline_labels, _test_online):
+def core(method, params_path, score_path, clf, _train, _labels, _test_offline_feature, _test_offline_labels, _test_online):
     start = time.time()
     with open(params_path  + "params.txt", 'a') as f:
         print("\n# Training clf :{}".format(clf))
@@ -200,7 +200,7 @@ def main():
 		creat_project_dirs(log_path, params_path, score_path, model_path)
 
 		_train, _labels, _test_offline_feature, _test_offline_labels, _test_online, _test_a, _train_data = data_edit(train_path, test_path, test_a_path, offline_validation)
-		core(params_path, score_path, clf, _train, _labels, _test_offline_feature, _test_offline_labels, _test_online)
+		core(method, params_path, score_path, clf, _train, _labels, _test_offline_feature, _test_offline_labels, _test_online)
 
 if __name__ == '__main__':
 	main()
