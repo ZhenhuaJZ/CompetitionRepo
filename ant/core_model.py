@@ -48,14 +48,16 @@ def core(fillna, log_path, offline_validation, method, clf, train_path, test_pat
 	if method == "single_model":
 		clf = clf.fit(_train, _labels)
 		clear_mermory(_train, _labels)
-		probs = clf.predict_proba(_test_online)
-		offline_score_1 = offline_model_performance(_test_offline_labels, probs[:,1], params_path = params_path)
-		offline_score_2 = offline_model_performance_2(_test_offline_labels, probs[:,1], params_path = params_path)
+		offline_probs = clf.predict_proba(_test_offline)
+		clear_mermory(_test_offline)
+		offline_score_1 = offline_model_performance(_test_offline_labels, offline_probs[:,1], params_path = params_path)
+		offline_score_2 = offline_model_performance_2(_test_offline_labels, offline_probs[:,1], params_path = params_path)
 		if offline_score_2 > offline_score_1:
 			print("Goog performance_2")
 		else:
 			print("Goog performance_1(JL)")
-		clear_mermory(_test_offline_feature, _test_offline_labels)
+		clear_mermory(_test_offline_feature, _test_offline_labels, offline_probs)
+		probs = clf.predict_proba(_test_online)
 		save_score(probs[:,1], score_path)
 		# NOTE:  Feed validation Back
 		"""
