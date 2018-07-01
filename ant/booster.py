@@ -63,7 +63,7 @@ def main():
 
             clf = classifier["XGB"]
             now = datetime.datetime.now()
-            log_path = "log/date_{}/Tuning_XGB_weight/{}:{}_SM/".format(now.day,now.hour,now.minute)
+            log_path = "log/date_{}/Tuning_XGB_weight/{}:{}_GS/".format(now.day,now.hour,now.minute)
             params_path = log_path + "params/"
             score_path = log_path + "score/"
             model_path = log_path + "model/"
@@ -144,7 +144,7 @@ def main():
             print("\n# >>>>Duration<<<< : {}min ".format(round((time.time()-start)/60,2)))
 
     else:
-        val_data = [20171025, 20171105]
+        offline_validation = [20171025, 20171105]
         classifier = {
 
             "XGB" : XGBClassifier(max_depth = 4, n_estimators = 4, subsample = 0.8, gamma = 0,
@@ -183,7 +183,7 @@ def main():
         #change -1 label to 1
         _train_data.loc[_train_data["label"] == -1] = 1
         #Split train and offine test
-        _train_data, _test_offline =  test_train_split_by_date(_train_data, val_data[0], val_data[1], params_path)
+        _train_data, _test_offline =  test_train_split_by_date(_train_data, offline_validation[0], offline_validation[1], params_path)
         _train, _labels = split_train_label(_train_data)
         #online & offline data
         _test_online = _test_online.iloc[:,2:]
@@ -245,7 +245,7 @@ def main():
             offline_score = offline_model_performance(new_clf, _test_offline_feature, _test_offline_labels, params_path)
             save_score(probs[:,1], score_path)
 
-        log_parmas(valset, offline_score_1, offline_score_2, method, log_path)
+        log_parmas(offline_validation, offline_score_1, offline_score_2, method, log_path)
         clear_mermory(now)
         print("\n# >>>>Duration<<<< : {}min ".format(round((time.time()-start)/60,2)))
 
