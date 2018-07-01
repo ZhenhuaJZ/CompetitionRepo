@@ -7,14 +7,7 @@ from sklearn.externals import joblib
 from lib.data_processing import *
 from lib.model_performance import *
 import datetime, time
-"""
-now = datetime.datetime.now()
-log_path = "log/date_{}/{}:{}_SM/".format(now.day,now.hour,now.minute)
-params_path = log_path + "params/"
-score_path = log_path + "score/"
-model_path = log_path + "model/"
-creat_project_dirs(log_path, params_path, score_path, model_path)
-"""
+
 # #####################Data path###########################################
 train_path = "data/train.csv" #train_heatmap , train_mode_fill, train,
 test_path = "data/test_b.csv" #test_a_heatmap, test_a_mode_fill, test_b
@@ -30,7 +23,6 @@ def positive_unlabel_learning(classifier, unlabel_data, threshold):
 	print("\n# After PU found <{}> potential black instances".format(len(unlabel_data[unlabel_data.label == 1])))
 	print("\n# After PU found <{}> potential white instances".format(len(unlabel_data[unlabel_data.label == 0])))
 	return unlabel_data
-
 
 def data_edit(params_path, train_path, test_path, test_a_path, offline_validation):
 	_train_data = pd.read_csv(train_path)
@@ -114,12 +106,11 @@ def main():
 	#Tunning params
 	tunning = False
 	method = "single_model"
+	offline_validation = [20171025, 20171105]
 	if tunning:
-
 		for p in range(1,40,5):
 
 			classifier = {
-
 			"XGB" : XGBClassifier(max_depth = 4, n_estimators = 480, subsample = 0.8, gamma = 0,
 			min_child_weight = 1, scale_pos_weight = p,
 			colsample_bytree = 0.8, learning_rate = 0.07, n_jobs = -1),
@@ -148,29 +139,10 @@ def main():
 			model_path = log_path + "model/"
 			creat_project_dirs(log_path, params_path, score_path, model_path)
 
-			_train_data = pd.read_csv(train_path)
-			_test_online = pd.read_csv(test_path)
-			_test_a = pd.read_csv(test_a_path)
-
-			_train_data, _test_online, _test_a = custom_imputation_3_inputs(_train_data, _test_online, _test_a, fillna_value)
-			#change -1 label to 1
-			_train_data.loc[_train_data["label"] == -1] = 1
-			#Split train and offine test
-			_train_data, _test_offline =  test_train_split_by_date(_train_data, 20171020, 20171031, params_path)
-			_train, _labels = split_train_label(_train_data)
-			#online & offline data
-			_test_online = _test_online.iloc[:,2:]
-			_test_offline_feature, _test_offline_labels = split_train_label(_test_offline)
-
-		_train, _labels, _test_offline_feature, _test_offline_labels, _test_online, _test_a, _train_data = data_edit(params_path,train_path, test_path, test_a_path, offline_validation)
-		core(params_path, score_path, clf, _train, _labels, _test_offline_feature, _test_offline_labels, _test_online)
-
+			_train, _labels, _test_offline_feature, _test_offline_labels, _test_online, _test_a, _train_data = data_edit(params_path,train_path, test_path, test_a_path, offline_validation)
+			core(params_path, score_path, clf, _train, _labels, _test_offline_feature, _test_offline_labels, _test_online)
 	else:
-
-		offline_validation = [20171025, 20171105]
-
 		classifier = {
-
 		"XGB" : XGBClassifier(max_depth = 4, n_estimators = 4, subsample = 0.8, gamma = 0,
 		min_child_weight = 1, scale_pos_weight = 1,
 		colsample_bytree = 0.8, learning_rate = 0.07, n_jobs = -1),
@@ -191,7 +163,7 @@ def main():
 		solver='lbfgs', tol=0.0001, validation_fraction=0.1)
 		}
 
-		clf = classifier["random_forest"]
+		clf = classifier["XGB"]
 		now = datetime.datetime.now()
 		log_path = "log/date_{}/{}:{}_SM/".format(now.day,now.hour,now.minute)
 		params_path = log_path + "params/"
