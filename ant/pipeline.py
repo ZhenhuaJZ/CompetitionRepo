@@ -21,7 +21,7 @@ now = datetime.datetime.now()
 def custom_gridsearch(_train, _labels, pipe_clf, param, params_path):
 	start = time.time()
 	print("\n{}\n# Tuning hyper-parameters for {}\n{}\n".format(str("##"*50),param,str("##"*50)))
-	my_scorer = make_scorer(offline_model_performance)
+	my_scorer = make_scorer(offline_model_performance_2)
 	clf = GridSearchCV(pipe_clf, param_grid  = param, scoring = my_scorer,
 	                   verbose = 1, n_jobs = 2, cv = 5)
 
