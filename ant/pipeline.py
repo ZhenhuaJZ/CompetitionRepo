@@ -14,14 +14,19 @@ import operator
 from shutil import rmtree
 import warnings
 from hparams import *
-from lib.data_processing import save_score, creat_project_dirs, test_train_split_by_date, custom_imputation
-from lib.model_performance import offline_model_performance
+from lib.data_processing import *
+from lib.model_performance import *
 now = datetime.datetime.now()
+
+
+
+
 
 def custom_gridsearch(_train, _labels, pipe_clf, param, params_path):
 	start = time.time()
 	print("\n{}\n# Tuning hyper-parameters for {}\n{}\n".format(str("##"*50),param,str("##"*50)))
-	clf = GridSearchCV(pipe_clf, param_grid  = param, scoring = 'roc_auc',
+	my_scorer = make_scorer(offline_model_performance)
+	clf = GridSearchCV(pipe_clf, param_grid  = param, scoring = my_scorer,
 	                   verbose = 1, n_jobs = 2, cv = 5)
 
 	clf.fit(_train, _labels)

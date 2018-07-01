@@ -49,8 +49,8 @@ def core(fillna, log_path, offline_validation, method, clf, train_path, test_pat
 		clf = clf.fit(_train, _labels)
 		clear_mermory(_train, _labels)
 		probs = clf.predict_proba(_test_online)
-		offline_score_1 = offline_model_performance(clf, _test_offline_feature, _test_offline_labels, params_path)
-		offline_score_2 = offline_model_performance_2(clf, _test_offline_feature, _test_offline_labels, params_path)
+		offline_score_1 = offline_model_performance(_test_offline_labels, probs[:,1], params_path = params_path)
+		offline_score_2 = offline_model_performance_2(_test_offline_labels, probs[:,1], params_path = params_path)
 		if offline_score_2 > offline_score_1:
 			print("Goog performance_2")
 		else:
@@ -75,7 +75,7 @@ def core(fillna, log_path, offline_validation, method, clf, train_path, test_pat
 		_clf = clf.fit(_train, _labels)
 		clear_mermory(_train, _labels)
 		#without PU offline score
-		offline_score = offline_model_performance(_clf, _test_offline_feature, _test_offline_labels, params_path)
+		offline_score = offline_model_performance(_test_offline_labels, probs[:,1], params_path = params_path)
 		unlabel_data = positive_unlabel_learning(_clf, _test_a, 0.6)
 		#Choose Black Label
 		unlabel_data = unlabel_data[unlabel_data.label == 1]
@@ -88,7 +88,7 @@ def core(fillna, log_path, offline_validation, method, clf, train_path, test_pat
 		probs = new_clf.predict_proba(_test_online)
 		#joblib.dump(clf, model_path + "{}.pkl".format("model"))
 		#with PU offline score
-		offline_score = offline_model_performance(new_clf, _test_offline_feature, _test_offline_labels, params_path)
+		offline_score = offline_model_performance(_test_offline_labels, probs[:,1], params_path = params_path)
 		save_score(probs[:,1], score_path)
 
 	log_parmas(clf, offline_validation, offline_score_1, offline_score_2, method, log_path, fillna)
