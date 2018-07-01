@@ -198,6 +198,21 @@ def get_tpr_from_fpr(fpr_array, tpr_array, target):
             tpr_index = tmp_index - 1
         return tpr_array[tpr_index]
 
+def get_tpr_from_fpr(fpr_array, tpr_array, target):
+    fpr_index = np.where(fpr_array == target)
+    assert target <= 0.01, 'the value of fpr in the custom metric function need lt 0.01'
+    if len(fpr_index[0]) > 0:
+        return np.mean(tpr_array[fpr_index])
+    else:
+        tmp_index = bisect.bisect(fpr_array, target)
+        fpr_tmp_1 = fpr_array[tmp_index-1]
+        fpr_tmp_2 = fpr_array[tmp_index]
+        if (target - fpr_tmp_1) > (fpr_tmp_2 - target):
+            tpr_index = tmp_index
+        else:
+            tpr_index = tmp_index - 1
+        return tpr_array[tpr_index]
+
 def offline_model_performance_2(ground_truth, predict, **kwargs):
     fpr, tpr, _ = roc_curve(ground_truth, predict, pos_label=1)
     tpr1 = get_tpr_from_fpr(fpr, tpr, 0.001)
@@ -219,6 +234,14 @@ def offline_model_performance_2(ground_truth, predict, **kwargs):
         +"fpr3 : {} ----> to tpr3: {}".format(str(0.01), str(tpr3)) + "\n"
         +"**"*40 + "\n"*2
         )
+    return model_performance
+
+def offline_model_performance_3(ground_truth, predict):
+    fpr, tpr, _ = roc_curve(ground_truth, predict, pos_label=1)
+    tpr1 = get_tpr_from_fpr(fpr, tpr, 0.001)
+    tpr2 = get_tpr_from_fpr(fpr, tpr, 0.005)
+    tpr3 = get_tpr_from_fpr(fpr, tpr, 0.01)
+    model_performance = 0.4*tpr1 + 0.3*tpr2 + 0.3*tpr3
     return model_performance
 
 # #############################Log all the data ################################
