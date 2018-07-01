@@ -47,7 +47,7 @@ def main():
 
 			clf = classifier["XGB"]
 			now = datetime.datetime.now()
-			log_path = "log/date_{}/Tuning_XGB_weight/{}:{}_GS/".format(now.day,now.hour,now.minute)
+			log_path = "log/date_{}/Tuning_XGB_alpha/{}:{}_GS/".format(now.day,now.hour,now.minute)
 			creat_project_dirs(log_path)
 			core(fillna, log_path, offline_validation, method, clf, train_path, test_path, test_a_path)
 	else:
