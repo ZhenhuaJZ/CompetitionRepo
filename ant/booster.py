@@ -162,7 +162,7 @@ def main():
 			_test_online = _test_online.iloc[:,2:]
 			_test_offline_feature, _test_offline_labels = split_train_label(_test_offline)
 
-		_train, _labels, _test_offline_feature, _test_offline_labels, _test_online, _test_a, _train_data = data_edit(train_path, test_path, test_a_path)
+		_train, _labels, _test_offline_feature, _test_offline_labels, _test_online, _test_a, _train_data = data_edit(train_path, test_path, test_a_path, offline_validation)
 		core(params_path, score_path, clf, _train, _labels, _test_offline_feature, _test_offline_labels, _test_online)
 
 	else:
@@ -199,7 +199,7 @@ def main():
 		model_path = log_path + "model/"
 		creat_project_dirs(log_path, params_path, score_path, model_path)
 
-		_train, _labels, _test_offline_feature, _test_offline_labels, _test_online, _test_a, _train_data = data_edit(train_path, test_path, test_a_path)
+		_train, _labels, _test_offline_feature, _test_offline_labels, _test_online, _test_a, _train_data = data_edit(train_path, test_path, test_a_path, offline_validation)
 		core(params_path, score_path, clf, _train, _labels, _test_offline_feature, _test_offline_labels, _test_online)
 
 if __name__ == '__main__':
