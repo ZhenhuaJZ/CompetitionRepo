@@ -21,7 +21,7 @@ now = datetime.datetime.now()
 def custom_gridsearch(_train, _labels, pipe_clf, param, params_path):
 	start = time.time()
 	print("\n{}\n# Tuning hyper-parameters for {}\n{}\n".format(str("##"*50),param,str("##"*50)))
-	my_scorer = make_scorer(offline_model_performance_3)
+	my_scorer = make_scorer(offline_model_performance_2, params_path = params_path)
 	clf = GridSearchCV(pipe_clf, param_grid  = param, scoring = my_scorer,
 	                   verbose = 1, n_jobs = 2, cv = 5)
 
@@ -85,11 +85,11 @@ def main(method, train_path, test_path, fillna_value):
 	_train_data = _train_data[(_train_data.label==0)|(_train_data.label==1)]
 	_train_data,  _test_offline = test_train_split_by_date(_train_data, 20171025, 20171105, params_path)
 
-	_train, _labels = split_train_label(_train_data)
+	_train, _labels = split_train_label(_train_data[1:2000])
 	clear_mermory(_train_data)
 
 	_test_online = _test_online.iloc[:,2:]
-	_test_offline_feature, _test_offline_labels = split_train_label(_test_offline)
+	_test_offline_feature, _test_offline_labels = split_train_label(_test_offline[1:2000])
 	clear_mermory(_test_offline)
 
 	with open(params_path  + "params.txt", 'a') as f:
