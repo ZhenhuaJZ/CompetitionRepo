@@ -87,9 +87,9 @@ def save_features(data_path, prefix, mode = "train"):
 	save_path = "../data/feats/" + prefix + "/"
 	if not os.path.exists(save_path):
 		os.makedirs(save_path)
-		#read data and choose column
-		df = pd.read_csv(data_path)
-		date = df.loc[:,["date"]]
+	#read data and choose column
+	df = pd.read_csv(data_path)
+	date = df.loc[:,["date"]]
 
 	for i in range(297):
 		col_name = "f"+str(i+1)
