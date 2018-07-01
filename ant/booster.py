@@ -20,14 +20,15 @@ def main():
 	fillna = 0
 	tunning = True
 	clf_name = "XGB" #LR,MLP,RF
+	tuning_name = "alpha"
+	#loop_start, loop_end, loop_step
+	range = np.arange(0, 0.08, 0.02)
 	method = "single_model" #pu_method
 	offline_validation = [20171025, 20171105]
 
 	if tunning:
-		#loop_start, loop_end, loop_step
-		range = np.arange(0.1, 1, 0.1)
 		for p in range:
-			
+
 			classifier = {
 			"XGB" : XGBClassifier(max_depth = 4, n_estimators = 4, subsample = 0.8, gamma = 0,
 			min_child_weight = 1, scale_pos_weight = 1, reg_alpha = p,
@@ -51,7 +52,7 @@ def main():
 
 			clf = classifier[clf_name]
 			now = datetime.datetime.now()
-			log_path = "log/date_{}/Tuning_{}_alpha/{}:{}_GS/".format(now.day, clf_name, now.hour,now.minute)
+			log_path = "log/date_{}/Tuning_{}_{}/{}:{}_GS/".format(now.day, clf_name, tuning_name, now.hour,now.minute)
 			creat_project_dirs(log_path)
 			core(fillna, log_path, offline_validation, method, clf, train_path, test_path, test_a_path)
 	else:
