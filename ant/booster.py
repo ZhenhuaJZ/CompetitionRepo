@@ -20,18 +20,18 @@ def main():
 	fillna = 0
 	tunning = True
 	clf_name = "XGB" #LR,MLP,RF
-	tuning_name = "max_depth"
+	tuning_name = "scale_pos_weight"
 	#loop_start, loop_end, loop_step
 	#range = np.arange(1, 30, 4)
-	range = [3,4,5]
+	range = [1,10,20,30,40,50,60]
 	method = "single_model" #pu_method
 	offline_validation = [20171025, 20171105]
 
 	if tunning:
 		for p in range:
 			classifier = {
-			"XGB" : XGBClassifier(max_depth = p, n_estimators = 480, subsample = 0.8, gamma = 0,
-			min_child_weight = 1, scale_pos_weight = 1, reg_alpha = 0,
+			"XGB" : XGBClassifier(max_depth = 4, n_estimators = 480, subsample = 0.8, gamma = 0,
+			min_child_weight = 1, scale_pos_weight = p, reg_alpha = 0,
 			colsample_bytree = 0.8, learning_rate = 0.07, n_jobs = -1),
 
 			"LR" : LogisticRegression(#penalty = "l2", C = p, solver = "sag",
