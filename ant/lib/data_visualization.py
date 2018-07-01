@@ -110,7 +110,7 @@ def save_features(data_path, prefix, mode = "train"):
 
 		elif mode == "test":
 			feature = df.loc[:,[col_name]]
-			plt.plot(feature.index, feature_0.values, 'b.')
+			plt.plot(feature.index, feature.values, 'b.')
 			plt.legend(("test_b"), loc = 'upper right')
 
 		plt.ylabel('values')
@@ -118,7 +118,7 @@ def save_features(data_path, prefix, mode = "train"):
 		plt.title(col_name)
 		plt.savefig(save_path + "{}.png".format(col_name))
 		plt.figure()
-		
+
 		return
 
 def main():
