@@ -113,7 +113,7 @@ def main(method, train_path, test_path, fillna_value):
 			_, best_est = custom_gridsearch(_train, _labels, best_est, param, params_path)
 	#save model, score
 	#joblib.dump(best_est, model_path + "{}.pkl".format(method))
-	offline_probs = clf.predict_proba(_test_offline_feature)
+	offline_probs = best_est.predict_proba(_test_offline_feature)
 	performance_score = offline_model_performance(_test_offline_labels, offline_probs[:,1], params_path = params_path)
 	probs = best_est.predict_proba(_test_online)
 	save_score(probs[:,1], score_path)
