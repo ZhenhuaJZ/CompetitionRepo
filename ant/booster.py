@@ -19,6 +19,7 @@ def main():
 	#Tunning params
 	fillna = 0
 	tunning = True
+	clf_name = "XGB" #LR,MLP,RF
 	method = "single_model"
 	offline_validation = [20171025, 20171105]
 
@@ -29,11 +30,11 @@ def main():
 			min_child_weight = 1, scale_pos_weight = 1, reg_alpha = p*0.01,
 			colsample_bytree = 0.8, learning_rate = 0.07, n_jobs = -1),
 
-			"logistic_regression" : LogisticRegression(#penalty = "l2", C = p, solver = "sag",
+			"LR" : LogisticRegression(#penalty = "l2", C = p, solver = "sag",
 			class_weight = "balanced", max_iter = 100, n_jobs = -1),
 
 			# NOTE:test min_samples_split and min_samples_leaf
-			"random_forest" : RandomForestClassifier(n_estimators = 300, criterion = "entropy", max_depth = 16,
+			"RF" : RandomForestClassifier(n_estimators = 300, criterion = "entropy", max_depth = 16,
 			min_samples_split = 110, min_samples_leaf = p*1, max_leaf_nodes = None,
 			n_jobs = -1),
 
@@ -45,9 +46,9 @@ def main():
 			solver='lbfgs', tol=0.0001, validation_fraction=0.1)
 			}
 
-			clf = classifier["XGB"]
+			clf = classifier[clf_name]
 			now = datetime.datetime.now()
-			log_path = "log/date_{}/Tuning_XGB_alpha/{}:{}_GS/".format(now.day,now.hour,now.minute)
+			log_path = "log/date_{}/Tuning_{}_alpha/{}:{}_GS/".format(now.day, clf_name, now.hour,now.minute)
 			creat_project_dirs(log_path)
 			core(fillna, log_path, offline_validation, method, clf, train_path, test_path, test_a_path)
 	else:
