@@ -10,6 +10,7 @@ import re, csv
 
 now = datetime.datetime.now()
 
+############################### Offline performance ######################
 def offline_model_performance(ground_truth, predict, **kwargs):
     #log_path = "log/date_{}/GS_{}:{}/".format(now.day,now.hour,now.minute)
     #params_path = log_path + "params/"
