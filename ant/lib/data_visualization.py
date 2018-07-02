@@ -90,7 +90,7 @@ def save_features(data_path, prefix, mode = "train"):
 	#read data and choose column
 	df = pd.read_csv(data_path)
 	df = df.sort_values('date')
-	df.to_csv(save_path + "test_b.csv", index = None, header = True)
+	print(df['date'])
 	date = df.loc[:,["date"]]
 
 	for i in range(297):
@@ -124,7 +124,7 @@ def save_features(data_path, prefix, mode = "train"):
 def main():
 
 	train_path = "../data/train.csv"
-	test_path = "../data/test_a.csv"
+	test_path = "../data/test_b.csv"
 
 	_train_data = pd.read_csv(train_path)
 	_test_online = pd.read_csv(test_path)
@@ -135,7 +135,7 @@ def main():
 	_test_offline = _test_offline.iloc[:,3:]
 	#hist_visualization(_train, _test_online, "train_test_b", figure_1="train", figure_2="test_b")
 	#hist_visualization(_test_offline, _test_online, "on-off-1010-1020", figure_1="offline", figure_2="online")
-	save_features(test_path, "test_a", mode = "test")
+	save_features(test_path, "test_b", mode = "test")
 
 if __name__ == '__main__':
 	main()
