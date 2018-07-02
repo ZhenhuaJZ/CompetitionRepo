@@ -19,7 +19,7 @@ def cv_fold(clf, _train_data, fold_time_split):
 	roc_2_list = []
 	for i, offline_validation in enumerate(fold_time_split):
 		#CV in 5 fold
-		print("\n# Fold {} from {} - {}"format(i, offline_validation[0], offline_validation[1]))
+		print("\n# Fold {} from {} - {}".format(i, offline_validation[0], offline_validation[1]))
 		_train_data, _test_offline =  test_train_split_by_date(_train_data, offline_validation[0], offline_validation[1], params_path)
 		_train, _labels = split_train_label(_train_data)
 		_test_offline_feature, _test_offline_labels = split_train_label(_test_offline)
