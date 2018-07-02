@@ -51,7 +51,7 @@ def cv_fold(clf, _train_data, fold_time_split, params_path):
 	print("##"*40)
 	return roc_1_mean, roc_2_mean
 
-def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_a_path, method = None, cv = False, fold_time_split = None):
+def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_a_path, pu_thres, method = None, cv = False, fold_time_split = None):
 	params_path = log_path + "params/"
 	score_path = log_path + "score/"
 	model_path = log_path + "model/"
@@ -91,7 +91,7 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
 		clear_mermory(_test_offline)
 		offline_model_performance(_test_offline_labels, offline_probs[:,1], params_path = params_path)
 		offline_model_performance_2(_test_offline_labels, offline_probs[:,1], params_path = params_path)
-		unlabel_data = positive_unlabel_learning(clf, _test_a, 0.6)
+		unlabel_data = positive_unlabel_learning(clf, _test_a, pu_thres)
 		clear_mermory(_test_a)
 		#Choose Black Label
 		unlabel_data = unlabel_data[unlabel_data.label == 1]

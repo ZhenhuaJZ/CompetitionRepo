@@ -18,21 +18,21 @@ def main():
 	# #####################################################################
 	#Tunning params
 	fillna = 0
-
 	clf_name = "XGB" #LR,MLP,RF,XGB
-	tuning_name = "max_depth"
-	tunning = False
+	tuning_name = "pu_thresh"
+	tunning = True
 	range = [1,2,3]
-	method = "single_mode" #pu_method, single_mode
-	offline_validation = [20171028, 20171105] #20171025, 20171105
-	cv = True
+	method = "pu_method" #pu_method, single_mode
+	pu_thres = [0.6, 0.5, 0.4, 0.3, 0.2, 0.1]
+	offline_validation = [20171025, 20171105] #20171025, 20171105
+	cv = False
 	fold_time_split = [[20170905, 20170910], [20170911, 20170920], [20170921, 20171001],[20171002,20171015],[20171015,20171027]]
 
 	if tunning:
 		for p in range:
 			classifier = {
-			"XGB" : XGBClassifier(max_depth = 4, n_estimators = 480, subsample = 0.8, gamma = 0,
-			min_child_weight = p, scale_pos_weight = 1, reg_alpha = 0,
+			"XGB" : XGBClassifier(max_depth = 4, n_estimators = 4, subsample = 0.8, gamma = 0,
+			min_child_weight = 1, scale_pos_weight = 1, reg_alpha = 0,
 			colsample_bytree = 0.8, learning_rate = 0.07, n_jobs = -1),
 
 			"LR" : LogisticRegression(#penalty = "l2", C = p, solver = "sag",
@@ -56,7 +56,7 @@ def main():
 			log_path = "log/date_{}/Tuning_{}_{}/{}:{}_GS/".format(now.day, clf_name, tuning_name, now.hour,now.minute)
 			creat_project_dirs(log_path)
 			core(fillna, log_path, offline_validation, clf, train_path, test_path, test_a_path,
-					method = method, cv = cv, fold_time_split = fold_time_split)
+					pu_thres = p, method = method, cv = cv, fold_time_split = fold_time_split)
 	else:
 		classifier = {
 		"XGB" : XGBClassifier(max_depth = 4, n_estimators = 4, subsample = 0.8, gamma = 0,
@@ -84,7 +84,7 @@ def main():
 		log_path = "log/date_{}/{}:{}_SM/".format(now.day,now.hour,now.minute)
 		creat_project_dirs(log_path)
 		core(fillna, log_path, offline_validation, clf, train_path, test_path, test_a_path,
-		 			method = method, cv = cv, fold_time_split = fold_time_split)
+		 			pu_thres = pu_thres, method = method, cv = cv, fold_time_split = fold_time_split)
 
 if __name__ == '__main__':
 	main()
