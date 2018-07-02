@@ -44,7 +44,7 @@ def cv_fold(clf, _train_data, fold_time_split):
 	return roc_1_mean, roc_2_mean
 
 def core(fillna, log_path, offline_validation, method, clf, train_path, test_path, test_a_path, cv = False):
-
+	fold_time_split = [[20170905, 20170915], [20170916, 20170930], [20171001, 20171015],[20171016,20171031],[20171101,20171105]]
 	params_path = log_path + "params/"
 	score_path = log_path + "score/"
 	model_path = log_path + "model/"
