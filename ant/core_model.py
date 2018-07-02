@@ -136,6 +136,7 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
 
 	print("\n# Feed Only black validation set to the dataset")
 	_test_offline_black = _test_offline.loc[_test_offline["label"] == 1]
+	print("\n# Found <{}> black instances".format(len(_test_offline_black)))
 	_final_train = file_merge(pu_train_data, _test_offline_black, "date")
 	clear_mermory(_test_offline_black, pu_train_data, _test_offline)
 	_final_feature, _final_label = split_train_label(_final_train)
