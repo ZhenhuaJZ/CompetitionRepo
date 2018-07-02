@@ -20,9 +20,9 @@ def cv_fold(clf, _train_data, fold_time_split, params_path):
 	for i, offline_validation in enumerate(fold_time_split):
 		#CV in 5 fold
 		start = time.time()
-		print("\n"+"##"*50)
+		print("\n"+"##"*40)
 		print("\n# Fold {} from {} - {}".format(i, offline_validation[0], offline_validation[1]))
-		print("\n"+"##"*50)
+		print("\n"+"##"*40)
 		train_data, test_offline =  test_train_split_by_date(_train_data, offline_validation[0], offline_validation[1], params_path)
 		train, labels = split_train_label(train_data)
 		test_offline_feature, test_offline_labels = split_train_label(test_offline)
@@ -45,9 +45,10 @@ def cv_fold(clf, _train_data, fold_time_split, params_path):
 	roc_2_mean = np.mean(roc_2, axis = 0)
 	roc_1_std = np.std(roc_2, axis = 0)
 	roc_2_std = np.std(roc_1, axis = 0)
-	print("\n# ROC :{} (+/- {:2f})".format(roc_1_mean, roc_1_std*2))
-	print("\n# ROC :{} (+/- {:2f})".format(roc_2_mean, roc_2_std*2))
-
+	print("##"*40)
+	print("\n# ROC_1(JL) :{} (+/- {:2f})".format(roc_1_mean, roc_1_std*2))
+	print("\n# ROC_2 :{} (+/- {:2f})".format(roc_2_mean, roc_2_std*2))
+	print("##"*40)
 	return roc_1_mean, roc_2_mean
 
 def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_a_path, method = None, cv = False, fold_time_split = None):
