@@ -90,12 +90,13 @@ def save_features(data_path, prefix, mode = "train"):
 	df = pd.read_csv(data_path)
 	df = df.sort_values('date')
 	date = df.loc[:,["date"]]
+	df = df.iloc[:,3:]
+	df = (df - df.mean()) / (df.max() - df.min())
 
 	for i in range(297):
 		col_name = "f"+str(i+1)
 		print(col_name)
 		if mode == "train":
-			print(df.loc[:,["date"]])
 			df_0 = df[(df.label==0)]
 			df_1 = df[(df.label==1)]
 			feature_0 = df_0.loc[:,[col_name]]
@@ -111,6 +112,10 @@ def save_features(data_path, prefix, mode = "train"):
 
 		elif mode == "test":
 			feature = df.loc[:,[col_name]]
+			#standarlization
+			#mean = feature.mean().values[0]
+			#std = feature.std().values[0]
+			#feature = (feature - mean) / (std)
 			#print(df.loc[:,["date"]])
 			plt.plot(feature.index, feature.values, 'b.')
 			plt.legend(("test_b"), loc = 'upper right')
@@ -135,7 +140,7 @@ def main():
 	_test_offline = _test_offline.iloc[:,3:]
 	#hist_visualization(_train, _test_online, "train_test_b", figure_1="train", figure_2="test_b")
 	#hist_visualization(_test_offline, _test_online, "on-off-1010-1020", figure_1="offline", figure_2="online")
-	save_features(train_path, "0_1", mode = "train")
+	save_features(train_path, "std_feats", mode = "test")
 
 if __name__ == '__main__':
 	main()

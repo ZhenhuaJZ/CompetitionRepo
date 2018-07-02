@@ -64,12 +64,9 @@ def split_train_label(data, cache = True):
 # test_train_split_by_date split the test set by providing a range of dates in yyyymmdd
 def test_train_split_by_date(data, start_y_m_d, end_y_m_d, params_path = ""):
 
-    #log_path = "log/date_{}/GS_{}:{}/".format(now.day,now.hour,now.minute)
-    #params_path = log_path + "params/"
-
     split_data = data[(data["date"] >= start_y_m_d) & (data["date"] <= end_y_m_d)]
     data = data.drop(data.index[(data["date"] >= start_y_m_d) & (data["date"] <= end_y_m_d)])
-    split_data_percent = round(len(split_data)/len(data.iloc[:,1]*100),2)
+    split_data_percent = round(len(split_data)/len(data.iloc[:,1]),2) * 100
     print("\n# Split by date from <<<{}>>> to <<<{}>>>".format(str(start_y_m_d), str(end_y_m_d)))
     print("\n# Offline test percentage {}%".format(split_data_percent))
     print("\n# Number of label 0 and 1 in test set:\n", split_data["label"].value_counts())
@@ -77,7 +74,7 @@ def test_train_split_by_date(data, start_y_m_d, end_y_m_d, params_path = ""):
     if params_path != "" :
         with open(params_path  + "params.txt", 'a') as f:
             f.write(
-            "**"*40 + "\n"*2
+            "##"*40 + "\n"*2
             +"Split by date from <<<{}>>> to <<<{}>>>".format(str(start_y_m_d), str(end_y_m_d)) + "\n"
             +"Offline test percentage {}%".format(str(split_data_percent)) + "\n"*2
             +"**"*40 + "\n"*2
@@ -144,7 +141,7 @@ def custom_imputation_3_inputs(df_train, df_test_b, df_test_a, fillna_value = 0)
     train = df_train.fillna(fillna_value)
     test_b = df_test_b.fillna(fillna_value)
     test_a = df_test_a.fillna(fillna_value)
-    print("##"*50)
+    print("##"*40)
     print("\n# Filling missing data with <<<{}>>>".format(fillna_value))
     return train, test_b, test_a
 
@@ -152,7 +149,7 @@ def custom_imputation_3_inputs(df_train, df_test_b, df_test_a, fillna_value = 0)
 def custom_imputation(df_train, df_test, fillna_value = 0):
     train = df_train.fillna(fillna_value)
     test = df_test.fillna(fillna_value)
-    print("##"*50)
+    print("##"*40)
     print("\n# Filling missing data with <<<{}>>>".format(fillna_value))
     return train, test
 # #############################Save score#######################################
