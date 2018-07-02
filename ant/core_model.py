@@ -87,6 +87,7 @@ def core(fillna, log_path, offline_validation, method, clf, train_path, test_pat
 		unlabel_data = positive_unlabel_learning(_clf, _test_a, 0.6)
 		#Choose Black Label
 		unlabel_data = unlabel_data[unlabel_data.label == 1]
+		print(unlabel_data)
 		#80% train data
 		pu_train_data = file_merge(_train_data, unlabel_data, "date")
 		_new_train, _new_label = split_train_label(pu_train_data)

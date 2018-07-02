@@ -21,11 +21,11 @@ def main():
 	tunning = False
 	clf_name = "XGB" #LR,MLP,RF,XGB
 	tuning_name = "max_depth"
-	cv = True
+	cv = False
 	#loop_start, loop_end, loop_step
 	#range = np.arange(1, 30, 4)
 	range = [9,10,11]
-	method = "single_model" #pu_method
+	method = "pu_method" #pu_method
 	offline_validation = [20171028, 20171105]
 	fold_time_split = [[20170905, 20170915], [20170916, 20170930], [20171001, 20171015],[20171016,20171031],[20171101,20171105]]
 
