@@ -21,6 +21,7 @@ def main():
 	tunning = False
 	clf_name = "XGB" #LR,MLP,RF,XGB
 	tuning_name = "max_depth"
+	cv = True
 	#loop_start, loop_end, loop_step
 	#range = np.arange(1, 30, 4)
 	range = [9,10,11]
@@ -55,10 +56,10 @@ def main():
 			now = datetime.datetime.now()
 			log_path = "log/date_{}/Tuning_{}_{}/{}:{}_GS/".format(now.day, clf_name, tuning_name, now.hour,now.minute)
 			creat_project_dirs(log_path)
-			core(fillna, log_path, offline_validation, method, clf, train_path, test_path, test_a_path)
+			core(fillna, log_path, offline_validation, method, clf, train_path, test_path, test_a_path, cv = cv)
 	else:
 		classifier = {
-		"XGB" : XGBClassifier(max_depth = 4, n_estimators = 480, subsample = 0.8, gamma = 0,
+		"XGB" : XGBClassifier(max_depth = 4, n_estimators = 4, subsample = 0.8, gamma = 0,
 		min_child_weight = 1, scale_pos_weight = 1,
 		colsample_bytree = 0.8, learning_rate = 0.07, n_jobs = -1),
 
@@ -82,7 +83,7 @@ def main():
 		now = datetime.datetime.now()
 		log_path = "log/date_{}/{}:{}_SM/".format(now.day,now.hour,now.minute)
 		creat_project_dirs(log_path)
-		core(fillna, log_path, offline_validation, method, clf, train_path, test_path, test_a_path)
+		core(fillna, log_path, offline_validation, method, clf, train_path, test_path, test_a_path, cv = cv)
 
 if __name__ == '__main__':
 	main()
