@@ -114,7 +114,7 @@ def save_features(data_path, prefix, mode = "train"):
 			#standarlization
 			mean = feature.mean().values[0]
 			std = feature.std().values[0]
-			feature = (feature_1 - mean) / (std)
+			feature = (feature - mean) / (std)
 			#print(df.loc[:,["date"]])
 			plt.plot(feature.index, feature.values, 'b.')
 			plt.legend(("test_b"), loc = 'upper right')
