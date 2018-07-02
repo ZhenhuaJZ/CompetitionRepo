@@ -24,7 +24,7 @@ def main():
 	tuning_range = [0.6, 0.5, 0.4, 0.3, 0.2, 0.1]
 	#Method
 	method = "single_mode" #pu_method, single_mode
-	pu_thres = 0.6
+	#pu_thres = 0
 	offline_validation = [20171025, 20171105] #20171025, 20171105
 	#CV
 	cv = False
@@ -35,7 +35,7 @@ def main():
 	if tunning:
 		for p in tuning_range:
 			classifier = {
-			"XGB" : XGBClassifier(max_depth = 4, n_estimators = 4, subsample = 0.8, gamma = 0,
+			"XGB" : XGBClassifier(max_depth = 4, n_estimators = 480, subsample = 0.8, gamma = 0,
 			min_child_weight = 1, scale_pos_weight = 1, reg_alpha = 0,
 			colsample_bytree = 0.8, learning_rate = 0.07, n_jobs = -1),
 
