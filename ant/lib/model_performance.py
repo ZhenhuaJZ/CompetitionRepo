@@ -249,7 +249,7 @@ def offline_model_performance_2(ground_truth, predict, **kwargs):
 
 # #############################Log all the data ################################
 
-def log_parmas(clf, valset, roc_1, roc_2, mode, filename, fillna, pu_thres = "n/a", cv_roc_1_mean = "n/a", cv_roc_2_mean = "n/a", ):
+def log_parmas(clf, valset, roc_1, roc_2, mode, filename, fillna, pu_thres = "n/a", cv_roc_1_mean = "n/a", cv_roc_2_mean = "n/a", under_samp = False):
     #formate log
     valset = str(valset[0]) + "-" + str(valset[1])
     roc_1 = round(roc_1, 6)
@@ -261,7 +261,7 @@ def log_parmas(clf, valset, roc_1, roc_2, mode, filename, fillna, pu_thres = "n/
     split_string = re.split('[(,' '\n)' ']', str(clf))
 
     f = csv.writer(open("log/log.csv", "a"))
-    
+
     log = [] #clf name
     header = [] #header
     parmas = [] #parmas
@@ -286,6 +286,7 @@ def log_parmas(clf, valset, roc_1, roc_2, mode, filename, fillna, pu_thres = "n/
     header.append("file name")
     header.append("PU(threshold)")
     header.append("fillna")
+    header.append("under_sampling")
 
     #add content
     parmas.append(valset)
@@ -298,6 +299,7 @@ def log_parmas(clf, valset, roc_1, roc_2, mode, filename, fillna, pu_thres = "n/
     parmas.append(filename)
     parmas.append(pu_thres)
     parmas.append(fillna)
+    parmas.append(under_samp)
 
     f.writerow(log)
     f.writerow(header)
