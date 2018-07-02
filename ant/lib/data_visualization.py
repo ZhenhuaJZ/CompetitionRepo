@@ -112,6 +112,7 @@ def save_features(data_path, prefix, mode = "train"):
 
 		elif mode == "test":
 			feature = df.loc[:,[col_name]]
+			print(df.loc[:,["data"]])
 			plt.plot(feature.index, feature.values, 'b.')
 			plt.legend(("test_b"), loc = 'upper right')
 
