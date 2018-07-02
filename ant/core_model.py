@@ -5,7 +5,7 @@ from lib.model_performance import *
 import datetime, time
 
 def positive_unlabel_learning(classifier, unlabel_data, threshold):
-	print("\n PU threshold = {}".format(threshold))
+	print("\n# PU threshold = {}".format(threshold))
 	score = classifier.predict_proba(unlabel_data.iloc[:,2:])
 	score = pd.Series(score[:,1])
 	score.loc[score >= threshold] = 1

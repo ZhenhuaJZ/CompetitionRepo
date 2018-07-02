@@ -16,14 +16,13 @@ test_a_path = "data/test_a.csv"
 
 def main():
 	# #####################################################################
-	#Tunning params
 	fillna = 0
 	clf_name = "XGB" #LR,MLP,RF,XGB
 	tuning_name = "pu_thresh"
-
+	#Tunning params
 	tunning = True
 	tuning_range = [0.6, 0.5, 0.4, 0.3, 0.2, 0.1]
-
+	#Method
 	method = "pu_method" #pu_method, single_mode
 	pu_thres = 0.6
 	offline_validation = [20171025, 20171105] #20171025, 20171105
@@ -52,7 +51,7 @@ def main():
 			nesterovs_momentum=True, power_t=0.5, random_state=1, shuffle=True,
 			solver='lbfgs', tol=0.0001, validation_fraction=0.1)
 			}
-			print("\n# Tuning : {} current at {}".format(tuning_name, p))
+			print("##"*40 + "\n# Tuning : {} current at {}".format(tuning_name, p))
 			clf = classifier[clf_name]
 			now = datetime.datetime.now()
 			log_path = "log/date_{}/Tuning_{}_{}/{}:{}_GS/".format(now.day, clf_name, tuning_name, now.hour,now.minute)
