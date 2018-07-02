@@ -6,8 +6,20 @@ import datetime
 import gc
 now = datetime.datetime.now()
 
+############################# Data subsampling #################################
+def under_sampling(data):
+    label_1_data = data.loc[data["label"] == 1]
+    label_1_size = len(label_1_data["label"])
+    label_0_data = data.drop(data.index[data["label"] == 1])
+    label_0_data = label_0_data.sample(n = label_1_size, random_state = 10)
+    print(label_0_data)
+    under_sample_data = file_merge(label_1_data, label_0_data, sort_by = "date", reset_index = True)
+    print("\n# Number of label 1 and 0:\n", under_sample_data["label"].value_counts())
+    return under_sample_data
 
+# TODO: SMOTE sampling technique
 
+########################### Memory Manage ######################################
 def clear_mermory(*args):
     for a in args:
         del a
