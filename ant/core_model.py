@@ -52,7 +52,7 @@ def cv_fold(clf, _train_data, fold_time_split, params_path):
 	print("##"*40)
 	return roc_1_mean, roc_2_mean
 
-def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_a_path, pu_thres, method = None, cv = False, fold_time_split = None):
+def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_a_path, pu_thres, method = None, cv = False, fold_time_split = None, under_samp = False):
 	params_path = log_path + "params/"
 	score_path = log_path + "score/"
 	model_path = log_path + "model/"
@@ -67,6 +67,11 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
 
 	#Split train and offine test
 	_train_data, _test_offline =  test_train_split_by_date(_train_data, offline_validation[0], offline_validation[1], params_path)
+
+	#under_sampling
+	if under_samp:
+		_train_data = under_sampling(_train_data)
+
 	_train, _labels = split_train_label(_train_data)
 	#online & offline data
 	_test_online = _test_online.iloc[:,2:]

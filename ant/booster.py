@@ -29,6 +29,9 @@ def main():
 	cv = False
 	fold_time_split = [[20170905, 20170910], [20170911, 20170920], [20170921, 20171001],[20171002,20171015],[20171015,20171027]]
 
+	#under_sampling
+	under_samp = True
+
 	if tunning:
 		for p in tuning_range:
 			classifier = {
@@ -57,7 +60,7 @@ def main():
 			log_path = "log/date_{}/Tuning_{}_{}/{}:{}_GS/".format(now.day, clf_name, tuning_name, now.hour,now.minute)
 			creat_project_dirs(log_path)
 			core(fillna, log_path, offline_validation, clf, train_path, test_path, test_a_path,
-					pu_thres = p, method = method, cv = cv, fold_time_split = fold_time_split)
+					pu_thres = p, method = method, cv = cv, fold_time_split = fold_time_split, under_samp = under_samp)
 	else:
 		classifier = {
 		"XGB" : XGBClassifier(max_depth = 4, n_estimators = 4, subsample = 0.8, gamma = 0,
@@ -85,7 +88,7 @@ def main():
 		log_path = "log/date_{}/{}:{}_SM/".format(now.day,now.hour,now.minute)
 		creat_project_dirs(log_path)
 		core(fillna, log_path, offline_validation, clf, train_path, test_path, test_a_path,
-		 			pu_thres = pu_thres, method = method, cv = cv, fold_time_split = fold_time_split)
+		 			pu_thres = pu_thres, method = method, cv = cv, fold_time_split = fold_time_split, under_samp = under_samp)
 
 if __name__ == '__main__':
 	main()
