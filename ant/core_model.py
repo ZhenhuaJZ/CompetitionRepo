@@ -102,13 +102,13 @@ def core(fillna, log_path, offline_validation, method, clf, train_path, test_pat
 
 	offline_probs = clf.predict_proba(_test_offline_feature)
 	clear_mermory(_test_offline)
-	offline_model_performance(_test_offline_labels, offline_probs[:,1], params_path = params_path)
-	offline_model_performance_2(_test_offline_labels, offline_probs[:,1], params_path = params_path)
+	offline_score_1 = offline_model_performance(_test_offline_labels, offline_probs[:,1], params_path = params_path)
+	offline_score_2 = offline_model_performance_2(_test_offline_labels, offline_probs[:,1], params_path = params_path)
 	clear_mermory(_test_offline_feature, _test_offline_labels, offline_probs)
 	probs = clf.predict_proba(_test_online)
 	save_score(probs[:,1], score_path)
 	#Log all the data
-	log_parmas(clf, offline_validation, offline_score_1, offline_score_2, method, log_path, fillna, cv_roc_1_mean, cv_roc_2_mean)
+	log_parmas(clf, offline_validation, offline_score_1, offline_score_2, method, log_path, fillna, roc_1_mean, roc_2_mean)
 	clear_mermory(now)
 
 	# NOTE:  Feed validation Back
