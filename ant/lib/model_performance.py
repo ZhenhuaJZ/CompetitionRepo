@@ -234,7 +234,7 @@ def offline_model_performance_2(ground_truth, predict, **kwargs):
           +"# fpr2 : {} ----> to tpr2: {:9f}".format(0.005, tpr2) + "\n"
           +"# fpr3 : {} ----> to tpr3: {:9f}".format(0.01, tpr3) + "\n"
     )
-    """
+
     with open(kwargs['params_path']  + "params.txt", 'a') as f:
         f.write(
         "**"*40 + "\n"*2
@@ -244,12 +244,13 @@ def offline_model_performance_2(ground_truth, predict, **kwargs):
         +"fpr3 : {} ----> to tpr3: {}".format(str(0.01), str(tpr3)) + "\n"
         +"**"*40 + "\n"*2
         )
-
+    """
     return model_performance
 
 # #############################Log all the data ################################
 
-def log_parmas(clf, valset, roc_1, roc_2, mode, filename, fillna, pu_thres = "n/a", cv_roc_1_mean = "n/a", cv_roc_2_mean = "n/a", under_samp = False):
+def log_parmas(clf, valset, roc_1, roc_2, mode, filename, fillna, pu_thres = "n/a",
+                cv_roc_1_mean = "n/a", cv_roc_2_mean = "n/a", under_samp = False, Feed_val_back = ""):
     #formate log
     valset = str(valset[0]) + "-" + str(valset[1])
     roc_1 = round(roc_1, 6)
@@ -287,6 +288,8 @@ def log_parmas(clf, valset, roc_1, roc_2, mode, filename, fillna, pu_thres = "n/
     header.append("PU(threshold)")
     header.append("fillna")
     header.append("under_sampling")
+    header.append("Feed val black back")
+
 
     #add content
     parmas.append(valset)
@@ -300,6 +303,7 @@ def log_parmas(clf, valset, roc_1, roc_2, mode, filename, fillna, pu_thres = "n/
     parmas.append(pu_thres)
     parmas.append(fillna)
     parmas.append(under_samp)
+    parmas.append(Feed_val_back)
 
     f.writerow(log)
     f.writerow(header)
