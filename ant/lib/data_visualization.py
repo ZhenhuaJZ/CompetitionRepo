@@ -90,6 +90,7 @@ def save_features(data_path, prefix, mode = "train"):
 	#read data and choose column
 	df = pd.read_csv(data_path)
 	df = df.sort_values('date')
+	df.to_csv(save_path + "test_b.csv", index = None, header = True)
 	date = df.loc[:,["date"]]
 
 	for i in range(297):
