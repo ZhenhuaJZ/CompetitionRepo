@@ -17,8 +17,10 @@ def positive_unlabel_learning(classifier, unlabel_data, threshold):
 def cv_fold(clf, _train_data, fold_time_split, params_path):
 	roc_1_list = []
 	roc_2_list = []
+
 	for i, offline_validation in enumerate(fold_time_split):
 		#CV in 5 fold
+		start = time.time()
 		print("\n"+"##"*50)
 		print("\n# Fold {} from {} - {}".format(i, offline_validation[0], offline_validation[1]))
 		print("\n"+"##"*50)
@@ -35,6 +37,7 @@ def cv_fold(clf, _train_data, fold_time_split, params_path):
 		offline_score_2 = offline_model_performance_2(test_offline_labels, offline_probs[:,1], params_path = params_path, fold = i)
 		roc_1_list.append(offline_score_1)
 		roc_2_list.append(offline_score_2)
+		print("\n# >>>>Duration<<<< : {}min ".format(round((time.time()-start)/60,2)))
 	#eval performace
 	clear_mermory(_train_data)
 	roc_1 = np.array(roc_1_list)
