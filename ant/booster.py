@@ -18,22 +18,22 @@ def main():
 	# #####################################################################
 	#Tunning params
 	fillna = 0
-	tunning = False
+	tunning = True
 	clf_name = "XGB" #LR,MLP,RF,XGB
 	tuning_name = "max_depth"
 	cv = False
 	#loop_start, loop_end, loop_step
 	#range = np.arange(1, 30, 4)
-	range = [9,10,11]
-	method = "pu_method" #pu_method
-	offline_validation = [20171025, 20171105] #20171025, 20171105
+	range = [1,2,3]
+	method = "pu_method" #pu_method, sing
+	offline_validation = [20171028, 20171105] #20171025, 20171105
 	fold_time_split = [[20170905, 20170915], [20170916, 20170930], [20171001, 20171015],[20171016,20171031],[20171101,20171105]]
 
 	if tunning:
 		for p in range:
 			classifier = {
-			"XGB" : XGBClassifier(max_depth = p, n_estimators = 480, subsample = 0.8, gamma = 0,
-			min_child_weight = 1, scale_pos_weight = 1, reg_alpha = 0,
+			"XGB" : XGBClassifier(max_depth = 4, n_estimators = 480, subsample = 0.8, gamma = 0,
+			min_child_weight = p, scale_pos_weight = 1, reg_alpha = 0,
 			colsample_bytree = 0.8, learning_rate = 0.07, n_jobs = -1),
 
 			"LR" : LogisticRegression(#penalty = "l2", C = p, solver = "sag",
@@ -56,7 +56,7 @@ def main():
 			now = datetime.datetime.now()
 			log_path = "log/date_{}/Tuning_{}_{}/{}:{}_GS/".format(now.day, clf_name, tuning_name, now.hour,now.minute)
 			creat_project_dirs(log_path)
-			core(fillna, log_path, offline_validation, method, clf, train_path, test_path, test_a_path, cv = cv)
+			core(fillna, log_path, offline_validation, clf, train_path, test_path, test_a_path, method = method, cv = cv)
 	else:
 		classifier = {
 		"XGB" : XGBClassifier(max_depth = 4, n_estimators = 480, subsample = 0.8, gamma = 0,
@@ -83,7 +83,7 @@ def main():
 		now = datetime.datetime.now()
 		log_path = "log/date_{}/{}:{}_SM/".format(now.day,now.hour,now.minute)
 		creat_project_dirs(log_path)
-		core(fillna, log_path, offline_validation, method, clf, train_path, test_path, test_a_path, cv = cv)
+		core(fillna, log_path, offline_validation, clf, train_path, test_path, test_a_path, method = method, cv = cv)
 
 if __name__ == '__main__':
 	main()
