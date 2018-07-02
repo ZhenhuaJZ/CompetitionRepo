@@ -20,7 +20,7 @@ def main():
 
 	fillna = 0
 	clf_name = "XGB" #LR,MLP,RF,XGB
-	tuning_name = "n_estimators"
+	tuning_name = "thresh"
 	#Tunning params
 	tunning = True
 	tuning_range = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6]
