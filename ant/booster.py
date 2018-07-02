@@ -20,10 +20,10 @@ def main():
 
 	fillna = 0
 	clf_name = "XGB" #LR,MLP,RF,XGB
-	tuning_name = "pu_thresh"
+	tuning_name = "n_estimators"
 	#Tunning params
-	tunning = False
-	tuning_range = [0.5, 0.6, 0.4, 0.3, 0.2, 0.1]
+	tunning = True
+	tuning_range = [4, 5]
 
 	pu_thres = 0.6
 	offline_validation = [20171025, 20171105] #20171025, 20171105
@@ -65,7 +65,7 @@ def main():
 	if tunning:
 		for p in tuning_range:
 			classifier = {
-			"XGB" : XGBClassifier(max_depth = 4, n_estimators = 480, subsample = 0.8, gamma = 0,
+			"XGB" : XGBClassifier(max_depth = 4, n_estimators = p, subsample = 0.8, gamma = 0,
 			min_child_weight = 1, scale_pos_weight = 1, reg_alpha = 0,
 			colsample_bytree = 0.8, learning_rate = 0.07, n_jobs = -1),
 
