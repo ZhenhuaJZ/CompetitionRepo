@@ -20,17 +20,17 @@ def main():
 	clf_name = "XGB" #LR,MLP,RF,XGB
 	tuning_name = "pu_thresh"
 	#Tunning params
-	tunning = False
-	tuning_range = [0.6, 0.5, 0.4, 0.3, 0.2, 0.1]
+	tunning = True
+	tuning_range = [0.5, 0.6, 0.4, 0.3, 0.2, 0.1]
 	#Method
-	method = "single_mode" #pu_method, single_mode
-	pu_thres = 0
+	method = "pu_method" #pu_method, single_mode
+	pu_thres = 0.5
 	offline_validation = [20171025, 20171105] #20171025, 20171105
 	#CV
 	cv = False
 	fold_time_split = [[20170905, 20170910], [20170911, 20170920], [20170921, 20171001],[20171002,20171015],[20171015,20171027]]
 	#under_sampling
-	under_samp = True
+	under_samp = False
 
 	if tunning:
 		for p in tuning_range:
