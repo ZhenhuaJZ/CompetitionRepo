@@ -133,7 +133,7 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
 	clear_mermory(_final_train)
 	#joblib.dump(clf, model_path + "{}.pkl".format("model"))
 	clf = clf.fit(_final_feature, _final_label)
-	clear_mermory(_final_train, _final_label)
+	clear_mermory(_final_feature, _final_label)
 	probs = clf.predict_proba(_test_online)
 	save_score(probs[:,1], score_path)
 

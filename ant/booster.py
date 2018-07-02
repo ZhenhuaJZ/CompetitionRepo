@@ -23,13 +23,13 @@ def main():
 	tuning_name = "thresh"
 	#Tunning params
 	tunning = True
-	tuning_range = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6]
+	tuning_range = [0.7,0.6,0.5,0.4,0.3]
 
 	pu_thres = 0.6
 	offline_validation = [20171025, 20171105] #20171025, 20171105
 	#CV
 	cv = True
-	fold_time_split = [[20170905, 20170915], [20170916, 20170925], [20170926, 20171005],[20171006,20171015],[20171015,20171025]]
+	fold_time_split = [[20170905, 20170916], [20170917, 20170925], [20170926, 20171005],[20171006,20171015],[20171015,20171025]]
 	#under_sampling
 	under_samp = False
 	method = "pu_method"
@@ -65,7 +65,7 @@ def main():
 	if tunning:
 		for p in tuning_range:
 			classifier = {
-			"XGB" : XGBClassifier(max_depth = 4, n_estimators = 3, subsample = 0.8, gamma = 0,
+			"XGB" : XGBClassifier(max_depth = 4, n_estimators = 4, subsample = 0.8, gamma = 0,
 			min_child_weight = 1, scale_pos_weight = 1, reg_alpha = 0,
 			colsample_bytree = 0.8, learning_rate = 0.07, n_jobs = -1),
 
@@ -84,7 +84,7 @@ def main():
 			nesterovs_momentum=True, power_t=0.5, random_state=1, shuffle=True,
 			solver='lbfgs', tol=0.0001, validation_fraction=0.1)
 			}
-			print("##"*40 + "\n# Tuning : {} current at {}".format(tuning_name, p))
+			print("\n##"*40 + "\n# Tuning : {} current at {}".format(tuning_name, p))
 			clf = classifier[clf_name]
 			now = datetime.datetime.now()
 			log_path = "log/date_{}/Tuning_{}_{}/{}:{}_GS/".format(now.day, clf_name, tuning_name, now.hour,now.minute)
