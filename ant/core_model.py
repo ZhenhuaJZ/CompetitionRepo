@@ -95,7 +95,7 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
 	clf = clf.fit(_train, _labels)
 	clear_mermory(_train, _labels)
 	print(clf.get_params())
-	print("\n #PU Traing Start")
+	print("\n# PU Traing Start")
 	# NOTE: PU learning
 	unlabel_data = positive_unlabel_learning(clf, _test_a, pu_thres)
 	clear_mermory(_test_a)
@@ -106,7 +106,7 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
 	_new_train, _new_label = split_train_label(pu_train_data)
 	clf = clf.fit(_new_train, _new_label)
 	clear_mermory(_new_train, _new_label)
-	print("\n #PU Traing Down")
+	print("\n# PU Traing Done")
 
 	roc_1_mean, roc_2_mean = "n/a","n/a"
 	if cv:
