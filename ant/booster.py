@@ -65,7 +65,7 @@ def main():
 	if tunning:
 		for p in tuning_range:
 			classifier = {
-			"XGB" : XGBClassifier(max_depth = 4, n_estimators = 4, subsample = 0.8, gamma = 0,
+			"XGB" : XGBClassifier(max_depth = 4, n_estimators = 480, subsample = 0.8, gamma = 0,
 			min_child_weight = 1, scale_pos_weight = 1, reg_alpha = 0,
 			colsample_bytree = 0.8, learning_rate = 0.07, n_jobs = -1),
 
@@ -84,7 +84,7 @@ def main():
 			nesterovs_momentum=True, power_t=0.5, random_state=1, shuffle=True,
 			solver='lbfgs', tol=0.0001, validation_fraction=0.1)
 			}
-			print("\n##"*40 + "\n# Tuning : {} current at {}".format(tuning_name, p))
+			print("\n"+ "##"*40 + "\n# Tuning : {} current at {}".format(tuning_name, p))
 			clf = classifier[clf_name]
 			now = datetime.datetime.now()
 			log_path = "log/date_{}/Tuning_{}_{}/{}:{}_GS/".format(now.day, clf_name, tuning_name, now.hour,now.minute)
