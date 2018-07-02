@@ -4,6 +4,11 @@ from lib.data_processing import *
 from lib.model_performance import *
 import datetime, time
 
+def feed_validation(classifier, data):
+	label_1_data = data.loc[data["label"] == 1]
+	_train = file_merge(label_1_data, train)
+	return _train
+
 def positive_unlabel_learning(classifier, unlabel_data, threshold):
 	print("\n# PU threshold = {}".format(threshold))
 	score = classifier.predict_proba(unlabel_data.iloc[:,2:])
@@ -39,7 +44,7 @@ def cv_fold(clf, _train_data, fold_time_split, params_path):
 		roc_2_list.append(offline_score_2)
 		print("\n# >>>>Duration<<<< : {}min ".format(round((time.time()-start)/60,2)))
 	#eval performace
-	clear_mermory(_train_data)
+	#clear_mermory(_train_data)
 	roc_1 = np.array(roc_1_list)
 	roc_2 = np.array(roc_2_list)
 	roc_1_mean = np.mean(roc_1, axis = 0)
@@ -94,7 +99,7 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
 		# NOTE: PU learning
 		#without PU offline score
 		offline_probs = clf.predict_proba(_test_offline_feature)
-		clear_mermory(_test_offline)
+		#clear_mermory(_test_offline)
 		offline_model_performance(_test_offline_labels, offline_probs[:,1], params_path = params_path)
 		offline_model_performance_2(_test_offline_labels, offline_probs[:,1], params_path = params_path)
 		unlabel_data = positive_unlabel_learning(clf, _test_a, pu_thres)
@@ -111,31 +116,38 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
 
 	roc_1_mean, roc_2_mean = "n/a","n/a"
 	if cv:
+		if method == "pu_method" :
+			print("\n# 5 - Fold CV for PU classifier (Evaluation Classifier)")
 		roc_1_mean, roc_2_mean = cv_fold(clf, _train_data, fold_time_split, params_path)
 
 	offline_probs = clf.predict_proba(_test_offline_feature)
-	clear_mermory(_test_offline)
+	#clear_mermory(_test_offline)
+	#evl pu model
 	offline_score_1 = offline_model_performance(_test_offline_labels, offline_probs[:,1], params_path = params_path)
 	offline_score_2 = offline_model_performance_2(_test_offline_labels, offline_probs[:,1], params_path = params_path)
 	clear_mermory(_test_offline_feature, _test_offline_labels, offline_probs)
+	#probs = clf.predict_proba(_test_online)
+	#save_score(probs[:,1], score_path)
+
+	#log_parmas(clf, offline_validation, offline_score_1, offline_score_2, method, log_path, fillna, pu_thres, roc_1_mean, roc_1_mean, under_samp)
+	#clear_mermory(now)
+
+	# NOTE:  Feed validation black label Back
+
+	print("\n# Feed Only black validation set to the dataset")
+	_test_offline_black = _test_offline.loc[_test_offline["label"] == 1]
+	_final_train = file_merge(pu_train_data, _test_offline_black, "date")
+	clear_mermory(_test_offline_black, pu_train_data, _test_offline)
+	_final_feature, _final_label = split_train_label(_final_train)
+	clear_mermory(_final_train)
+	#joblib.dump(clf, model_path + "{}.pkl".format("model"))
+	clf = clf.fit(_final_feature, _final_label)
+	clear_mermory(_final_train, _final_label)
 	probs = clf.predict_proba(_test_online)
 	save_score(probs[:,1], score_path)
+
 	#Log all the data
-	log_parmas(clf, offline_validation, offline_score_1, offline_score_2, method, log_path, fillna, pu_thres, roc_1_mean, roc_1_mean, under_samp)
+	log_parmas(clf, offline_validation, offline_score_1, offline_score_2, method,
+				log_path, fillna, pu_thres, roc_1_mean, roc_1_mean, under_samp)
 	clear_mermory(now)
-
-	# NOTE:  Feed validation Back
-	"""
-	print("\n# Feed validation set to the dataset")
-	all_train = file_merge(_train_data, _test_offline, "date")
-	clear_mermory(_test_offline, _train_data)
-	_new_train, _new_label = split_train_label(all_train)
-	clear_mermory(all_train)
-	#joblib.dump(clf, model_path + "{}.pkl".format("model"))
-	new_clf = clf.fit(_new_train, _new_label)
-	clear_mermory(_new_train, _new_label)
-	probs = new_clf.predict_proba(_test_online)
-	save_score(probs[:,1], score_path)
-	"""
-
 	print("\n# >>>>Duration<<<< : {}min ".format(round((time.time()-start)/60,2)))
