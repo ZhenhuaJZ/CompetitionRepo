@@ -109,7 +109,7 @@ def offline_model_performance(ground_truth, predict, **kwargs):
         +"fpr1 : {} ----> to tpr1: {}".format(str(0.001), str(tpr1)) + "\n"
         +"fpr2 : {} ----> to tpr2: {}".format(str(0.005), str(tpr2)) + "\n"
         +"fpr3 : {} ----> to tpr3: {}".format(str(0.01), str(tpr3)) + "\n"
-        +"**"*40 + "\n"*2
+        +"##"*40 + "\n"*2
         )
 
     return model_performance
@@ -156,7 +156,7 @@ def offline_model_performance_2(ground_truth, predict, **kwargs):
 # #############################Log all the data ################################
 
 def log_parmas(clf, valset, roc_1, roc_2, filename, fillna,  pu_thres = "n/a",
-                cv_roc_1_mean = "n/a", cv_roc_2_mean = "n/a", under_samp = False, Feed_val_back = "", mode = "PU"):
+                cv_roc_1_mean = "n/a", cv_roc_2_mean = "n/a", under_samp = False, Feed_val_back = "True", mode = "PU"):
     #formate log
     valset = str(valset[0]) + "-" + str(valset[1])
     roc_1 = round(roc_1, 6)
@@ -195,7 +195,6 @@ def log_parmas(clf, valset, roc_1, roc_2, filename, fillna,  pu_thres = "n/a",
     header.append("fillna")
     header.append("under_sampling")
     header.append("Feed val black back")
-
 
     #add content
     parmas.append(valset)
