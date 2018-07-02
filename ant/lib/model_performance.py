@@ -176,7 +176,6 @@ def offline_model_performance(ground_truth, predict, **kwargs):
     with open(kwargs['params_path']  + "params.txt", 'a') as f:
         f.write(
         "**"*40 + "\n"*2
-        print(type(kwargs['fold']))
         if isinstance(kwargs['fold'], int):
             +"fold : " + str(kwargs['fold']) +"\n"
         +"Offline model performance_1 ROC(JL) : <<<{}>>>".format(str(model_performance)) + "\n"

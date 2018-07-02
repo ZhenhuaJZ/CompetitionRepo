@@ -90,6 +90,8 @@ def save_features(data_path, prefix, mode = "train"):
 	#read data and choose column
 	df = pd.read_csv(data_path)
 	df = df.sort_values('date')
+	df = df.iloc[:,3]
+	df = (df - df.mean()) / (df.max() - df.min())
 	date = df.loc[:,["date"]]
 
 	for i in range(297):
@@ -112,9 +114,9 @@ def save_features(data_path, prefix, mode = "train"):
 		elif mode == "test":
 			feature = df.loc[:,[col_name]]
 			#standarlization
-			mean = feature.mean().values[0]
-			std = feature.std().values[0]
-			feature = (feature - mean) / (std)
+			#mean = feature.mean().values[0]
+			#std = feature.std().values[0]
+			#feature = (feature - mean) / (std)
 			#print(df.loc[:,["date"]])
 			plt.plot(feature.index, feature.values, 'b.')
 			plt.legend(("test_b"), loc = 'upper right')
