@@ -20,16 +20,18 @@ def main():
 	fillna = 0
 	clf_name = "XGB" #LR,MLP,RF,XGB
 	tuning_name = "pu_thresh"
+
 	tunning = True
-	range = [1,2,3]
+	tuning_range = [0.6, 0.5, 0.4, 0.3, 0.2, 0.1]
+
 	method = "pu_method" #pu_method, single_mode
-	pu_thres = [0.6, 0.5, 0.4, 0.3, 0.2, 0.1]
+	pu_thres = 0.6
 	offline_validation = [20171025, 20171105] #20171025, 20171105
 	cv = False
 	fold_time_split = [[20170905, 20170910], [20170911, 20170920], [20170921, 20171001],[20171002,20171015],[20171015,20171027]]
 
 	if tunning:
-		for p in range:
+		for p in tuning_range:
 			classifier = {
 			"XGB" : XGBClassifier(max_depth = 4, n_estimators = 4, subsample = 0.8, gamma = 0,
 			min_child_weight = 1, scale_pos_weight = 1, reg_alpha = 0,
