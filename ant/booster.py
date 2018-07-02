@@ -20,12 +20,13 @@ def main():
 
 	fillna = 0
 	clf_name = "XGB" #LR,MLP,RF,XGB
-	tuning_name = "thresh"
+
 	#Tunning params
-	tunning = True
+	tuning_name = "thresh"
+	tunning = False
 	tuning_range = [0.7,0.6,0.5,0.4,0.3]
 
-	pu_thres = 0.6
+	pu_thres = 0.4
 	offline_validation = [20171025, 20171105] #20171025, 20171105
 	#CV
 	cv = True
@@ -93,7 +94,7 @@ def main():
 					pu_thres = p, method = method, cv = cv, fold_time_split = fold_time_split, under_samp = under_samp)
 	else:
 		classifier = {
-		"XGB" : XGBClassifier(max_depth = 4, n_estimators = 4, subsample = 0.8, gamma = 0,
+		"XGB" : XGBClassifier(max_depth = 4, n_estimators = 480, subsample = 0.8, gamma = 0,
 		min_child_weight = 1, scale_pos_weight = 1,
 		colsample_bytree = 0.8, learning_rate = 0.07, n_jobs = -1),
 
