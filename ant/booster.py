@@ -24,7 +24,7 @@ def main():
 	tuning_range = [0.6, 0.5, 0.4, 0.3, 0.2, 0.1]
 	#Method
 	method = "single_mode" #pu_method, single_mode
-	#pu_thres = 0
+	pu_thres = 0
 	offline_validation = [20171025, 20171105] #20171025, 20171105
 	#CV
 	cv = False
