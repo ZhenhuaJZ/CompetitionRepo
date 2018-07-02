@@ -97,9 +97,10 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
 		clf = clf.fit(_new_train, _new_label)
 		clear_mermory(_new_train, _new_label)
 
+	roc_1_mean, roc_2_mean = "n/a","n/a"
 	if cv:
 		roc_1_mean, roc_2_mean = cv_fold(clf, _train_data, fold_time_split, params_path)
-
+		
 	offline_probs = clf.predict_proba(_test_offline_feature)
 	clear_mermory(_test_offline)
 	offline_score_1 = offline_model_performance(_test_offline_labels, offline_probs[:,1], params_path = params_path)
@@ -108,7 +109,7 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
 	probs = clf.predict_proba(_test_online)
 	save_score(probs[:,1], score_path)
 	#Log all the data
-	log_parmas(clf, offline_validation, offline_score_1, offline_score_2, method, log_path, fillna)
+	log_parmas(clf, offline_validation, offline_score_1, offline_score_2, method, log_path, fillna, roc_1_mean, roc_1_mean)
 	clear_mermory(now)
 
 	# NOTE:  Feed validation Back
