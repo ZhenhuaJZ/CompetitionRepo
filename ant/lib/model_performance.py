@@ -174,7 +174,7 @@ def offline_model_performance(ground_truth, predict, **kwargs):
           +"# fpr3 : {} ----> to tpr3: {:9f}".format(0.01, tpr3) + "\n"
     )
     with open(kwargs['params_path']  + "params.txt", 'a') as f:
-        if isinstance(kwargs['fold'], int):
+        if kwargs['fold'] != None and isinstance(kwargs['fold'], int):
             f.write("Fold : <<<<" + str(kwargs['fold']) + ">>>>" +"\n")
         f.write(
         "**"*40 + "\n"*2
@@ -231,7 +231,7 @@ def offline_model_performance_2(ground_truth, predict, **kwargs):
           +"# fpr3 : {} ----> to tpr3: {:9f}".format(0.01, tpr3) + "\n"
     )
     with open(kwargs['params_path']  + "params.txt", 'a') as f:
-        if isinstance(kwargs['fold'], int):
+        if kwargs['fold'] != None and isinstance(kwargs['fold'], int):
             f.write("Fold : <<<<" + str(kwargs['fold']) + ">>>>" +"\n")
         f.write(
         "**"*40 + "\n"*2
