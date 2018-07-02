@@ -176,14 +176,14 @@ def offline_model_performance(ground_truth, predict, **kwargs):
     with open(kwargs['params_path']  + "params.txt", 'a') as f:
         f.write(
         "**"*40 + "\n"*2
-        if isinstance(kwargs['fold'], int):
-            +"fold : " + str(kwargs['fold']) +"\n"
         +"Offline model performance_1 ROC(JL) : <<<{}>>>".format(str(model_performance)) + "\n"
         +"fpr1 : {} ----> to tpr1: {}".format(str(0.001), str(tpr1)) + "\n"
         +"fpr2 : {} ----> to tpr2: {}".format(str(0.005), str(tpr2)) + "\n"
         +"fpr3 : {} ----> to tpr3: {}".format(str(0.01), str(tpr3)) + "\n"
         +"**"*40 + "\n"*2
         )
+    #if isinstance(kwargs['fold'], int):
+        #+"fold : " + str(kwargs['fold']) +"\n"
     return model_performance
 
 def get_tpr_from_fpr(fpr_array, tpr_array, target):
@@ -231,14 +231,14 @@ def offline_model_performance_2(ground_truth, predict, **kwargs):
     with open(kwargs['params_path']  + "params.txt", 'a') as f:
         f.write(
         "**"*40 + "\n"*2
-        if isinstance(kwargs['fold'], int):
-            +"fold : " + str(kwargs['fold']) +"\n"
         +"Offline model performance_2 ROC : <<<{}>>>".format(str(model_performance)) + "\n"
         +"fpr1 : {} ----> to tpr1: {}".format(str(0.001), str(tpr1)) + "\n"
         +"fpr2 : {} ----> to tpr2: {}".format(str(0.005), str(tpr2)) + "\n"
         +"fpr3 : {} ----> to tpr3: {}".format(str(0.01), str(tpr3)) + "\n"
         +"**"*40 + "\n"*2
         )
+    #if isinstance(kwargs['fold'], int):
+        #+"fold : " + str(kwargs['fold']) +"\n"
     return model_performance
 
 # #############################Log all the data ################################
