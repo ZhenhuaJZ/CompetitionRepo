@@ -88,7 +88,6 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
 		clear_mermory(_test_a)
 		#Choose Black Label
 		unlabel_data = unlabel_data[unlabel_data.label == 1]
-		print(unlabel_data)
 		#80% train data
 		pu_train_data = file_merge(_train_data, unlabel_data, "date")
 		clear_mermory(_train_data, unlabel_data)
@@ -100,7 +99,7 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
 	roc_1_mean, roc_2_mean = "n/a","n/a"
 	if cv:
 		roc_1_mean, roc_2_mean = cv_fold(clf, _train_data, fold_time_split, params_path)
-		
+
 	offline_probs = clf.predict_proba(_test_offline_feature)
 	clear_mermory(_test_offline)
 	offline_score_1 = offline_model_performance(_test_offline_labels, offline_probs[:,1], params_path = params_path)
