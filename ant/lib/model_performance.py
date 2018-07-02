@@ -228,13 +228,13 @@ def offline_model_performance_2(ground_truth, predict, **kwargs):
     tpr2 = get_tpr_from_fpr(fpr, tpr, 0.005)
     tpr3 = get_tpr_from_fpr(fpr, tpr, 0.01)
     model_performance = 0.4*tpr1 + 0.3*tpr2 + 0.3*tpr3
-
+    """
     print("\n# Offline model performance_2 ROC : <<<{:9f}>>>".format(model_performance) + "\n"
           +"# fpr1 : {} ----> to tpr1: {:9f}".format(0.001, tpr1) + "\n"
           +"# fpr2 : {} ----> to tpr2: {:9f}".format(0.005, tpr2) + "\n"
           +"# fpr3 : {} ----> to tpr3: {:9f}".format(0.01, tpr3) + "\n"
     )
-
+    """
     with open(kwargs['params_path']  + "params.txt", 'a') as f:
         f.write(
         "**"*40 + "\n"*2
@@ -254,9 +254,9 @@ def log_parmas(clf, valset, roc_1, roc_2, mode, filename, fillna, pu_thres = "n/
     valset = str(valset[0]) + "-" + str(valset[1])
     roc_1 = round(roc_1, 6)
     roc_2 = round(roc_2, 6)
-    if isinstance(cv_roc_1_mean, int):
-        roc_2 = round(cv_roc_1_mean, 6)
-        roc_2 = round(cv_roc_2_mean, 6)
+    if isinstance(cv_roc_1_mean, float):
+        cv_roc_1_mean = round(cv_roc_1_mean, 6)
+        cv_roc_2_mean = round(cv_roc_2_mean, 6)
     filename = re.split('log/', filename)[-1]
     split_string = re.split('[(,' '\n)' ']', str(clf))
 
