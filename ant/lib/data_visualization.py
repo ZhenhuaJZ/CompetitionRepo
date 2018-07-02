@@ -112,6 +112,10 @@ def save_features(data_path, prefix, mode = "train"):
 
 		elif mode == "test":
 			feature = df.loc[:,[col_name]]
+			#standarlization
+			mean = feature.mean().values[0]
+			std = feature.std().values[0]
+			feature = (feature_1 - mean) / (std)
 			#print(df.loc[:,["date"]])
 			plt.plot(feature.index, feature.values, 'b.')
 			plt.legend(("test_b"), loc = 'upper right')
@@ -136,7 +140,7 @@ def main():
 	_test_offline = _test_offline.iloc[:,3:]
 	#hist_visualization(_train, _test_online, "train_test_b", figure_1="train", figure_2="test_b")
 	#hist_visualization(_test_offline, _test_online, "on-off-1010-1020", figure_1="offline", figure_2="online")
-	save_features(train_path, "0_1", mode = "train")
+	save_features(train_path, "std_feats", mode = "test")
 
 if __name__ == '__main__':
 	main()
