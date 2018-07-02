@@ -258,9 +258,10 @@ def log_parmas(clf, valset, roc_1, roc_2, mode, filename, fillna, pu_thres = "n/
         roc_2 = round(cv_roc_1_mean, 6)
         roc_2 = round(cv_roc_2_mean, 6)
     filename = re.split('log/', filename)[-1]
-
     split_string = re.split('[(,' '\n)' ']', str(clf))
+
     f = csv.writer(open("log/log.csv", "a"))
+    
     log = [] #clf name
     header = [] #header
     parmas = [] #parmas
