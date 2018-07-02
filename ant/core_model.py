@@ -84,12 +84,14 @@ def core(fillna, log_path, offline_validation, method, clf, train_path, test_pat
 		clear_mermory(_test_offline)
 		offline_model_performance(_test_offline_labels, offline_probs[:,1], params_path = params_path)
 		offline_model_performance_2(_test_offline_labels, offline_probs[:,1], params_path = params_path)
-		unlabel_data = positive_unlabel_learning(_clf, _test_a, 0.6)
+		unlabel_data = positive_unlabel_learning(clf, _test_a, 0.6)
+		clear_mermory(_test_a)
 		#Choose Black Label
 		unlabel_data = unlabel_data[unlabel_data.label == 1]
 		print(unlabel_data)
 		#80% train data
 		pu_train_data = file_merge(_train_data, unlabel_data, "date")
+		clear_mermory(_train_data, unlabel_data)
 		_new_train, _new_label = split_train_label(pu_train_data)
 		#recall clf
 		clf = clf.fit(_new_train, _new_label)

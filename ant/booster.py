@@ -26,7 +26,7 @@ def main():
 	#range = np.arange(1, 30, 4)
 	range = [9,10,11]
 	method = "pu_method" #pu_method
-	offline_validation = [20171028, 20171105]
+	offline_validation = [20171025, 20171105] #20171025, 20171105
 	fold_time_split = [[20170905, 20170915], [20170916, 20170930], [20171001, 20171015],[20171016,20171031],[20171101,20171105]]
 
 	if tunning:
