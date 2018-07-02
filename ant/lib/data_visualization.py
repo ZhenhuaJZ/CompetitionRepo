@@ -96,7 +96,6 @@ def save_features(data_path, prefix, mode = "train"):
 		col_name = "f"+str(i+1)
 		print(col_name)
 		if mode == "train":
-			print(df.loc[:,["date"]])
 			df_0 = df[(df.label==0)]
 			df_1 = df[(df.label==1)]
 			feature_0 = df_0.loc[:,[col_name]]
