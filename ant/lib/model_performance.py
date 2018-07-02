@@ -249,7 +249,7 @@ def offline_model_performance_2(ground_truth, predict, **kwargs):
 
 # #############################Log all the data ################################
 
-def log_parmas(clf, valset, roc_1, roc_2, mode, filename, fillna, cv_roc_1_mean = "n/a", cv_roc_2_mean = "n/a"):
+def log_parmas(clf, valset, roc_1, roc_2, mode, filename, fillna, pu_thres = "n/a", cv_roc_1_mean = "n/a", cv_roc_2_mean = "n/a", ):
     #formate log
     valset = str(valset[0]) + "-" + str(valset[1])
     roc_1 = round(roc_1, 6)
@@ -295,7 +295,7 @@ def log_parmas(clf, valset, roc_1, roc_2, mode, filename, fillna, cv_roc_1_mean 
     parmas.append('')
     parmas.append(mode)
     parmas.append(filename)
-    parmas.append('n/a')
+    parmas.append(pu_thres)
     parmas.append(fillna)
 
     f.writerow(log)
