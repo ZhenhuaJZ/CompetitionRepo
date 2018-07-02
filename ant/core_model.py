@@ -14,7 +14,7 @@ def positive_unlabel_learning(classifier, unlabel_data, threshold):
 	print("\n# After PU found <{}> potential white instances".format(len(unlabel_data[unlabel_data.label == 0])))
 	return unlabel_data
 
-def cv_fold(clf, _train_data, fold_time_split):
+def cv_fold(clf, _train_data, fold_time_split, params_path):
 	roc_1_list = []
 	roc_2_list = []
 	for i, offline_validation in enumerate(fold_time_split):
@@ -29,8 +29,8 @@ def cv_fold(clf, _train_data, fold_time_split):
 		clear_mermory(_train, _labels)
 		offline_probs = clf.predict_proba(_test_offline_feature)
 		clear_mermory(_test_offline)
-		offline_score_1 = offline_model_performance(_test_offline_labels, offline_probs[:,1], params_path = params_path)
-		offline_score_2 = offline_model_performance_2(_test_offline_labels, offline_probs[:,1], params_path = params_path)
+		offline_score_1 = offline_model_performance(_test_offline_labels, offline_probs[:,1], params_path = params_path, fold = i)
+		offline_score_2 = offline_model_performance_2(_test_offline_labels, offline_probs[:,1], params_path = params_path, fold = i)
 		roc_1 = np.array(roc_1_list.append(offline_score_1))
 		roc_2 = np.array(roc_2_list.append(offline_score_2))
 	#eval performace
@@ -95,7 +95,7 @@ def core(fillna, log_path, offline_validation, method, clf, train_path, test_pat
 		clear_mermory(_new_train, _new_label)
 
 	if cv:
-		roc_1_mean, roc_2_mean = cv_fold(clf, _train_data, fold_time_split)
+		roc_1_mean, roc_2_mean = cv_fold(clf, _train_data, fold_time_split, params_path)
 
 	offline_probs = clf.predict_proba(_test_offline_feature)
 	clear_mermory(_test_offline)
