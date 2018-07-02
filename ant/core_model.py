@@ -121,7 +121,7 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
 	probs = clf.predict_proba(_test_online)
 	save_score(probs[:,1], score_path)
 	#Log all the data
-	log_parmas(clf, offline_validation, offline_score_1, offline_score_2, method, log_path, fillna, pu_thres, roc_1_mean, roc_1_mean)
+	log_parmas(clf, offline_validation, offline_score_1, offline_score_2, method, log_path, fillna, pu_thres, roc_1_mean, roc_1_mean, under_samp)
 	clear_mermory(now)
 
 	# NOTE:  Feed validation Back
