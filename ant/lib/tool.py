@@ -13,8 +13,3 @@ def double_check(*args, **kwargs):
     elif check in ("n", "no", "false"):
         print("\n# Exit")
         return sys.exit()
-
-
-p = { "a" : 1, "b" : 2, "c" : 3}
-
-double_check(p)
