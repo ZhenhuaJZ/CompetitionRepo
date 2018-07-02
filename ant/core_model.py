@@ -39,7 +39,7 @@ def cv_fold(clf, _train_data, fold_time_split, params_path):
 		offline_probs = _clf.predict_proba(test_offline_feature)
 		clear_mermory(test_offline, _clf)
 		offline_score_1 = offline_model_performance(test_offline_labels, offline_probs[:,1], params_path = params_path, fold = i)
-		#offline_score_2 = offline_model_performance_2(test_offline_labels, offline_probs[:,1], params_path = params_path, fold = i)
+		offline_score_2 = offline_model_performance_2(test_offline_labels, offline_probs[:,1], params_path = params_path, fold = i)
 		roc_1_list.append(offline_score_1)
 		roc_2_list.append(offline_score_2)
 		print("\n# >>>>Duration<<<< : {}min ".format(round((time.time()-start)/60,2)))
