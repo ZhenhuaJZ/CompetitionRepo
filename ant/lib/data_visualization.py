@@ -70,7 +70,6 @@ def hist_visualization(df_0, df_1, prefix, figure_1, figure_2):
 		plt.savefig(save_path + "{}.png".format(col_name))
 		plt.figure()
 
-
 def time_stamp(date_column):
     for i in range(len(date_column)):
         if date_column.date[i] <= 20170915 and date_column.date[i+1] >= 20170916:
