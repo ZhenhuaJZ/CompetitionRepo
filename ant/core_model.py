@@ -17,7 +17,6 @@ def positive_unlabel_learning(classifier, unlabel_data, threshold):
 def cv_fold(clf, _train_data, fold_time_split, params_path):
 	roc_1_list = []
 	roc_2_list = []
-
 	for i, offline_validation in enumerate(fold_time_split):
 		#CV in 5 fold
 		start = time.time()
@@ -51,8 +50,7 @@ def cv_fold(clf, _train_data, fold_time_split, params_path):
 
 	return roc_1_mean, roc_2_mean
 
-def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_a_path, method = None, cv = False):
-	fold_time_split = [[20170905, 20170915], [20170916, 20170930], [20171001, 20171015],[20171016,20171031],[20171101,20171105]]
+def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_a_path, method = None, cv = False, fold_time_split = None):
 	params_path = log_path + "params/"
 	score_path = log_path + "score/"
 	model_path = log_path + "model/"

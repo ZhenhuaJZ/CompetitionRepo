@@ -18,16 +18,15 @@ def main():
 	# #####################################################################
 	#Tunning params
 	fillna = 0
-	tunning = False
+
 	clf_name = "XGB" #LR,MLP,RF,XGB
 	tuning_name = "max_depth"
-	cv = True
-	#loop_start, loop_end, loop_step
-	#range = np.arange(1, 30, 4)
+	tunning = False
 	range = [1,2,3]
 	method = "single_mode" #pu_method, single_mode
 	offline_validation = [20171028, 20171105] #20171025, 20171105
-	fold_time_split = [[20170905, 20170915], [20170916, 20170930], [20171001, 20171015],[20171016,20171031],[20171101,20171105]]
+	cv = True
+	fold_time_split = [[20170905, 20170910], [20170911, 20170920], [20170921, 20171001],[20171002,20171015],[20171015,20171027]]
 
 	if tunning:
 		for p in range:
@@ -56,7 +55,8 @@ def main():
 			now = datetime.datetime.now()
 			log_path = "log/date_{}/Tuning_{}_{}/{}:{}_GS/".format(now.day, clf_name, tuning_name, now.hour,now.minute)
 			creat_project_dirs(log_path)
-			core(fillna, log_path, offline_validation, clf, train_path, test_path, test_a_path, method = method, cv = cv)
+			core(fillna, log_path, offline_validation, clf, train_path, test_path, test_a_path,
+					method = method, cv = cv, fold_time_split = fold_time_split)
 	else:
 		classifier = {
 		"XGB" : XGBClassifier(max_depth = 4, n_estimators = 4, subsample = 0.8, gamma = 0,
@@ -83,7 +83,8 @@ def main():
 		now = datetime.datetime.now()
 		log_path = "log/date_{}/{}:{}_SM/".format(now.day,now.hour,now.minute)
 		creat_project_dirs(log_path)
-		core(fillna, log_path, offline_validation, clf, train_path, test_path, test_a_path, method = method, cv = cv)
+		core(fillna, log_path, offline_validation, clf, train_path, test_path, test_a_path,
+		 			method = method, cv = cv, fold_time_split = fold_time_split)
 
 if __name__ == '__main__':
 	main()
