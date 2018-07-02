@@ -23,13 +23,13 @@ def main():
 	tuning_name = "n_estimators"
 	#Tunning params
 	tunning = True
-	tuning_range = [4, 5]
+	tuning_range = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6]
 
 	pu_thres = 0.6
 	offline_validation = [20171025, 20171105] #20171025, 20171105
 	#CV
 	cv = True
-	fold_time_split = [[20170905, 20170910], [20170911, 20170920], [20170921, 20171001],[20171002,20171015],[20171015,20171027]]
+	fold_time_split = [[20170905, 20170915], [20170916, 20170925], [20170926, 20171005],[20171006,20171015],[20171015,20171025]]
 	#under_sampling
 	under_samp = False
 	method = "pu_method"
@@ -65,7 +65,7 @@ def main():
 	if tunning:
 		for p in tuning_range:
 			classifier = {
-			"XGB" : XGBClassifier(max_depth = 4, n_estimators = p, subsample = 0.8, gamma = 0,
+			"XGB" : XGBClassifier(max_depth = 4, n_estimators = 3, subsample = 0.8, gamma = 0,
 			min_child_weight = 1, scale_pos_weight = 1, reg_alpha = 0,
 			colsample_bytree = 0.8, learning_rate = 0.07, n_jobs = -1),
 
