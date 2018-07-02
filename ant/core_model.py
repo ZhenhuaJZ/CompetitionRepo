@@ -94,7 +94,6 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
 
 	clf = clf.fit(_train, _labels)
 	clear_mermory(_train, _labels)
-	print(clf.get_params())
 	print("\n# PU Traing Start")
 	# NOTE: PU learning
 	unlabel_data = positive_unlabel_learning(clf, _test_a, pu_thres)
@@ -115,7 +114,6 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
 		roc_1_mean, roc_2_mean = cv_fold(clf, _train_data, fold_time_split, params_path)
 
 	offline_probs = clf.predict_proba(_test_offline_feature)
-	print(clf.get_params())
 	#evl pu model
 	offline_score_1 = offline_model_performance(_test_offline_labels, offline_probs[:,1], params_path = params_path)
 	offline_score_2 = offline_model_performance_2(_test_offline_labels, offline_probs[:,1], params_path = params_path)
@@ -135,13 +133,12 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
 	clear_mermory(_final_train)
 	#joblib.dump(clf, model_path + "{}.pkl".format("model"))
 	clf = clf.fit(_final_feature, _final_label)
-	print(clf.get_params())
 	clear_mermory(_final_train, _final_label)
 	probs = clf.predict_proba(_test_online)
 	save_score(probs[:,1], score_path)
 
 	#Log all the data
-	log_parmas(clf, offline_validation, offline_score_1, offline_score_2, method,
+	log_parmas(clf, offline_validation, offline_score_1, offline_score_2,
 				log_path, fillna, pu_thres, roc_1_mean, roc_1_mean, under_samp)
 	clear_mermory(now)
 	print("\n# >>>>Duration<<<< : {}min ".format(round((time.time()-start)/60,2)))
