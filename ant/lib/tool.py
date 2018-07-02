@@ -1,8 +1,10 @@
 import os, sys
 
-def double_check(*args, **kwargs):
+def double_check(dict, **kwargs):
     print("\n# CheckList : " )
-    print(args[0].keys()[0])
+    
+    for i in dict:
+        print("\n** {} is : {} ".format(i, dict[i]))
     for i, kwarg in enumerate(kwargs):
         print("\n** {} is : {} ".format(kwarg, kwargs[kwarg]))
 
