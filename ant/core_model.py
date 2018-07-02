@@ -39,7 +39,7 @@ def cv_fold(clf, _train_data, fold_time_split, params_path):
 		offline_probs = _clf.predict_proba(test_offline_feature)
 		clear_mermory(test_offline, _clf)
 		offline_score_1 = offline_model_performance(test_offline_labels, offline_probs[:,1], params_path = params_path, fold = i)
-		offline_score_2 = offline_model_performance_2(test_offline_labels, offline_probs[:,1], params_path = params_path, fold = i)
+		#offline_score_2 = offline_model_performance_2(test_offline_labels, offline_probs[:,1], params_path = params_path, fold = i)
 		roc_1_list.append(offline_score_1)
 		roc_2_list.append(offline_score_2)
 		print("\n# >>>>Duration<<<< : {}min ".format(round((time.time()-start)/60,2)))
@@ -95,13 +95,8 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
 	clf = clf.fit(_train, _labels)
 	clear_mermory(_train, _labels)
 	print(clf.get_params())
-	#if method == "pu_method" :
+	print("\n #PU Traing Start")
 	# NOTE: PU learning
-	#without PU offline score
-	#offline_probs = clf.predict_proba(_test_offline_feature)
-	#clear_mermory(_test_offline)
-	#offline_model_performance(_test_offline_labels, offline_probs[:,1], params_path = params_path)
-	#offline_model_performance_2(_test_offline_labels, offline_probs[:,1], params_path = params_path)
 	unlabel_data = positive_unlabel_learning(clf, _test_a, pu_thres)
 	clear_mermory(_test_a)
 	#Choose Black Label

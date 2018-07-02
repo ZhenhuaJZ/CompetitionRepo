@@ -25,7 +25,7 @@ def main():
 	tunning = False
 	tuning_range = [0.5, 0.6, 0.4, 0.3, 0.2, 0.1]
 	#Method
-	#method = "pu_method" #pu_method, single_mode
+	method = "pu_method" #pu_method, single_mode
 	pu_thres = 0.6
 	offline_validation = [20171025, 20171105] #20171025, 20171105
 	#CV
@@ -90,7 +90,7 @@ def main():
 			log_path = "log/date_{}/Tuning_{}_{}/{}:{}_GS/".format(now.day, clf_name, tuning_name, now.hour,now.minute)
 			creat_project_dirs(log_path)
 			core(fillna, log_path, offline_validation, clf, train_path, test_path, test_a_path,
-					pu_thres = p, cv = cv, fold_time_split = fold_time_split, under_samp = under_samp)
+					pu_thres = p, method = method, cv = cv, fold_time_split = fold_time_split, under_samp = under_samp)
 	else:
 		classifier = {
 		"XGB" : XGBClassifier(max_depth = 4, n_estimators = 480, subsample = 0.8, gamma = 0,
@@ -118,7 +118,7 @@ def main():
 		log_path = "log/date_{}/{}:{}_SM/".format(now.day,now.hour,now.minute)
 		creat_project_dirs(log_path)
 		core(fillna, log_path, offline_validation, clf, train_path, test_path, test_a_path,
-		 			pu_thres = pu_thres, cv = cv, fold_time_split = fold_time_split, under_samp = under_samp)
+		 			pu_thres = pu_thres, method = method, cv = cv, fold_time_split = fold_time_split, under_samp = under_samp)
 
 if __name__ == '__main__':
 	main()
