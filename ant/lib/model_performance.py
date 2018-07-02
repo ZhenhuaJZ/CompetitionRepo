@@ -175,7 +175,7 @@ def offline_model_performance(ground_truth, predict, **kwargs):
     )
     with open(kwargs['params_path']  + "params.txt", 'a') as f:
         if isinstance(kwargs['fold'], int):
-            f.write("Fold : <<<<" + str(kwargs['fold'] + ">>>>") +"\n"
+            f.write("Fold : <<<<" + str(kwargs['fold']) + ">>>>" +"\n")
         f.write(
         "**"*40 + "\n"*2
         +"Offline model performance_1 ROC(JL) : <<<{}>>>".format(str(model_performance)) + "\n"
@@ -232,7 +232,7 @@ def offline_model_performance_2(ground_truth, predict, **kwargs):
     )
     with open(kwargs['params_path']  + "params.txt", 'a') as f:
         if isinstance(kwargs['fold'], int):
-            f.write("Fold : <<<<" + str(kwargs['fold'] + ">>>>") +"\n"
+            f.write("Fold : <<<<" + str(kwargs['fold']) + ">>>>" +"\n")
         f.write(
         "**"*40 + "\n"*2
         +"Offline model performance_2 ROC : <<<{}>>>".format(str(model_performance)) + "\n"
