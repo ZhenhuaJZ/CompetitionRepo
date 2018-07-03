@@ -137,8 +137,6 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
 	pu_black_data = positive_unlabel_learning(clf, _test_a, pu_thres)
 	clear_mermory(_test_a)
 	pu_train_data = file_merge(_train_data, pu_black_data, "date")
-	pu_train_data.to_csv("pu_train_data_test.csv", index = None)
-	sys.exit()
 	clear_mermory(_train_data, pu_black_data)
 	_new_train, _new_label = split_train_label(pu_train_data)
 	clf = clf.fit(_new_train, _new_label)

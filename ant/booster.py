@@ -26,7 +26,7 @@ def main():
 	tunning = False
 	tuning_range = [0.5,0.6]
 
-	pu_thres = 0.5
+	pu_thres = 0.55
 	offline_validation = [20171025, 20171105] #20171025, 20171105
 	#CV
 	cv = False
@@ -34,7 +34,7 @@ def main():
 	#under_sampling
 	under_samp = False
 
-	partical_fit = True
+	partical_fit = False
 	partal_fit_thresh = 0.5
 
 	"""
