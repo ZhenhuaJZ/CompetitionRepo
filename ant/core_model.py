@@ -189,6 +189,7 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
 		test_b_seg_1_black.to_csv("black.csv")
 		clear_mermory(test_b_seg_1)
 		increment_train = file_merge(test_b_seg_1_black, _final_train, "date")
+		print("rungiiiiiiinngg here")
 		clear_mermory(test_b_seg_1_black, _final_train)
 
 		#########################Merge Test_b score#################################
