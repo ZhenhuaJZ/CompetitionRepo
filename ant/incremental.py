@@ -34,7 +34,7 @@ test_path = "data/test_b.csv"
 
 
 print("\n# Partical fit <test_b> to the dataset")
-_test_online = df_read_and_fillna(test_path, fillna)
+_test_online = df_read_and_fillna(test_path, 0)
 test_b_seg_1,  test_b_seg_2 = partical_fit(_test_online, 0.5, "date")
 clear_mermory(_test_online, test_b_seg_1)
 
