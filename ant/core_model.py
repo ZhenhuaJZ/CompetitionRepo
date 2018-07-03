@@ -97,7 +97,7 @@ def cv_fold(clf, _train_data, fold_time_split, params_path):
 	print("##"*40)
 	return roc_1_mean, roc_2_mean
 
-def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_a_path, pu_thres, method = None, cv = False, fold_time_split = None, under_samp = False, partical_ratio = 0.5):
+def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_a_path, pu_thres, cv = False, fold_time_split = None, under_samp = False, partical_ratio = 0.5):
 	params_path = log_path + "params/"
 	score_path = log_path + "score/"
 	model_path = log_path + "model/"
@@ -146,8 +146,7 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
 	roc_1_mean, roc_2_mean = "n/a","n/a"
 	if cv:
 		cv_clf = clf
-		if method == "pu_method" :
-			print("\n# 5 - Fold CV for PU classifier (Evaluation Classifier)")
+		print("\n# 5-Fold CV (Evaluation Classifier)")
 		roc_1_mean, roc_2_mean = cv_fold(cv_clf, pu_train_data, fold_time_split, params_path)
 
 	offline_probs = clf.predict_proba(_test_offline_feature)
@@ -168,44 +167,49 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
 	clf = clf.fit(_final_feature, _final_label)
 	clear_mermory(_final_feature, _final_label)
 	_test_online = df_read_and_fillna(test_path, fillna)
-	prob = predict_proba(_test_online.iloc[:,2])
-	save_score(prob[:1], score_path)
 
-	
-	"""
-	##########################Partical_fit######################################
-	# NOTE:  PU test_b
-	#Feed test online
-	print("\n# Partical fit <test_b> to the dataset")
-	_test_online = df_read_and_fillna(test_path, fillna)
-	test_b_seg_1,  test_b_seg_2 = partical_fit(_test_online, partical_ratio, "date")
+	if not partical_fit:
+		prob = predict_proba(_test_online.iloc[:,2])
+		save_score(prob[:1], score_path)
 
-	#Predict and save seg_1 score
-	prob_seg_1 = clf.predict_proba(test_b_seg_1.iloc[:,2:])
-	score_seg_1 = pd.DataFrame(test_b_seg_1["id"]).assign(score = prob_seg_1[:,1])
+	if partical_fit:
+		##########################Partical_fit######################################
+		# NOTE:  PU test_b
+		#Feed test online
+		print("\n# Partical fit <test_b> to the dataset")
+		_test_online = df_read_and_fillna(test_path, fillna)
+		test_b_seg_1,  test_b_seg_2 = partical_fit(_test_online, partical_ratio, "date")
 
-	clear_mermory(_test_online)
-	test_b_seg_1_black = positive_unlabel_learning(clf, test_b_seg_1, pu_thres) #pu threshold
-	clear_mermory(test_b_seg_1)
-	increment_train = file_merge(test_b_seg_1_black, _final_train, "date")
-	clear_mermory(test_b_seg_1_black, _final_train)
+		#Predict and save seg_1 score
+		prob_seg_1 = clf.predict_proba(test_b_seg_1.iloc[:,2:])
+		score_seg_1 = pd.DataFrame(test_b_seg_1["id"]).assign(score = prob_seg_1[:,1])
 
-	#########################Merge Test_b score#################################
-	increment_train_feature, increment_train_label = split_train_label(increment_train)
-	clear_mermory(increment_train)
-	#Fit new classifier
-	clf.fit(increment_train_feature, increment_train_label)
+		clear_mermory(_test_online)
+		test_b_seg_1_black = positive_unlabel_learning(clf, test_b_seg_1, pu_thres) #pu threshold
+		clear_mermory(test_b_seg_1)
+		increment_train = file_merge(test_b_seg_1_black, _final_train, "date")
+		clear_mermory(test_b_seg_1_black, _final_train)
 
-	#Predict and save seg_2 score
-	prob_seg_2 = clf.predict_proba(test_b_seg_2.iloc[:,2:])
-	score_seg_2 = pd.DataFrame(test_b_seg_2["id"]).assign(score = prob_seg_2[:,1])
+		#########################Merge Test_b score#################################
+		increment_train_feature, increment_train_label = split_train_label(increment_train)
+		clear_mermory(increment_train)
+		#Fit new classifier
+		clf.fit(increment_train_feature, increment_train_label)
 
-	##############################Merge Score###################################
-	score = score_seg_1.append(score_seg_2)
-	score.to_csv(score_path + "score_day{}_time{}:{}.csv".format(now.day, now.hour, now.minute), index = None, float_format = "%.9f")
-	print("\n# Score saved in {}".format(score_path))
-	"""
+		#Predict and save seg_2 score
+		prob_seg_2 = clf.predict_proba(test_b_seg_2.iloc[:,2:])
+		score_seg_2 = pd.DataFrame(test_b_seg_2["id"]).assign(score = prob_seg_2[:,1])
+
+		##############################Merge Score###################################
+		score = score_seg_1.append(score_seg_2)
+		score.to_csv(score_path + "score_day{}_time{}:{}.csv".format(now.day, now.hour, now.minute), index = None, float_format = "%.9f")
+		print("\n# Score saved in {}".format(score_path))
+
 	#Log all the data
-	log_parmas(clf, offline_validation, offline_score_1, offline_score_2,
-				log_path, fillna, pu_thres, roc_1_mean, roc_2_mean, under_samp)
+	log_parmas(clf, val_date = offline_validation,
+				ROC_1 = offline_score_1, ROC_2 = offline_score_2,
+				CV_ROC_1 = roc_1_mean, CV_ROC_2 = roc_2_mean, Score = "",
+				score_path = score_path, pu_thres = pu_thres, partical_fit = partical_fit,
+				under_samp = under_samp, fillna = fillna)
+
 	clear_mermory(now)
