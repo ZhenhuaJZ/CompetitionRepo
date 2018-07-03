@@ -192,7 +192,7 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
 		#Predict and save seg_1 score
 		prob_seg_1 = clf.predict_proba(test_b_seg_1.iloc[:,2:])
 		score_seg_1 = pd.DataFrame(test_b_seg_1["id"]).assign(score = prob_seg_1[:,1])
-		score_seg_1_path = score_path + "score_day{}_time{}:{}_seg_a.csv"
+		score_seg_1_path = score_path + "score_seg_a.csv"
 		score_seg_1.to_csv(score_seg_1_path, index = None)
 		print("\n# Parrical_score_1 saved in path {} !".format(score_seg_1_path))
 		clear_mermory(_test_online, score_seg_1)
@@ -223,6 +223,7 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
 		clear_mermory(increment_train)
 		#Fit new classifier
 		clf.fit(increment_train_feature, increment_train_label)
+		clear_mermory(increment_train_feature, increment_train_label)
 
 		#Predict and save seg_2 score
 		prob_seg_2 = clf.predict_proba(test_b_seg_2.iloc[:,2:])

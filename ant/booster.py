@@ -12,7 +12,7 @@ import datetime, time
 
 # #####################Data path###########################################
 train_path = "data/train.csv" #train_heatmap , train,
-test_path = "data/test_b.csv" #test_a_heatmap, test_b
+test_path = "data/test_b.csv"
 test_a_path = "data/test_a.csv"
 
 def main():
