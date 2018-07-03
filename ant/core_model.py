@@ -177,6 +177,7 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
 	test_b_seg_1_black, score_seg_1 = positive_unlabel_learning(clf, test_b_seg_1, 0.6) #pu threshold
 
 	increment_train = file_merge(test_b_seg_1_black, _final_train, "date")
+	clear_mermory(test_b_seg_1_black, _final_train)
 	increment_train_feature, increment_train_label = split_train_label(increment_train)
 	clf = clf.fit(increment_train_feature, increment_train_label)
 	score_seg_2 = clf.predict_proba(test_b_seg_2.iloc[:,2])
