@@ -177,7 +177,7 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
 	_test_online = df_read_and_fillna(test_path, fillna)
 
 	if not part_fit:
-		prob = predict_proba(_test_online.iloc[:,2])
+		prob = clf.predict_proba(_test_online.iloc[:,2])
 		save_score(prob[:1], score_path)
 
 	if part_fit:
