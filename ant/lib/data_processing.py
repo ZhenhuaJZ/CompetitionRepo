@@ -144,6 +144,11 @@ def file_merge(data_1, data_2, sort_by = "", reset_index = False):
     del data_1, data_2
     return merged_file
 
+def df_read_and_fillna(data_path, fillna_value = 0):
+	data = pd.read_csv(data_path)
+	data = custom_imputation(data, fillna_value)
+	return data
+
 ############################## Replace_missing by mode #########################
 # This function still having trouble
 def find_common_mode(black_frequency_list, white_frequency_list):
