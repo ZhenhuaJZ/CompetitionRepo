@@ -41,7 +41,6 @@ def positive_unlabel_learning(classifier, unlabel_data, threshold):
 	score.loc[score < threshold] = 0
 	unlabel_data.insert(1, "label", score)
 	black_unlabel_data = unlabel_data.loc[unlabel_data["label"] == 1]
-	print(len(black_unlabel_data))
 	print("\n# After PU found <{}> potential black instances".format(len(unlabel_data[unlabel_data.label == 1])))
 	print("\n# After PU found <{}> potential white instances".format(len(unlabel_data[unlabel_data.label == 0])))
 	clear_mermory(classifier)
