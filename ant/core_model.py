@@ -137,7 +137,9 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
 	_test_a = df_read_and_fillna(test_a_path, fillna)
 	pu_black_data = positive_unlabel_learning(clf, _test_a, pu_thres)
 	clear_mermory(_test_a)
+
 	pu_train_data = file_merge(_train_data, pu_black_data, "date")
+	_train_data.to_csv("_train_data_test.csv", index = None)
 	pu_black_data.to_csv("pu_black_data_test.csv", index = None)
 	pu_train_data.to_csv("pu_train_data_test.csv", index = None)
 	sys.exit()
@@ -212,7 +214,7 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
 		#Read increment_train from hard drive
 		print("\n# Inititalize increment_train (read from hard drive)")
 		time.sleep(5)
-		_train_data = pd.read_csv(increment_train_path)
+		_train_data = pd.read_csv(increment_train_path, low_memory = False)
 		increment_train = df_read_and_fillna(increment_train_path)
 
 		#########################Merge Test_b score#################################
