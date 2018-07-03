@@ -52,10 +52,10 @@ def partical_fit(data, feed_ratio, sort_by = ""):
 	partical_loc = int(len(data) * feed_ratio)
 	#split_data = data[(data["date"] >= start_y_m_d) & (data["date"] <= end_y_m_d)]
 	data_seg_1 = data.iloc[:partical_loc,:]
-	print("\n# length of data_seg_1 : {}", len(data_seg_1))
 	data_seg_2 = data.iloc[partical_loc+1:,:]
-	print("# length of data_seg_2 : ", len(data_seg_2))
 	print("\n# length of data_seg_1 : ", len(data_seg_1))
+	print("# length of data_seg_2 : ", len(data_seg_2))
+
 	clear_mermory(data)
 	return data_seg_1, data_seg_2
 
@@ -175,7 +175,7 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
 	_test_online = df_read_and_fillna(test_path, 0)
 	test_b_seg_1,  test_b_seg_2 = partical_fit(_test_online, 0.5, "date")
 	clear_mermory(_test_online)
-	test_b_seg_1_black, score_seg_1 = positive_unlabel_learning(clf, test_b_seg_1, 0.6) #pu threshold
+	test_b_seg_1_black, score_seg_1 = positive_unlabel_learning(clf, test_b_seg_1, 0.7) #pu threshold
 
 	increment_train = file_merge(test_b_seg_1_black, _final_train, "date")
 	clear_mermory(test_b_seg_1_black, _final_train)
