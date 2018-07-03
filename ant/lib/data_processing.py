@@ -136,7 +136,7 @@ def file_merge(data_1, data_2, sort_by = "", reset_index = False):
     elif len(data_2) == 0:
         print("\n# Waring {} has 0 lengh !".format(data_2))
         return data_1
-    merged_file = pd.concat([data_1,data_2], axis = 0)
+    merged_file = pd.concat([data_1,data_2])
     clear_mermory(data_1, data_2)
     if sort_by != "":
         merged_file = merged_file.sort_values(by = str(sort_by))
