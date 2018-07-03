@@ -155,8 +155,7 @@ def offline_model_performance_2(ground_truth, predict, **kwargs):
 
 # #############################Log all the data ################################
 
-def log_parmas(clf, valset, roc_1, roc_2, filename, fillna,  pu_thres = "n/a",
-                cv_roc_1_mean = "n/a", cv_roc_2_mean = "n/a", under_samp = False, Feed_val_back = "True", mode = "PU"):
+def log_parmas(clf, **kwargs):
     #formate log
     valset = str(valset[0]) + "-" + str(valset[1])
     roc_1 = round(roc_1, 6)
@@ -182,7 +181,11 @@ def log_parmas(clf, valset, roc_1, roc_2, filename, fillna,  pu_thres = "n/a",
                 header.append(new[0])
                 parmas.append(new[1])
 
+    for key in kwargs:
+        header.append(key)
+        parmas.append(kwargs[key])
     #add header
+    """
     header.append("Validation set")
     header.append("ROC_1")
     header.append("ROC_2")
@@ -195,8 +198,9 @@ def log_parmas(clf, valset, roc_1, roc_2, filename, fillna,  pu_thres = "n/a",
     header.append("fillna")
     header.append("under_sampling")
     header.append("Feed val black back")
-
+    """
     #add content
+    """
     parmas.append(valset)
     parmas.append(roc_1)
     parmas.append(roc_2)
@@ -209,6 +213,8 @@ def log_parmas(clf, valset, roc_1, roc_2, filename, fillna,  pu_thres = "n/a",
     parmas.append(fillna)
     parmas.append(under_samp)
     parmas.append(Feed_val_back)
+    """
+
 
     f.writerow(log)
     f.writerow(header)
