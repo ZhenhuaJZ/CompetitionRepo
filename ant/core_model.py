@@ -134,7 +134,6 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
 	_final_feature, _final_label = split_train_label(_final_train)
 	clear_mermory(_final_train)
 	#joblib.dump(clf, model_path + "{}.pkl".format("model"))
-	print(_final_feature, _final_label)
 	clf = clf.fit(_final_feature, _final_label)
 	clear_mermory(_final_feature, _final_label)
 	_test_online = df_read_and_fillna(test_path, 0)
@@ -150,7 +149,8 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
 	test_b_seg_1_black, score_seg_1 = positive_unlabel_learning(clf, test_b_seg_1, 0.5) #pu threshold
 
 	print(test_b_seg_1)
-	test_b_seg_1.loc["id"].assign(score = test_b_seg_2[:,1])
+	print(test_b_seg_1["id"])
+	test_b_seg_1["id"].assign(score = score_seg_1[:,1])
 
 	increment_train = merged_file(test_b_seg_1_black, _final_train, "date")
 	increment_train_feature, increment_train_label = split_train_label(increment_train)
