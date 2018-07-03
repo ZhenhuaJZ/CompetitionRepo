@@ -52,6 +52,7 @@ def partical_fit(data, feed_ratio, sort_by = ""):
 		data = data.sort_values(by = str(sort_by))
 		print("\n# Sort data in <{}> order".format(sort_by))
 	partical_loc = int(len(data) * feed_ratio)
+	print("loc", partical_loc)
 	data_seg_1 = data.iloc[:partical_loc,:]
 	data_seg_2 = data.iloc[partical_loc+1:,:]
 	print("\n# length of data_seg_1 :", len(data_seg_1))
@@ -100,6 +101,7 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
 	params_path = log_path + "params/"
 	score_path = log_path + "score/"
 	model_path = log_path + "model/"
+	print("\n# Filling missing data with <{}>".format(fillna))
 	# ##########################Edit data####################################
 	_train_data = pd.read_csv(train_path)
 	_train_data = custom_imputation(_train_data)
@@ -127,9 +129,11 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
 
 	clf = clf.fit(_train, _labels)
 	clear_mermory(_train, _labels)
+
+	# ##########################PU Learning#####################################
 	print("\n# PU Traing Start")
 	# NOTE: PU learning
-	_test_a = df_read_and_fillna(test_a_path, 0)
+	_test_a = df_read_and_fillna(test_a_path, fillna)
 	pu_black_data = positive_unlabel_learning(clf, _test_a, pu_thres)
 	clear_mermory(_test_a)
 	pu_train_data = file_merge(_train_data, pu_black_data, "date")
@@ -163,7 +167,7 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
 	#clear_mermory(_final_train)
 	clf = clf.fit(_final_feature, _final_label)
 	clear_mermory(_final_feature, _final_label)
-	_test_online = df_read_and_fillna(test_path, 0)
+	_test_online = df_read_and_fillna(test_path, fillna)
 	#prob = predict_proba(_test_online.iloc[:,2])
 	#save_score(prob[:1], score_path)
 
@@ -171,7 +175,7 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
 	# NOTE:  PU test_b
 	#Feed test online
 	print("\n# Partical fit <test_b> to the dataset")
-	_test_online = df_read_and_fillna(test_path, 0)
+	_test_online = df_read_and_fillna(test_path, fillna)
 	test_b_seg_1,  test_b_seg_2 = partical_fit(_test_online, 0.4, "date")
 
 	#Predict and save seg_1 score
