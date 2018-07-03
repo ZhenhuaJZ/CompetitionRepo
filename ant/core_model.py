@@ -183,14 +183,16 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
 		#Predict and save seg_1 score
 		prob_seg_1 = clf.predict_proba(test_b_seg_1.iloc[:,2:])
 		score_seg_1 = pd.DataFrame(test_b_seg_1["id"]).assign(score = prob_seg_1[:,1])
+		score_seg_1.to_csv("data/seg_a_score.csv", index = None)
+		#clear_mermory(_test_online)
+		#test_b_seg_1_black = positive_unlabel_learning(clf, test_b_seg_1, 0.5) #pu threshold
+		#clear_mermory(test_b_seg_1)
+		#increment_train = file_merge(test_b_seg_1_black, _final_train, "date")
+		#increment_train.to_csv("data/increment_train_0.5.csv", index = None)
+		#print("\n# Partical fit done !")
+		#clear_mermory(test_b_seg_1_black, _final_train, increment_train)
 
-		clear_mermory(_test_online)
-		test_b_seg_1_black = positive_unlabel_learning(clf, test_b_seg_1, 0.5) #pu threshold
-		clear_mermory(test_b_seg_1)
-		increment_train = file_merge(test_b_seg_1_black, _final_train, "date")
-		increment_train.to_csv("data/increment_train_0.5.csv", index = None)
-		print("\n# Partical fit done !")
-		clear_mermory(test_b_seg_1_black, _final_train)
+
 		"""
 		#########################Merge Test_b score#################################
 		increment_train_feature, increment_train_label = split_train_label(increment_train)
@@ -207,6 +209,7 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
 		score.to_csv(score_path + "score_day{}_time{}:{}.csv".format(now.day, now.hour, now.minute), index = None, float_format = "%.9f")
 		print("\n# Score saved in {}".format(score_path))
 		"""
+
 	#Log all the data
 	log_parmas(clf, valset = offline_validation,
 				roc_1 = offline_score_1, roc_2 = offline_score_2,
