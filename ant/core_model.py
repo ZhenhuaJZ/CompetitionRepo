@@ -174,6 +174,7 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
 	print("\n# Partical fit <test_b> to the dataset")
 	_test_online = df_read_and_fillna(test_path, 0)
 	test_b_seg_1,  test_b_seg_2 = partical_fit(_test_online, 0.5, "date")
+	clear_mermory(_test_online)
 	test_b_seg_1_black, score_seg_1 = positive_unlabel_learning(clf, test_b_seg_1, 0.6) #pu threshold
 
 	increment_train = file_merge(test_b_seg_1_black, _final_train, "date")
@@ -188,8 +189,8 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
 	test_b_seg_2.assign(score = test_b_seg_2[:,1])
 
 	# TODO:  merge score_seg_a and score_seg_b
-	score = score_seg_2[:,1] + score_seg_1[:,1]
-	save_score(score, score_path)
+	#score = score_seg_2[:,1] + score_seg_1[:,1]
+	#save_score(score, score_path)
 
 
 	#Log all the data
