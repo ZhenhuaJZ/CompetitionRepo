@@ -43,7 +43,7 @@ def positive_unlabel_learning(classifier, unlabel_data, threshold):
 	black_unlabel_data = unlabel_data.loc[unlabel_data["label"] == 1]
 	n_black = len(unlabel_data[unlabel_data.label == 1])
 	n_white = len(unlabel_data[unlabel_data.label == 1])
-	print("\n# After PU found <{}> potential black instances, and {} potential white instances".format(n_black, n_white))
+	print("\n# After PU found <{}> potential black instances, and <{}> potential white instances".format(n_black, n_white))
 	clear_mermory(classifier)
 	return black_unlabel_data
 
@@ -52,13 +52,9 @@ def partical_fit(data, feed_ratio, sort_by = ""):
 	if sort_by != "":
 		data = data.sort_values(by = str(sort_by))
 		print("\n# Sort data in <{}> order".format(sort_by))
-	data['id'].to_csv("te.csv")
 	partical_loc = int(len(data) * feed_ratio)
 	data_seg_1 = data[:partical_loc]
-	print(data_seg_1)
 	data_seg_2 = data[partical_loc:]
-	print(data_seg_2)
-	print("loc", partical_loc)
 	print("\n# length of data_seg_1 :", len(data_seg_1))
 	print("# length of data_seg_2 :", len(data_seg_2))
 	clear_mermory(data)
@@ -180,7 +176,7 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
 	#Feed test online
 	print("\n# Partical fit <test_b> to the dataset")
 	_test_online = df_read_and_fillna(test_path, fillna)
-	test_b_seg_1,  test_b_seg_2 = partical_fit(_test_online[:2001], 0.5, "date")
+	test_b_seg_1,  test_b_seg_2 = partical_fit(_test_online, 0.5, "date")
 
 	#Predict and save seg_1 score
 	prob_seg_1 = clf.predict_proba(test_b_seg_1.iloc[:,2:])
