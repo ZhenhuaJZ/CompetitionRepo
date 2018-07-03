@@ -183,17 +183,27 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
 		#Predict and save seg_1 score
 		prob_seg_1 = clf.predict_proba(test_b_seg_1.iloc[:,2:])
 		score_seg_1 = pd.DataFrame(test_b_seg_1["id"]).assign(score = prob_seg_1[:,1])
-		score_seg_1.to_csv("data/seg_a_score.csv", index = None)
-		#clear_mermory(_test_online)
-		#test_b_seg_1_black = positive_unlabel_learning(clf, test_b_seg_1, 0.5) #pu threshold
-		#clear_mermory(test_b_seg_1)
-		#increment_train = file_merge(test_b_seg_1_black, _final_train, "date")
-		#increment_train.to_csv("data/increment_train_0.5.csv", index = None)
-		#print("\n# Partical fit done !")
-		#clear_mermory(test_b_seg_1_black, _final_train, increment_train)
+		score_seg_1_path = score_path + "score_day{}_time{}:{}_seg_a.csv"
+		score_seg_1.to_csv(score_seg_1_path, index = None)
+		clear_mermory(_test_online, score_seg_1)
 
+		#PU for test_b
+		test_b_seg_1_black = positive_unlabel_learning(clf, test_b_seg_1, 0.5) #pu threshold
+		clear_mermory(test_b_seg_1)
+		increment_train = file_merge(test_b_seg_1_black, _final_train, "date")
+		increment_train_path = log_path + "increment_train.csv"
 
-		"""
+		#Save increment_train to hard drive
+		increment_train.to_csv(increment_train_path, index = None)
+		print("\n# Partical fit done !")
+		clear_mermory(test_b_seg_1_black, _final_train, increment_train)
+
+		#Read increment_train from hard drive
+		print("\n# Inititalize increment_train (read from hard drive)")
+		time.sleep(5)
+		_train_data = pd.read_csv(increment_train_path)
+		increment_train = df_read_and_fillna(increment_train_path)
+
 		#########################Merge Test_b score#################################
 		increment_train_feature, increment_train_label = split_train_label(increment_train)
 		clear_mermory(increment_train)
@@ -205,10 +215,10 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
 		score_seg_2 = pd.DataFrame(test_b_seg_2["id"]).assign(score = prob_seg_2[:,1])
 
 		##############################Merge Score###################################
+		score_seg_1 = pd.read_csv(score_seg_1_path)
 		score = score_seg_1.append(score_seg_2)
 		score.to_csv(score_path + "score_day{}_time{}:{}.csv".format(now.day, now.hour, now.minute), index = None, float_format = "%.9f")
 		print("\n# Score saved in {}".format(score_path))
-		"""
 
 	#Log all the data
 	log_parmas(clf, valset = offline_validation,
