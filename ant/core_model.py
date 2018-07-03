@@ -178,35 +178,26 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
 	clear_mermory(_test_online)
 	test_b_seg_1_black, score_seg_1 = positive_unlabel_learning(clf, test_b_seg_1, 0.5) #pu threshold
 	clear_mermory(test_b_seg_1)
-	print("***********************run1********************")
 	increment_train = file_merge(test_b_seg_1_black, _final_train, "date")
-	#sys.exit()
 	#increment_train.to_csv("testleo.csv", index = None, header = True)
 	#increment_train = pd.read_csv("testleo.csv")
-	print("***********************run2********************")
 	clear_mermory(test_b_seg_1_black, _final_train)
 	increment_train_feature, increment_train_label = split_train_label(increment_train)
-	print(increment_train_feature)
-	print("***********************run3********************")
+
 	clear_mermory(increment_train)
 
 	clf.fit(increment_train_feature, increment_train_label)
 
-
-	print("***********************run4********************")
-	score_seg_2 = clf.predict_proba(test_b_seg_2.iloc[:,2])
-	print("***********************run5********************")
-	test_b_seg_2 = pd.DataFrame(test_b_seg_2["id"])
-	test_b_seg_2.assign(score = test_b_seg_2[:,1])
-	print("***********************run6********************")
+	score_seg_2 = clf.predict_proba(test_b_seg_2.iloc[:,2:])
 	test_b_seg_1 = pd.DataFrame(test_b_seg_1["id"])
-	test_b_seg_1.assign(score = score_seg_1[:,1])
-	print("***********************run7********************")
-	sys.exit()
-	# TODO:  merge score_seg_a and score_seg_b
-	score = score_seg_2[:,1] + score_seg_1[:,1]
-	save_score(score, score_path)
-	print("***********************run8********************")
+	seg_1_score = test_b_seg_1.assign(score = score_seg_1[:,1])
+	test_b_seg_2 = pd.DataFrame(test_b_seg_2["id"])
+	seg_2_score = test_b_seg_2.assign(score = score_seg_2[:,1])
+
+    score = seg_2_score.append(seg_1_score)
+	score.to_csv(score_path + "score_day{}_time{}:{}.csv".format(now.day, now.hour, now.minute), index = None, float_format = "%.9f")
+	#score = score_seg_2[:,1] + score_seg_1[:,1]
+	#save_score(score, score_path)
 	#Log all the data
 	log_parmas(clf, offline_validation, offline_score_1, offline_score_2,
 				log_path, fillna, pu_thres, roc_1_mean, roc_2_mean, under_samp)
