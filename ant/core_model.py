@@ -4,6 +4,33 @@ from lib.data_processing import *
 from lib.model_performance import *
 import datetime, time
 
+def segmentation_model(clf, data, test, feature_dic):
+    # Segment data and test into segment a and b
+    seg_a_train, seg_b_train = sample_segmentation(data,feature_dic)
+    seg_a_test, seg_b_test = sample_segmentation(test, feature_dic)
+    # Extract id
+    seg_a_score = pd.DataFrame(seg_a_test["id"], columns = ["id"])
+    seg_b_score = pd.DataFrame(seg_b_test["id"], columns = ["id"])
+    # Segment A data sets
+    seg_a_feature, seg_a_label = split_train_label(seg_a_train)
+    # Segment B data sets
+    seg_b_feature, seg_b_label = split_train_label(seg_b_train)
+    ###################### Segment A train and test ####################
+    print("\n# Initiate training for segment a")
+    seg_a_clf = clf.fit(seg_a_feature, seg_a_label)
+    seg_a_test_score = clf.predict_proba(seg_a_test.iloc[:,2:])[:,1]
+    print(len(seg_a_score))
+    print(seg_a_test_score)
+    seg_a_score = seg_a_score.assign(score = seg_a_test_score)
+    ###################### Segment B train and test ####################
+    print("\n# Initiate training for segment b")
+    seg_b_clf = clf.fit(seg_b_feature, seg_b_label)
+    seg_b_test_score = clf.predict_proba(seg_b_test.iloc[:,2:])[:,1]
+    seg_b_score = seg_b_score.assign(score = seg_b_test_score)
+
+    final_score = seg_a_score.append(seg_b_score)
+
+    return final_score
 
 def positive_unlabel_learning(classifier, unlabel_data, threshold):
 	print("\n# PU threshold = {}".format(threshold))
