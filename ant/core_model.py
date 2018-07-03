@@ -38,10 +38,10 @@ def cv_fold(clf, _train_data, fold_time_split, params_path):
 		clear_mermory(train, labels)
 		offline_probs = _clf.predict_proba(test_offline_feature)
 		clear_mermory(test_offline, _clf)
-		offline_score_1 = offline_model_performance(test_offline_labels, offline_probs[:,1], params_path = params_path, fold = i)
-		offline_score_2 = offline_model_performance_2(test_offline_labels, offline_probs[:,1], params_path = params_path, fold = i)
-		roc_1_list.append(offline_score_1)
-		roc_2_list.append(offline_score_2)
+		cv_offline_score_1 = offline_model_performance(test_offline_labels, offline_probs[:,1], params_path = params_path, fold = i)
+		cv_offline_score_2 = offline_model_performance_2(test_offline_labels, offline_probs[:,1], params_path = params_path, fold = i)
+		roc_1_list.append(cv_offline_score_1)
+		roc_2_list.append(cv_offline_score_2)
 		print("\n# >>>>Duration<<<< : {}min ".format(round((time.time()-start)/60,2)))
 	#eval performace
 	#clear_mermory(_train_data)
@@ -111,7 +111,7 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
 	if cv:
 		if method == "pu_method" :
 			print("\n# 5 - Fold CV for PU classifier (Evaluation Classifier)")
-		roc_1_mean, roc_2_mean = cv_fold(clf, _train_data, fold_time_split, params_path)
+		roc_1_mean, roc_2_mean = cv_fold(clf, pu_train_data, fold_time_split, params_path)
 
 	offline_probs = clf.predict_proba(_test_offline_feature)
 	#evl pu model
@@ -139,6 +139,6 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
 
 	#Log all the data
 	log_parmas(clf, offline_validation, offline_score_1, offline_score_2,
-				log_path, fillna, pu_thres, roc_1_mean, roc_1_mean, under_samp)
+				log_path, fillna, pu_thres, roc_1_mean, roc_2_mean, under_samp)
 	clear_mermory(now)
 	print("\n# >>>>Duration<<<< : {}min ".format(round((time.time()-start)/60,2)))
