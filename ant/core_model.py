@@ -52,13 +52,13 @@ def partical_fit(data, feed_ratio, sort_by = ""):
 	if sort_by != "":
 		data = data.sort_values(by = str(sort_by))
 		print("\n# Sort data in <{}> order".format(sort_by))
-	print(data['id'])
+	data['id'].to_csv("te.csv")
 	partical_loc = int(len(data) * feed_ratio)
-	print("loc", partical_loc)
 	data_seg_1 = data[:partical_loc]
 	print(data_seg_1)
 	data_seg_2 = data[partical_loc+1:]
 	print(data_seg_2)
+	print("loc", partical_loc)
 	print("\n# length of data_seg_1 :", len(data_seg_1))
 	print("# length of data_seg_2 :", len(data_seg_2))
 	clear_mermory(data)
