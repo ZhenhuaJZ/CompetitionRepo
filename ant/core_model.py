@@ -17,7 +17,7 @@ def positive_unlabel_learning(classifier, unlabel_data, threshold):
 	print("\n# After PU found <{}> potential white instances".format(len(unlabel_data[unlabel_data.label == 0])))
 	return black_unlabel_data, _score
 
-def partical_fit(data, start_y_m_d, end_y_m_d, sort_by = ""):
+def partical_fit(data, feed_ratio, sort_by = ""):
 	print("\n# Total length ", len(data))
 	if sort_by != "":
 		data = data.sort_values(by = str(sort_by))
@@ -26,8 +26,8 @@ def partical_fit(data, start_y_m_d, end_y_m_d, sort_by = ""):
 	#split_data = data[(data["date"] >= start_y_m_d) & (data["date"] <= end_y_m_d)]
 	data_seg_1 = data.iloc[:partical_loc,:]
 	data_seg_2 = data.iloc[partical_loc+1:,:]
-	print("# length of data_seg_2 : ", len(data_seg_2))
-	print("\n# length of data_seg_1 : ", len(data_seg_1))
+	print("# length of data_seg_2 : ", len(data_seg_2.iloc[0]))
+	print("\n# length of data_seg_1 : ", len(data_seg_1.iloc[0]))
 
 	return data_seg_1, data_seg_2
 
