@@ -194,7 +194,7 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
 	test_b_seg_2 = pd.DataFrame(test_b_seg_2["id"])
 	seg_2_score = test_b_seg_2.assign(score = score_seg_2[:,1])
 
-    score = seg_2_score.append(seg_1_score)
+	score = seg_2_score.append(seg_1_score)
 	score.to_csv(score_path + "score_day{}_time{}:{}.csv".format(now.day, now.hour, now.minute), index = None, float_format = "%.9f")
 	#score = score_seg_2[:,1] + score_seg_1[:,1]
 	#save_score(score, score_path)
