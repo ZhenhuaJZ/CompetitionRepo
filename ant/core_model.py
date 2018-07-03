@@ -52,12 +52,13 @@ def partical_fit(data, feed_ratio, sort_by = ""):
 	if sort_by != "":
 		data = data.sort_values(by = str(sort_by))
 		print("\n# Sort data in <{}> order".format(sort_by))
-	print(data)
 	print(data['id'])
 	partical_loc = int(len(data) * feed_ratio)
 	print("loc", partical_loc)
 	data_seg_1 = data[:partical_loc]
+	print(data_seg_1)
 	data_seg_2 = data[partical_loc+1:]
+	print(data_seg_2)
 	print("\n# length of data_seg_1 :", len(data_seg_1))
 	print("# length of data_seg_2 :", len(data_seg_2))
 	clear_mermory(data)
@@ -179,7 +180,7 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
 	#Feed test online
 	print("\n# Partical fit <test_b> to the dataset")
 	_test_online = df_read_and_fillna(test_path, fillna)
-	test_b_seg_1,  test_b_seg_2 = partical_fit(_test_online, 0.4, "date")
+	test_b_seg_1,  test_b_seg_2 = partical_fit(_test_online[:2001], 0.5, "date")
 
 	#Predict and save seg_1 score
 	prob_seg_1 = clf.predict_proba(test_b_seg_1.iloc[:,2:])
