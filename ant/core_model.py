@@ -154,14 +154,13 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
 
 	############################Feed val black back#############################
 	# NOTE:  Feed validation black label Back
-	print("\n# Feed Only black validation set to the dataset")
+	print("\n# Feed Only black instances from the validation set to the dataset")
 	_test_offline_black = _test_offline.loc[_test_offline["label"] == 1]
 	print("\n# Found <{}> black instances".format(len(_test_offline_black)))
 	_final_train = file_merge(pu_train_data, _test_offline_black, "date")
 	clear_mermory(_test_offline_black, pu_train_data, _test_offline)
 	_final_feature, _final_label = split_train_label(_final_train)
 	#clear_mermory(_final_train)
-	#joblib.dump(clf, model_path + "{}.pkl".format("model"))
 	clf = clf.fit(_final_feature, _final_label)
 	clear_mermory(_final_feature, _final_label)
 	_test_online = df_read_and_fillna(test_path, 0)
@@ -177,8 +176,7 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
 
 	#Predict and save seg_1 score
 	prob_seg_1 = clf.predict_proba(test_b_seg_1.iloc[:,2:])
-	test_b_seg_1 = pd.DataFrame(test_b_seg_1["id"])
-	score_seg_1 = test_b_seg_1.assign(score = prob_seg_1[:,1])
+	score_seg_1 = pd.DataFrame(test_b_seg_1["id"]).assign(score = prob_seg_1[:,1])
 
 	clear_mermory(_test_online)
 	test_b_seg_1_black = positive_unlabel_learning(clf, test_b_seg_1, pu_thres) #pu threshold
@@ -193,8 +191,7 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
 
 	#Predict and save seg_2 score
 	prob_seg_2 = clf.predict_proba(test_b_seg_2.iloc[:,2:])
-	test_b_seg_2 = pd.DataFrame(test_b_seg_2["id"])
-	score_seg_2 = test_b_seg_2.assign(score = prob_seg_2[:,1])
+	score_seg_2 = pd.DataFrame(test_b_seg_2["id"]).assign(score = prob_seg_2[:,1])
 
 	##############################Merge Score###################################
 	score = score_seg_1.append(score_seg_2)
