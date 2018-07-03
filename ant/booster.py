@@ -126,7 +126,8 @@ def main():
 		log_path = "log/date_{}/{}:{}_SM/".format(now.day,now.hour,now.minute)
 		creat_project_dirs(log_path)
 		core(fillna, log_path, offline_validation, clf, train_path, test_path, test_a_path,
-		 			pu_thres = pu_thres, cv = cv, fold_time_split = fold_time_split, under_samp = under_samp, partical_fit = partical_fit partical_ratio = partal_fit_thresh)
+		 			pu_thres = pu_thres, cv = cv, fold_time_split = fold_time_split, under_samp = under_samp,
+					partical_fit = partical_fit, partical_ratio = partal_fit_thresh)
 
 if __name__ == '__main__':
 	main()
