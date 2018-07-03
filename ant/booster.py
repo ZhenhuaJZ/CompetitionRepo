@@ -24,9 +24,9 @@ def main():
 	#Tunning params
 	tuning_name = "thresh"
 	tunning = False
-	tuning_range = [0.4,0.5,0.6]
+	tuning_range = [0.5,0.6]
 
-	pu_thres = 0.6
+	pu_thres = 0.7
 	offline_validation = [20171025, 20171105] #20171025, 20171105
 	#CV
 	cv = False

@@ -97,7 +97,7 @@ def cv_fold(clf, _train_data, fold_time_split, params_path):
 	print("##"*40)
 	return roc_1_mean, roc_2_mean
 
-def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_a_path, pu_thres, method = None, cv = False, fold_time_split = None, under_samp = False):
+def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_a_path, pu_thres, method = None, cv = False, fold_time_split = None, under_samp = False, partical_ratio = 0.5):
 	params_path = log_path + "params/"
 	score_path = log_path + "score/"
 	model_path = log_path + "model/"
@@ -168,15 +168,17 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
 	clf = clf.fit(_final_feature, _final_label)
 	clear_mermory(_final_feature, _final_label)
 	_test_online = df_read_and_fillna(test_path, fillna)
-	#prob = predict_proba(_test_online.iloc[:,2])
-	#save_score(prob[:1], score_path)
+	prob = predict_proba(_test_online.iloc[:,2])
+	save_score(prob[:1], score_path)
 
+	
+	"""
 	##########################Partical_fit######################################
 	# NOTE:  PU test_b
 	#Feed test online
 	print("\n# Partical fit <test_b> to the dataset")
 	_test_online = df_read_and_fillna(test_path, fillna)
-	test_b_seg_1,  test_b_seg_2 = partical_fit(_test_online, 0.5, "date")
+	test_b_seg_1,  test_b_seg_2 = partical_fit(_test_online, partical_ratio, "date")
 
 	#Predict and save seg_1 score
 	prob_seg_1 = clf.predict_proba(test_b_seg_1.iloc[:,2:])
@@ -202,6 +204,7 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
 	score = score_seg_1.append(score_seg_2)
 	score.to_csv(score_path + "score_day{}_time{}:{}.csv".format(now.day, now.hour, now.minute), index = None, float_format = "%.9f")
 	print("\n# Score saved in {}".format(score_path))
+	"""
 	#Log all the data
 	log_parmas(clf, offline_validation, offline_score_1, offline_score_2,
 				log_path, fillna, pu_thres, roc_1_mean, roc_2_mean, under_samp)
