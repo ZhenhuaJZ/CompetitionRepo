@@ -27,6 +27,7 @@ def segmentation_model(clf, data, test, feature_dic):
     seg_b_clf = clf.fit(seg_b_feature, seg_b_label)
     seg_b_test_score = clf.predict_proba(seg_b_test.iloc[:,2:])[:,1]
     seg_b_score = seg_b_score.assign(score = seg_b_test_score)
+
     final_score = seg_a_score.append(seg_b_score)
 
     return final_score
@@ -41,7 +42,6 @@ def positive_unlabel_learning(classifier, unlabel_data, threshold):
 	black_unlabel_data = unlabel_data.loc[unlabel_data["label"] == 1]
 	print("\n# After PU found <{}> potential black instances".format(len(unlabel_data[unlabel_data.label == 1])))
 	print("\n# After PU found <{}> potential white instances".format(len(unlabel_data[unlabel_data.label == 0])))
-	clear_mermory(unlabel_data)
 	return black_unlabel_data, _score
 
 def partical_fit(data, feed_ratio, sort_by = ""):
@@ -49,14 +49,12 @@ def partical_fit(data, feed_ratio, sort_by = ""):
 	if sort_by != "":
 		data = data.sort_values(by = str(sort_by))
 		print("\n# Sort data in <{}> order".format(sort_by))
-	partical_loc = int(len(data) * feed_ratio)
-	#split_data = data[(data["date"] >= start_y_m_d) & (data["date"] <= end_y_m_d)]
+	partical_loc = int(len(data.iloc[0]) * feed_ratio)
 	data_seg_1 = data.iloc[:partical_loc,:]
+	print("\n# length of data_seg_1 : {}", len(data_seg_1))
 	data_seg_2 = data.iloc[partical_loc+1:,:]
-	print("\n# length of data_seg_1 : ", len(data_seg_1))
-	print("# length of data_seg_2 : ", len(data_seg_2))
+	print("# length of data_seg_2 : {}", len(data_seg_2))
 
-	clear_mermory(data)
 	return data_seg_1, data_seg_2
 
 def cv_fold(clf, _train_data, fold_time_split, params_path):
@@ -174,24 +172,23 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
 	print("\n# Partical fit <test_b> to the dataset")
 	_test_online = df_read_and_fillna(test_path, 0)
 	test_b_seg_1,  test_b_seg_2 = partical_fit(_test_online, 0.5, "date")
-	clear_mermory(_test_online)
-	test_b_seg_1_black, score_seg_1 = positive_unlabel_learning(clf, test_b_seg_1, 0.7) #pu threshold
+	test_b_seg_1_black, score_seg_1 = positive_unlabel_learning(clf, test_b_seg_1, 0.5) #pu threshold
 
-	increment_train = file_merge(test_b_seg_1_black, _final_train, "date")
-	clear_mermory(test_b_seg_1_black, _final_train)
+	print(test_b_seg_1)
+	print(test_b_seg_1["id"])
+	test_b_seg_1 = pd.DataFrame(test_b_seg_1["id"])
+	test_b_seg_1.assign(score = score_seg_1[:,1])
+
+	increment_train = merged_file(test_b_seg_1_black, _final_train, "date")
 	increment_train_feature, increment_train_label = split_train_label(increment_train)
 	clf = clf.fit(increment_train_feature, increment_train_label)
 	score_seg_2 = clf.predict_proba(test_b_seg_2.iloc[:,2])
-
-	test_b_seg_1 = pd.DataFrame(test_b_seg_1["id"])
-	test_b_seg_1.assign(score = score_seg_1[:,1])
 	test_b_seg_2 = pd.DataFrame(test_b_seg_2["id"])
 	test_b_seg_2.assign(score = test_b_seg_2[:,1])
 
 	# TODO:  merge score_seg_a and score_seg_b
-	#score = score_seg_2[:,1] + score_seg_1[:,1]
-	#save_score(score, score_path)
-
+	score = score_seg_2[:,1] + score_seg_1[:,1]
+	save_score(score, score_path)
 
 	#Log all the data
 	log_parmas(clf, offline_validation, offline_score_1, offline_score_2,
