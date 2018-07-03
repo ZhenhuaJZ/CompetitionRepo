@@ -40,6 +40,7 @@ def positive_unlabel_learning(classifier, unlabel_data, threshold):
 	score.loc[score < threshold] = 0
 	unlabel_data.insert(1, "label", score)
 	black_unlabel_data = unlabel_data.loc[unlabel_data["label"] == 1]
+	print(black_unlabel_data)
 	print("\n# After PU found <{}> potential black instances".format(len(unlabel_data[unlabel_data.label == 1])))
 	print("\n# After PU found <{}> potential white instances".format(len(unlabel_data[unlabel_data.label == 0])))
 	clear_mermory(classifier)
@@ -176,7 +177,7 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
 	clear_mermory(_test_online)
 	test_b_seg_1_black, score_seg_1 = positive_unlabel_learning(clf, test_b_seg_1, 0.5) #pu threshold
 	clear_mermory(test_b_seg_1)
-	
+
 	increment_train = file_merge(test_b_seg_1_black, _final_train, "date")
 	increment_train.to_csv("testleo.csv", index = None, header = True)
 	increment_train = pd.read_csv("testleo.csv")
