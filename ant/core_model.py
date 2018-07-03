@@ -4,21 +4,31 @@ from lib.data_processing import *
 from lib.model_performance import *
 import datetime, time
 
-def feed_validation(classifier, data):
-	label_1_data = data.loc[data["label"] == 1]
-	_train = file_merge(label_1_data, train)
-	return _train
 
 def positive_unlabel_learning(classifier, unlabel_data, threshold):
 	print("\n# PU threshold = {}".format(threshold))
-	score = classifier.predict_proba(unlabel_data.iloc[:,2:])
-	score = pd.Series(score[:,1])
+	_score = classifier.predict_proba(unlabel_data.iloc[:,2:])
+	score = pd.Series(_score[:,1])
 	score.loc[score >= threshold] = 1
 	score.loc[score < threshold] = 0
 	unlabel_data.insert(1, "label", score)
+	black_unlabel_data = unlabel_data.loc[unlabel_data["label"] == 1]
 	print("\n# After PU found <{}> potential black instances".format(len(unlabel_data[unlabel_data.label == 1])))
 	print("\n# After PU found <{}> potential white instances".format(len(unlabel_data[unlabel_data.label == 0])))
-	return unlabel_data
+	return black_unlabel_data, _score
+
+def partical_fit(data, feed_ratio, sort_by = ""):
+	print("\n# Total length {}", len(data))
+	if sort_by != "":
+		data = data.sort_values(by = str(sort_by))
+		print("\n# Sort data in <{}> order".format(sort_by))
+	partical_loc = int(len(data.iloc[0]) * feed_ratio)
+	data_seg_1 = data.iloc[:partical_loc,:]
+	print("\n# length of data_seg_1 : {}", len(data_seg_1))
+	data_seg_2 = data.iloc[partical_loc+1:,:]
+	print("# length of data_seg_2 : {}", len(data_seg_2))
+
+	return data_seg_1, data_seg_2
 
 def cv_fold(clf, _train_data, fold_time_split, params_path):
 	roc_1_list = []
@@ -63,13 +73,8 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
 	model_path = log_path + "model/"
 	# ##########################Edit data####################################
 	_train_data = pd.read_csv(train_path)
-	_test_online = pd.read_csv(test_path)
-	_test_a = pd.read_csv(test_a_path)
-
-	_train_data, _test_online, _test_a = custom_imputation_3_inputs(_train_data, _test_online, _test_a, fillna)
-	#change -1 label to 1
-	_train_data.loc[_train_data["label"] == -1] = 1
-
+	_train_data = custom_imputation(_train_data)
+	_train_data.loc[_train_data["label"] == -1] = 1 #change -1 label to 1
 	#Split train and offine test
 	_train_data, _test_offline =  test_train_split_by_date(_train_data, offline_validation[0], offline_validation[1], params_path)
 
@@ -78,8 +83,7 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
 		_train_data = under_sampling(_train_data)
 
 	_train, _labels = split_train_label(_train_data)
-	#online & offline data
-	_test_online = _test_online.iloc[:,2:]
+	#offline data
 	_test_offline_feature, _test_offline_labels = split_train_label(_test_offline)
 
 	# ##########################Traing model####################################
@@ -96,12 +100,11 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
 	clear_mermory(_train, _labels)
 	print("\n# PU Traing Start")
 	# NOTE: PU learning
-	unlabel_data = positive_unlabel_learning(clf, _test_a, pu_thres)
+	_test_a = df_read_and_fillna(test_a_path, 0)
+	pu_black_data, _ = positive_unlabel_learning(clf, _test_a, pu_thres)
 	clear_mermory(_test_a)
-	#Choose Black Label
-	unlabel_data = unlabel_data[unlabel_data.label == 1]
-	pu_train_data = file_merge(_train_data, unlabel_data, "date")
-	clear_mermory(_train_data, unlabel_data)
+	pu_train_data = file_merge(_train_data, pu_black_data, "date")
+	clear_mermory(_train_data, pu_black_data)
 	_new_train, _new_label = split_train_label(pu_train_data)
 	clf = clf.fit(_new_train, _new_label)
 	clear_mermory(_new_train, _new_label)
@@ -120,6 +123,7 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
 	offline_score_2 = offline_model_performance_2(_test_offline_labels, offline_probs[:,1], params_path = params_path)
 	clear_mermory(_test_offline_feature, _test_offline_labels, offline_probs)
 
+	############################Feed val black back#############################
 	# NOTE:  Feed validation black label Back
 	print("\n# Feed Only black validation set to the dataset")
 	_test_offline_black = _test_offline.loc[_test_offline["label"] == 1]
@@ -127,14 +131,35 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
 	_final_train = file_merge(pu_train_data, _test_offline_black, "date")
 	clear_mermory(_test_offline_black, pu_train_data, _test_offline)
 	_final_feature, _final_label = split_train_label(_final_train)
-	clear_mermory(_final_train)
+	#clear_mermory(_final_train)
 	#joblib.dump(clf, model_path + "{}.pkl".format("model"))
 	clf = clf.fit(_final_feature, _final_label)
 	clear_mermory(_final_feature, _final_label)
-	probs = clf.predict_proba(_test_online)
-	save_score(probs[:,1], score_path)
+	_test_online = df_read_and_fillna(test_path, 0)
+	#prob = predict_proba(_test_online.iloc[:,2])
+	#save_score(prob[:1], score_path)
 
-	#def parti()
+	##########################Partical_fit######################################
+	# NOTE:  PU test_b
+	#Feed test online
+	print("\n# Partical fit <test_b> to the dataset")
+	_test_online = df_read_and_fillna(test_path, 0)
+	test_b_seg_1,  test_b_seg_2 = partical_fit(_test_online, 0.5, "date")
+	test_b_seg_1_black, score_seg_1 = positive_unlabel_learning(clf, test_b_seg_1, 0.5) #pu threshold
+
+	test_b_seg_1.loc["id"].assign(score = test_b_seg_2[:,1])
+
+	increment_train = merged_file(test_b_seg_1_black, _final_train, "date")
+	increment_train_feature, increment_train_label = split_train_label(increment_train)
+	clf = clf.fit(increment_train_feature, increment_train_label)
+	score_seg_2 = clf.predict_proba(test_b_seg_2.iloc[:,2])
+
+	test_b_seg_2.loc["id"].assign(score = test_b_seg_2[:,1])
+
+	# TODO:  merge score_seg_a and score_seg_b
+	score = score_seg_2[:,1] + score_seg_1[:,1]
+	save_score(score, score_path)
+
 
 	#Log all the data
 	log_parmas(clf, offline_validation, offline_score_1, offline_score_2,

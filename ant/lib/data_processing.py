@@ -140,6 +140,11 @@ def file_merge(data_1, data_2, sort_by = "", reset_index = False):
     del data_1, data_2
     return merged_file
 
+def df_read_and_fillna(data_path, fillna_value = 0):
+	data = pd.read_csv(data_path)
+	data = custom_imputation(data, fillna_value)
+	return data
+
 ############################## Replace_missing by mode #########################
 # This function still having trouble
 def find_common_mode(black_frequency_list, white_frequency_list):
@@ -193,12 +198,11 @@ def custom_imputation_3_inputs(df_train, df_test_b, df_test_a, fillna_value = 0)
     return train, test_b, test_a
 
 #custom_imputation
-def custom_imputation(df_train, df_test, fillna_value = 0):
-    train = df_train.fillna(fillna_value)
-    test = df_test.fillna(fillna_value)
-    print("##"*40)
-    print("\n# Filling missing data with <<<{}>>>".format(fillna_value))
-    return train, test
+def custom_imputation(df, fillna_value = 0):
+    data = df.fillna(fillna_value)
+    #print("##"*40)
+    print("\n# Filling <{}> to data : {} ".format(fillna_value, df))
+    return data
 # #############################Save score#######################################
 #pass preds and save score file path
 def save_score(preds, score_path):
