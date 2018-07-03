@@ -51,11 +51,11 @@ def partical_fit(data, feed_ratio, sort_by = ""):
 		data = data.sort_values(by = str(sort_by))
 		print("\n# Sort data in <{}> order".format(sort_by))
 	partical_loc = int(len(data) * feed_ratio)
-	data_seg_1 = data[:partical_loc,:]
-	data_seg_2 = data[partical_loc+1:,:]
+	data_seg_1 = data.iloc[:partical_loc,:]
+	data_seg_2 = data.iloc[partical_loc+1:,:]
 	print("\n# length of data_seg_1 :", len(data_seg_1))
 	print("# length of data_seg_2 :", len(data_seg_2))
-
+	clear_mermory(data)
 	return data_seg_1, data_seg_2
 
 def cv_fold(clf, _train_data, fold_time_split, params_path):
