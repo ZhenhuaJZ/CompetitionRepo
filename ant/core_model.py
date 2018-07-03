@@ -199,6 +199,7 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
 	##############################Merge Score###################################
 	score = score_seg_1.append(score_seg_2)
 	score.to_csv(score_path + "score_day{}_time{}:{}.csv".format(now.day, now.hour, now.minute), index = None, float_format = "%.9f")
+	print("\n# Score saved in {}".format(score_path))
 	#Log all the data
 	log_parmas(clf, offline_validation, offline_score_1, offline_score_2,
 				log_path, fillna, pu_thres, roc_1_mean, roc_2_mean, under_samp)
