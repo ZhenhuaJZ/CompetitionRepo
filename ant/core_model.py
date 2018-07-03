@@ -35,8 +35,8 @@ def segmentation_model(clf, data, test, feature_dic):
 
 def positive_unlabel_learning(classifier, unlabel_data, threshold):
 	print("\n# PU threshold = {}".format(threshold))
-	_score = classifier.predict_proba(unlabel_data.iloc[:,2:])
-	score = pd.Series(_score[:,1])
+	score = classifier.predict_proba(unlabel_data.iloc[:,2:])
+	score = pd.Series(score[:,1])
 	score.loc[score >= threshold] = 1
 	score.loc[score < threshold] = 0
 	unlabel_data.insert(1, "label", score)
@@ -45,7 +45,7 @@ def positive_unlabel_learning(classifier, unlabel_data, threshold):
 	print("\n# After PU found <{}> potential black instances".format(len(unlabel_data[unlabel_data.label == 1])))
 	print("\n# After PU found <{}> potential white instances".format(len(unlabel_data[unlabel_data.label == 0])))
 	clear_mermory(classifier)
-	return black_unlabel_data, _score
+	return black_unlabel_data
 
 def partical_fit(data, feed_ratio, sort_by = ""):
 	print("\n# Total length :", len(data))
@@ -131,7 +131,7 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
 	print("\n# PU Traing Start")
 	# NOTE: PU learning
 	_test_a = df_read_and_fillna(test_a_path, 0)
-	pu_black_data, _ = positive_unlabel_learning(clf, _test_a, pu_thres)
+	pu_black_data = positive_unlabel_learning(clf, _test_a, pu_thres)
 	clear_mermory(_test_a)
 	pu_train_data = file_merge(_train_data, pu_black_data, "date")
 	clear_mermory(_train_data, pu_black_data)
@@ -174,30 +174,32 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
 	#Feed test online
 	print("\n# Partical fit <test_b> to the dataset")
 	_test_online = df_read_and_fillna(test_path, 0)
-	test_b_seg_1,  test_b_seg_2 = partical_fit(_test_online, 0.5, "date")
+	test_b_seg_1,  test_b_seg_2 = partical_fit(_test_online, 0.4, "date")
+
+	#Predict and save seg_1 score
+	prob_seg_1 = clf.predict_proba(test_b_seg_1.iloc[:,2:])
+	test_b_seg_1 = pd.DataFrame(test_b_seg_1["id"])
+	score_seg_1 = test_b_seg_1.assign(score = prob_seg_1[:,1])
+
 	clear_mermory(_test_online)
-	test_b_seg_1_black, score_seg_1 = positive_unlabel_learning(clf, test_b_seg_1, 0.5) #pu threshold
-	clear_mermory(test_b_seg_1)
+	test_b_seg_1_black = positive_unlabel_learning(clf, test_b_seg_1, pu_thres) #pu threshold
 	increment_train = file_merge(test_b_seg_1_black, _final_train, "date")
-	#increment_train.to_csv("testleo.csv", index = None, header = True)
-	#increment_train = pd.read_csv("testleo.csv")
 	clear_mermory(test_b_seg_1_black, _final_train)
+
+	#########################Merge Test_b score#################################
 	increment_train_feature, increment_train_label = split_train_label(increment_train)
-
 	clear_mermory(increment_train)
-
+	#Fit new classifier
 	clf.fit(increment_train_feature, increment_train_label)
 
-	score_seg_2 = clf.predict_proba(test_b_seg_2.iloc[:,2:])
-	test_b_seg_1 = pd.DataFrame(test_b_seg_1["id"])
-	seg_1_score = test_b_seg_1.assign(score = score_seg_1[:,1])
+	#Predict and save seg_2 score
+	prob_seg_2 = clf.predict_proba(test_b_seg_2.iloc[:,2:])
 	test_b_seg_2 = pd.DataFrame(test_b_seg_2["id"])
-	seg_2_score = test_b_seg_2.assign(score = score_seg_2[:,1])
+	score_seg_2 = test_b_seg_2.assign(score = prob_seg_2[:,1])
 
-	score = seg_2_score.append(seg_1_score)
+	##############################Merge Score###################################
+	score = score_seg_1.append(score_seg_2)
 	score.to_csv(score_path + "score_day{}_time{}:{}.csv".format(now.day, now.hour, now.minute), index = None, float_format = "%.9f")
-	#score = score_seg_2[:,1] + score_seg_1[:,1]
-	#save_score(score, score_path)
 	#Log all the data
 	log_parmas(clf, offline_validation, offline_score_1, offline_score_2,
 				log_path, fillna, pu_thres, roc_1_mean, roc_2_mean, under_samp)
