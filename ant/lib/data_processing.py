@@ -131,8 +131,10 @@ def test_train_split_by_date(data, start_y_m_d, end_y_m_d, params_path = ""):
 # This function merges two dataframe and can be sort by provided string
 def file_merge(data_1, data_2, sort_by = "", reset_index = False):
     if len(data_1) == 0:
+        print("\n# Waring {} has 0 lengh !".format(data_1))
         return data_2
     elif len(data_2) == 0:
+        print("\n# Waring {} has 0 lengh !".format(data_2))
         return data_1
     merged_file = pd.concat([data_1,data_2], axis = 0)
     clear_mermory(data_1, data_2)
