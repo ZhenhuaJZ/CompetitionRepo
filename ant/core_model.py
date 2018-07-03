@@ -4,6 +4,33 @@ from lib.data_processing import *
 from lib.model_performance import *
 import datetime, time
 
+def segmentation_model(clf, data, test, feature_dic):
+    # Segment data and test into segment a and b
+    seg_a_train, seg_b_train = sample_segmentation(data,feature_dic)
+    seg_a_test, seg_b_test = sample_segmentation(test, feature_dic)
+    # Extract id
+    seg_a_score = pd.DataFrame(seg_a_test["id"], columns = ["id"])
+    seg_b_score = pd.DataFrame(seg_b_test["id"], columns = ["id"])
+    # Segment A data sets
+    seg_a_feature, seg_a_label = split_train_label(seg_a_train)
+    # Segment B data sets
+    seg_b_feature, seg_b_label = split_train_label(seg_b_train)
+    ###################### Segment A train and test ####################
+    print("\n# Initiate training for segment a")
+    seg_a_clf = clf.fit(seg_a_feature, seg_a_label)
+    seg_a_test_score = clf.predict_proba(seg_a_test.iloc[:,2:])[:,1]
+    print(len(seg_a_score))
+    print(seg_a_test_score)
+    seg_a_score = seg_a_score.assign(score = seg_a_test_score)
+    ###################### Segment B train and test ####################
+    print("\n# Initiate training for segment b")
+    seg_b_clf = clf.fit(seg_b_feature, seg_b_label)
+    seg_b_test_score = clf.predict_proba(seg_b_test.iloc[:,2:])[:,1]
+    seg_b_score = seg_b_score.assign(score = seg_b_test_score)
+
+    final_score = seg_a_score.append(seg_b_score)
+
+    return final_score
 
 def positive_unlabel_learning(classifier, unlabel_data, threshold):
 	print("\n# PU threshold = {}".format(threshold))
@@ -19,17 +46,22 @@ def positive_unlabel_learning(classifier, unlabel_data, threshold):
 	return black_unlabel_data, _score
 
 def partical_fit(data, feed_ratio, sort_by = ""):
-	print("\n# Total length ", len(data))
+	print("\n# Total length {}", len(data))
 	if sort_by != "":
 		data = data.sort_values(by = str(sort_by))
 		print("\n# Sort data in <{}> order".format(sort_by))
 	partical_loc = int(len(data) * feed_ratio)
 	#split_data = data[(data["date"] >= start_y_m_d) & (data["date"] <= end_y_m_d)]
 	data_seg_1 = data.iloc[:partical_loc,:]
+	print("\n# length of data_seg_1 : {}", len(data_seg_1))
 	data_seg_2 = data.iloc[partical_loc+1:,:]
 	print("# length of data_seg_2 : ", len(data_seg_2))
 	print("\n# length of data_seg_1 : ", len(data_seg_1))
+<<<<<<< HEAD
 	clear_mermory(data)
+=======
+
+>>>>>>> 7688a90ce0d63dce61efc4aa36b6e476a5ea678d
 	return data_seg_1, data_seg_2
 
 def cv_fold(clf, _train_data, fold_time_split, params_path):
@@ -133,7 +165,7 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
 	_final_train = file_merge(pu_train_data, _test_offline_black, "date")
 	clear_mermory(_test_offline_black, pu_train_data, _test_offline)
 	_final_feature, _final_label = split_train_label(_final_train)
-	clear_mermory(_final_train)
+	#clear_mermory(_final_train)
 	#joblib.dump(clf, model_path + "{}.pkl".format("model"))
 	clf = clf.fit(_final_feature, _final_label)
 	clear_mermory(_final_feature, _final_label)
@@ -168,4 +200,3 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
 	log_parmas(clf, offline_validation, offline_score_1, offline_score_2,
 				log_path, fillna, pu_thres, roc_1_mean, roc_2_mean, under_samp)
 	clear_mermory(now)
-	print("\n# >>>>Duration<<<< : {}min ".format(round((time.time()-start)/60,2)))
