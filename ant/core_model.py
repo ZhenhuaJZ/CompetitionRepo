@@ -56,7 +56,7 @@ def partical_fit(data, feed_ratio, sort_by = ""):
 	partical_loc = int(len(data) * feed_ratio)
 	data_seg_1 = data[:partical_loc]
 	print(data_seg_1)
-	data_seg_2 = data[partical_loc+1:]
+	data_seg_2 = data[partical_loc:]
 	print(data_seg_2)
 	print("loc", partical_loc)
 	print("\n# length of data_seg_1 :", len(data_seg_1))
