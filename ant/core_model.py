@@ -17,16 +17,17 @@ def positive_unlabel_learning(classifier, unlabel_data, threshold):
 	print("\n# After PU found <{}> potential white instances".format(len(unlabel_data[unlabel_data.label == 0])))
 	return black_unlabel_data, _score
 
-def partical_fit(data, feed_ratio, sort_by = ""):
-	print("\n# Total length {}", len(data))
+def partical_fit(data, start_y_m_d, end_y_m_d, sort_by = ""):
+	print("\n# Total length ", len(data))
 	if sort_by != "":
 		data = data.sort_values(by = str(sort_by))
 		print("\n# Sort data in <{}> order".format(sort_by))
 	partical_loc = int(len(data.iloc[0]) * feed_ratio)
+	split_data = data[(data["date"] >= start_y_m_d) & (data["date"] <= end_y_m_d)]
 	data_seg_1 = data.iloc[:partical_loc,:]
-	print("\n# length of data_seg_1 : {}", len(data_seg_1))
 	data_seg_2 = data.iloc[partical_loc+1:,:]
-	print("# length of data_seg_2 : {}", len(data_seg_2))
+	print("# length of data_seg_2 : ", len(data_seg_2))
+	print("\n# length of data_seg_1 : ", len(data_seg_1))
 
 	return data_seg_1, data_seg_2
 
@@ -147,6 +148,7 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
 	test_b_seg_1,  test_b_seg_2 = partical_fit(_test_online, 0.5, "date")
 	test_b_seg_1_black, score_seg_1 = positive_unlabel_learning(clf, test_b_seg_1, 0.5) #pu threshold
 
+	print(test_b_seg_1)
 	test_b_seg_1.loc["id"].assign(score = test_b_seg_2[:,1])
 
 	increment_train = merged_file(test_b_seg_1_black, _final_train, "date")
