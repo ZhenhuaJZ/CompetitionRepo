@@ -46,15 +46,15 @@ def positive_unlabel_learning(classifier, unlabel_data, threshold):
 	return black_unlabel_data, _score
 
 def partical_fit(data, feed_ratio, sort_by = ""):
-	print("\n# Total length {}", len(data))
+	print("\n# Total length :", len(data))
 	if sort_by != "":
 		data = data.sort_values(by = str(sort_by))
 		print("\n# Sort data in <{}> order".format(sort_by))
-	partical_loc = int(len(data.iloc[0]) * feed_ratio)
-	data_seg_1 = data.iloc[:partical_loc,:]
-	print("\n# length of data_seg_1 : {}", len(data_seg_1))
-	data_seg_2 = data.iloc[partical_loc+1:,:]
-	print("# length of data_seg_2 : {}", len(data_seg_2))
+	partical_loc = int(len(data) * feed_ratio)
+	data_seg_1 = data[:partical_loc,:]
+	data_seg_2 = data[partical_loc+1:,:]
+	print("\n# length of data_seg_1 :", len(data_seg_1))
+	print("# length of data_seg_2 :", len(data_seg_2))
 
 	return data_seg_1, data_seg_2
 
