@@ -29,7 +29,7 @@ def main():
 	pu_thres = 0.4
 	offline_validation = [20171025, 20171105] #20171025, 20171105
 	#CV
-	cv = True
+	cv = False
 	fold_time_split = [[20170905, 20170916], [20170917, 20170925], [20170926, 20171005],[20171006,20171015],[20171015,20171025]]
 	#under_sampling
 	under_samp = False
