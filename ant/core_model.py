@@ -173,15 +173,15 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
 	print("\n# Partical fit <test_b> to the dataset")
 	_test_online = df_read_and_fillna(test_path, 0)
 	test_b_seg_1,  test_b_seg_2 = partical_fit(_test_online, 0.5, "date")
+	clear_mermory(_test_online)
 	test_b_seg_1_black, score_seg_1 = positive_unlabel_learning(clf, test_b_seg_1, 0.5) #pu threshold
-
-	increment_train = merged_file(test_b_seg_1_black, _final_train, "date")
+	clear_mermory(test_b_seg_1)
+	increment_train = file_merge(test_b_seg_1_black, _final_train, "date")
 	clear_mermory(test_b_seg_1_black, _final_train)
 	increment_train_feature, increment_train_label = split_train_label(increment_train)
 	clear_mermory(increment_train)
 	clf.fit(increment_train_feature, increment_train_label)
 	score_seg_2 = clf.predict_proba(test_b_seg_2.iloc[:,2])
-
 
 	test_b_seg_2 = pd.DataFrame(test_b_seg_2["id"])
 	test_b_seg_2.assign(score = test_b_seg_2[:,1])
