@@ -4,6 +4,7 @@ from lib.data_processing import *
 from lib.model_performance import *
 import datetime, time
 import sys
+now = datetime.datetime.now()
 
 def segmentation_model(clf, data, test, feature_dic):
     # Segment data and test into segment a and b
@@ -137,7 +138,8 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
 	pu_black_data = positive_unlabel_learning(clf, _test_a, pu_thres)
 	clear_mermory(_test_a)
 	pu_train_data = file_merge(_train_data, pu_black_data, "date")
-	_final_train.to_csv("pu_train_data.csv", index = None)
+	pu_black_data.to_csv("pu_black_data_test.csv", index = None)
+	pu_train_data.to_csv("pu_train_data_test.csv", index = None)
 	sys.exit()
 	clear_mermory(_train_data, pu_black_data)
 	_new_train, _new_label = split_train_label(pu_train_data)
