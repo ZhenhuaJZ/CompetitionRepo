@@ -4,7 +4,7 @@ import pandas as pd
 import math
 import datetime
 import gc
-from imblearn.over_sampling import SMOTE
+#from imblearn.over_sampling import SMOTE
 now = datetime.datetime.now()
 
 ##################### Data subsampling / imbalanced data ######################
@@ -21,6 +21,7 @@ def under_sampling(data, ratio = 1):
 
 # TODO: SMOTE sampling technique
 # Synthetic Minority Over-sampling technique
+"""
 def SMOTE_sampling(feature,label):
     sm = SMOTE(random_state = 2)
     # feature = data.drop(columns = ["label","id"])
@@ -39,7 +40,7 @@ def SMOTE_sampling(feature,label):
     print(data.value_counts("label"))
     exit()
     return data
-
+"""
 # TODO: uncompleted
 def SMOTETomek(data):
     sm = SMOTE(random_state = 2)
