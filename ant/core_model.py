@@ -178,17 +178,19 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
 	clear_mermory(_test_online)
 	test_b_seg_1_black, score_seg_1 = positive_unlabel_learning(clf, test_b_seg_1, 0.5) #pu threshold
 	clear_mermory(test_b_seg_1)
-
+	print("***********************run1********************")
 	increment_train = file_merge(test_b_seg_1_black, _final_train, "date")
-	sys.exit()
+	#sys.exit()
 	#increment_train.to_csv("testleo.csv", index = None, header = True)
 	#increment_train = pd.read_csv("testleo.csv")
-
+	print("***********************run2********************")
 	clear_mermory(test_b_seg_1_black, _final_train)
 	increment_train_feature, increment_train_label = split_train_label(increment_train)
-	print(len(increment_train_feature))
+	print("***********************run3********************")
 	clear_mermory(increment_train)
+	sys.exit()
 	clf.fit(increment_train_feature, increment_train_label)
+	print("***********************run4********************")
 	score_seg_2 = clf.predict_proba(test_b_seg_2.iloc[:,2])
 
 	test_b_seg_2 = pd.DataFrame(test_b_seg_2["id"])
