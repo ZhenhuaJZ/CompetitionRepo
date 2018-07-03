@@ -4,20 +4,54 @@ import pandas as pd
 import math
 import datetime
 import gc
+from imblearn.over_sampling import SMOTE
 now = datetime.datetime.now()
 
-############################# Data subsampling #################################
-def under_sampling(data):
+##################### Data subsampling / imbalanced data ######################
+# The ratio defines what is the output label 1 and 0 ratio
+def under_sampling(data, ratio = 1):
     label_1_data = data.loc[data["label"] == 1]
     label_1_size = len(label_1_data["label"])
     label_0_data = data.drop(data.index[data["label"] == 1])
-    label_0_data = label_0_data.sample(n = label_1_size, random_state = 10)
+    label_0_data = label_0_data.sample(n = int(label_1_size*ratio), random_state = 10)
     print(label_0_data)
     under_sample_data = file_merge(label_1_data, label_0_data, sort_by = "date", reset_index = True)
     print("\n# Number of label 1 and 0:\n", under_sample_data["label"].value_counts())
     return under_sample_data
 
 # TODO: SMOTE sampling technique
+# Synthetic Minority Over-sampling technique
+def SMOTE_sampling(feature,label):
+    sm = SMOTE(random_state = 2)
+    # feature = data.drop(columns = ["label","id"])
+    # # feature = data.iloc[:, 3:]
+    # label = data.iloc[:,1]
+    new_feature, new_label = sm.fit_sample(feature,label)
+    clear_mermory(feature,label)
+
+    new_feature = pd.DataFrame(new_feature)
+    new_label = pd.Series(new_label)
+    print(new_feature)
+    print(new_label)
+    print(new_label.value_counts())
+    clear_mermory(new_label,new_feature)
+    print(data)
+    print(data.value_counts("label"))
+    exit()
+    return data
+
+# TODO: uncompleted 
+def SMOTETomek(data):
+    sm = SMOTE(random_state = 2)
+    # feature = data.drop(columns = "label")
+    feature = data.iloc[:, 3:]
+    label = data.iloc[:,1]
+    new_feature, new_label = sm.fit_sample(feature,label)
+    print(new_feature)
+    print(new_label.value_counts())
+    data = feature.insert(1, "label", new_label)
+    print(data)
+    return data
 
 ########################### Memory Manage ######################################
 def clear_mermory(*args):
@@ -46,6 +80,10 @@ def batch_data(data, split_ratio):
     for i in range(num_batch):
         batch["batch_{}".format(i)] = data.loc[(i*size_per_batch):(size_per_batch*(i+1))]
     return batch
+
+def sample_segmentation(data, feature_list, value_range):
+    for feature in feature_list:
+
 
 #Pass the training dataframe or datapath and split to feature and label
 def split_train_label(data, cache = True):
@@ -161,3 +199,10 @@ def save_score(preds, score_path):
     answer = answer_sheet.assign(score = preds)
     answer.to_csv(score_path + "score_day{}_time{}:{}.csv".format(now.day, now.hour, now.minute), index = None, float_format = "%.9f")
     return print("\n# Score saved in {}".format(score_path))
+
+############################## Code Test Section ################################
+data = pd.read_csv("data/train.csv")
+data = data.fillna(0)
+data = data.loc[:10000]
+feature,label = split_train_label(data)
+balanced_data = SMOTE_sampling(feature,label)
