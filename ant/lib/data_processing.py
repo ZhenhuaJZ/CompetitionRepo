@@ -116,8 +116,8 @@ def test_train_split_by_date(data, start_y_m_d, end_y_m_d, params_path = ""):
     data = data.drop(data.index[(data["date"] >= start_y_m_d) & (data["date"] <= end_y_m_d)])
     split_data_percent = round(len(split_data)/len(data.iloc[:,1]),2) * 100
     # Reset both data set index to count from zero
-    data.reset_index(inplace = True)
-    split_data.reset_index(inplace = True)
+    #data.reset_index(inplace = True)
+    #split_data.reset_index(inplace = True)
     print("\n# Split by date from <<<{}>>> to <<<{}>>>".format(str(start_y_m_d), str(end_y_m_d)))
     print("\n# Offline test percentage {}%".format(split_data_percent))
     print("\n# Number of label 0 and 1 in test set:\n", split_data["label"].value_counts())
