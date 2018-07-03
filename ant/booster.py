@@ -26,10 +26,10 @@ def main():
 	tunning = False
 	tuning_range = [0.4,0.6,0.5,0.7,0.3]
 
-	pu_thres = 0.4
+	pu_thres = 0.5
 	offline_validation = [20171025, 20171105] #20171025, 20171105
 	#CV
-	cv = False
+	cv = True
 	fold_time_split = [[20170905, 20170916], [20170917, 20170925], [20170926, 20171005],[20171006,20171015],[20171015,20171025]]
 	#under_sampling
 	under_samp = False
