@@ -91,11 +91,7 @@ def sample_segmentation(data, feature_list):
     for feature in feature_list:
         seg_a_data = seg_a_data.loc[seg_a_data[feature] >= feature_list[feature]]
     # create seg_b_data
-    print(seg_a_data.index)
     seg_b_data = data.drop(seg_a_data.index)
-    print(len(seg_a_data))
-    print(len(seg_b_data))
-    exit()
     return seg_a_data, seg_b_data
 
 #Pass the training dataframe or datapath and split to feature and label
