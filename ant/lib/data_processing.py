@@ -4,7 +4,7 @@ import pandas as pd
 import math
 import datetime
 import gc
-from imblearn.over_sampling import SMOTE
+# from imblearn.over_sampling import SMOTE
 now = datetime.datetime.now()
 
 ##################### Data subsampling / imbalanced data ######################
@@ -21,37 +21,37 @@ def under_sampling(data, ratio = 1):
 
 # TODO: SMOTE sampling technique
 # Synthetic Minority Over-sampling technique
-def SMOTE_sampling(feature,label):
-    sm = SMOTE(random_state = 2)
-    # feature = data.drop(columns = ["label","id"])
-    # # feature = data.iloc[:, 3:]
-    # label = data.iloc[:,1]
-    new_feature, new_label = sm.fit_sample(feature,label)
-    clear_mermory(feature,label)
+# def SMOTE_sampling(feature,label):
+#     sm = SMOTE(random_state = 2)
+#     # feature = data.drop(columns = ["label","id"])
+#     # # feature = data.iloc[:, 3:]
+#     # label = data.iloc[:,1]
+#     new_feature, new_label = sm.fit_sample(feature,label)
+#     clear_mermory(feature,label)
+#
+#     new_feature = pd.DataFrame(new_feature)
+#     new_label = pd.Series(new_label)
+#     print(new_feature)
+#     print(new_label)
+#     print(new_label.value_counts())
+#     clear_mermory(new_label,new_feature)
+#     print(data)
+#     print(data.value_counts("label"))
+#     exit()
+#     return data
 
-    new_feature = pd.DataFrame(new_feature)
-    new_label = pd.Series(new_label)
-    print(new_feature)
-    print(new_label)
-    print(new_label.value_counts())
-    clear_mermory(new_label,new_feature)
-    print(data)
-    print(data.value_counts("label"))
-    exit()
-    return data
-
-# TODO: uncompleted 
-def SMOTETomek(data):
-    sm = SMOTE(random_state = 2)
-    # feature = data.drop(columns = "label")
-    feature = data.iloc[:, 3:]
-    label = data.iloc[:,1]
-    new_feature, new_label = sm.fit_sample(feature,label)
-    print(new_feature)
-    print(new_label.value_counts())
-    data = feature.insert(1, "label", new_label)
-    print(data)
-    return data
+# TODO: uncompleted
+# def SMOTETomek(data):
+#     sm = SMOTE(random_state = 2)
+#     # feature = data.drop(columns = "label")
+#     feature = data.iloc[:, 3:]
+#     label = data.iloc[:,1]
+#     new_feature, new_label = sm.fit_sample(feature,label)
+#     print(new_feature)
+#     print(new_label.value_counts())
+#     data = feature.insert(1, "label", new_label)
+#     print(data)
+#     return data
 
 ########################### Memory Manage ######################################
 def clear_mermory(*args):
@@ -82,9 +82,21 @@ def batch_data(data, split_ratio):
     return batch
 
 def sample_segmentation(data, feature_list, value_range):
-    for feature in feature_list:
-
-
+    # seg_a_data is data that is larger than value_range
+    # seg_b_data is data that is less than value_range
+    seg_a_data = data
+    # Interate through each feature in the feature_list
+    # If the each feature_list is larger than value_range
+    # Then it is stored inside seg_a_data
+    for i in range(len(feature_list)):
+        seg_a_data = seg_a_data.loc[seg_a_data[feature_list[i]] >= value_range[i]]
+    # create seg_b_data
+    print(seg_a_data.index)
+    seg_b_data = data.drop(seg_a_data.index)
+    print(len(seg_a_data))
+    print(len(seg_b_data))
+    exit()
+    return seg_a_data, seg_b_data
 #Pass the training dataframe or datapath and split to feature and label
 def split_train_label(data, cache = True):
     #print(type(data))
@@ -203,6 +215,7 @@ def save_score(preds, score_path):
 ############################## Code Test Section ################################
 data = pd.read_csv("data/train.csv")
 data = data.fillna(0)
-data = data.loc[:10000]
-feature,label = split_train_label(data)
-balanced_data = SMOTE_sampling(feature,label)
+data = data.loc[:100000]
+feature_list = ["f103","f104","f105"]
+value_range = [150,150,150]
+feature,label = sample_segmentation(data,feature_list,value_range)
