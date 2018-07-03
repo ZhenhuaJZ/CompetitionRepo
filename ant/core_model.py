@@ -53,7 +53,12 @@ def partical_fit(data, feed_ratio, sort_by = ""):
 	data_seg_1 = data.iloc[:partical_loc,:]
 	print("\n# length of data_seg_1 : {}", len(data_seg_1))
 	data_seg_2 = data.iloc[partical_loc+1:,:]
+<<<<<<< HEAD
 	print("# length of data_seg_2 : {}", len(data_seg_2))
+=======
+	print("# length of data_seg_2 : ", len(data_seg_2))
+	print("\n# length of data_seg_1 : ", len(data_seg_1))
+>>>>>>> 283974cff886819fa654d40c42326ca42ba7e99b
 
 	return data_seg_1, data_seg_2
 
@@ -174,12 +179,10 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
 	test_b_seg_1,  test_b_seg_2 = partical_fit(_test_online, 0.5, "date")
 	test_b_seg_1_black, score_seg_1 = positive_unlabel_learning(clf, test_b_seg_1, 0.5) #pu threshold
 
-	print(test_b_seg_1)
-	print(test_b_seg_1["id"])
 	test_b_seg_1 = pd.DataFrame(test_b_seg_1["id"])
 	test_b_seg_1.assign(score = score_seg_1[:,1])
 
-	increment_train = merged_file(test_b_seg_1_black, _final_train, "date")
+	increment_train = file_merge(test_b_seg_1_black, _final_train, "date")
 	increment_train_feature, increment_train_label = split_train_label(increment_train)
 	clf = clf.fit(increment_train_feature, increment_train_label)
 	score_seg_2 = clf.predict_proba(test_b_seg_2.iloc[:,2])
