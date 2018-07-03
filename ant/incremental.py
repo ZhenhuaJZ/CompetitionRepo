@@ -30,6 +30,7 @@ clf = classifier["XGB"]
 log_path = "log/date_4/2:25_SM/"
 score_path = log_path + "score/"
 score_seg_1_path = score_path + "score_seg_a.csv"
+increment_train_path = log_path + "increment_train.csv"
 test_path = "data/test_b.csv"
 
 
