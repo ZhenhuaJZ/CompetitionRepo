@@ -185,7 +185,7 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
 		score_seg_1 = pd.DataFrame(test_b_seg_1["id"]).assign(score = prob_seg_1[:,1])
 
 		clear_mermory(_test_online)
-		test_b_seg_1_black = positive_unlabel_learning(clf, test_b_seg_1, 0.8) #pu threshold
+		test_b_seg_1_black = positive_unlabel_learning(clf, test_b_seg_1, 0.5) #pu threshold
 		clear_mermory(test_b_seg_1)
 		increment_train = file_merge(test_b_seg_1_black, _final_train, "date")
 		increment_train.to_csv("data/increment_train.csv", index = None)
