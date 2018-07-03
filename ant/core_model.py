@@ -3,6 +3,7 @@ from sklearn.externals import joblib
 from lib.data_processing import *
 from lib.model_performance import *
 import datetime, time
+import sys
 
 def segmentation_model(clf, data, test, feature_dic):
     # Segment data and test into segment a and b
@@ -179,6 +180,7 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
 	clear_mermory(test_b_seg_1)
 
 	increment_train = file_merge(test_b_seg_1_black, _final_train, "date")
+	sys.exit()
 	#increment_train.to_csv("testleo.csv", index = None, header = True)
 	#increment_train = pd.read_csv("testleo.csv")
 
