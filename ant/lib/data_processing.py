@@ -105,7 +105,7 @@ def split_train_label(data, cache = True):
         feature = data.iloc[:,3:]
         label = data.iloc[:,1]
     if cache:
-        del data
+        clear_mermory(data)
     return feature, label
 
 # test_train_split_by_date split the test set by providing a range of dates in yyyymmdd
