@@ -213,9 +213,8 @@ def save_score(preds, score_path):
     return print("\n# Score saved in {}".format(score_path))
 
 ############################## Code Test Section ################################
-data = pd.read_csv("data/train.csv")
-data = data.fillna(0)
-data = data.loc[:100000]
-feature_list = ["f103","f104","f105"]
-value_range = [150,150,150]
-feature,label = sample_segmentation(data,feature_list,value_range)
+#data = pd.read_csv("data/train.csv")
+#data = data.fillna(0)
+#data = data.loc[:10000]
+#feature,label = split_train_label(data)
+#balanced_data = SMOTE_sampling(feature,label)
