@@ -144,6 +144,20 @@ def file_merge(data_1, data_2, sort_by = "", reset_index = False):
         print("\n# Merged data and sort in <Index Order>")
     return merged_file
 
+# Merge all the files under srcpath and save to despath
+def file_merge_hard_drive(srcpath, despath):
+    files = os.listdir(srcpath)
+    print("\n# Merge {}",format(files))
+    #files = ['merge_train.csv','labeled_with_time.csv']
+    with open(despath, 'w+') as output:
+        for eachfile in files:
+            print(eachfile)
+            filepath = os.path.join(srcpath, eachfile)
+            print(filepath)
+            with open(filepath, 'r+') as infile:
+                data = infile.read()
+                output.write(data)
+    print("# File merge done")
 def df_read_and_fillna(data_path, fillna_value = 0):
 	data = pd.read_csv(data_path)
 	data = custom_imputation(data, fillna_value)
