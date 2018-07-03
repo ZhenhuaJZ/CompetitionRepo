@@ -185,6 +185,7 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
 		score_seg_1 = pd.DataFrame(test_b_seg_1["id"]).assign(score = prob_seg_1[:,1])
 		score_seg_1_path = score_path + "score_day{}_time{}:{}_seg_a.csv"
 		score_seg_1.to_csv(score_seg_1_path, index = None)
+		print("\n# Parrical_score_1 saved in path {} !".format(score_seg_1_path))
 		clear_mermory(_test_online, score_seg_1)
 
 		#PU for test_b
@@ -193,9 +194,11 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
 		increment_train = file_merge(test_b_seg_1_black, _final_train, "date")
 		increment_train_path = log_path + "increment_train.csv"
 
+
 		#Save increment_train to hard drive
 		increment_train.to_csv(increment_train_path, index = None)
 		print("\n# Partical fit done !")
+		print("# incremental train data saved in path {} !".format(increment_train_path))
 		clear_mermory(test_b_seg_1_black, _final_train, increment_train)
 
 		#Read increment_train from hard drive
