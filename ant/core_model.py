@@ -57,19 +57,19 @@ def cv_fold(clf, _train_data, fold_time_split, params_path):
 	print("##"*40)
 	return roc_1_mean, roc_2_mean
 
+def df_read_and_fillna(data_path, fillna_value = 0):
+	data = pd.read_csv(data_path)
+	data = custom_imputation(data, fillna_value)
+	return data
+
 def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_a_path, pu_thres, method = None, cv = False, fold_time_split = None, under_samp = False):
 	params_path = log_path + "params/"
 	score_path = log_path + "score/"
 	model_path = log_path + "model/"
 	# ##########################Edit data####################################
 	_train_data = pd.read_csv(train_path)
-	_test_online = pd.read_csv(test_path)
-	_test_a = pd.read_csv(test_a_path)
-
-	_train_data, _test_online, _test_a = custom_imputation_3_inputs(_train_data, _test_online, _test_a, fillna)
-	#change -1 label to 1
-	_train_data.loc[_train_data["label"] == -1] = 1
-
+	_train_data = custom_imputation(_train_data)
+	_train_data.loc[_train_data["label"] == -1] = 1 #change -1 label to 1
 	#Split train and offine test
 	_train_data, _test_offline =  test_train_split_by_date(_train_data, offline_validation[0], offline_validation[1], params_path)
 
@@ -78,8 +78,7 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
 		_train_data = under_sampling(_train_data)
 
 	_train, _labels = split_train_label(_train_data)
-	#online & offline data
-	_test_online = _test_online.iloc[:,2:]
+	#offline data
 	_test_offline_feature, _test_offline_labels = split_train_label(_test_offline)
 
 	# ##########################Traing model####################################
@@ -96,6 +95,7 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
 	clear_mermory(_train, _labels)
 	print("\n# PU Traing Start")
 	# NOTE: PU learning
+	_test_a = df_read_and_fillna(test_a_path, 0)
 	unlabel_data = positive_unlabel_learning(clf, _test_a, pu_thres)
 	clear_mermory(_test_a)
 	#Choose Black Label
@@ -120,6 +120,7 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
 	offline_score_2 = offline_model_performance_2(_test_offline_labels, offline_probs[:,1], params_path = params_path)
 	clear_mermory(_test_offline_feature, _test_offline_labels, offline_probs)
 
+	############################################################################
 	# NOTE:  Feed validation black label Back
 	print("\n# Feed Only black validation set to the dataset")
 	_test_offline_black = _test_offline.loc[_test_offline["label"] == 1]
@@ -127,14 +128,36 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
 	_final_train = file_merge(pu_train_data, _test_offline_black, "date")
 	clear_mermory(_test_offline_black, pu_train_data, _test_offline)
 	_final_feature, _final_label = split_train_label(_final_train)
-	clear_mermory(_final_train)
+	#clear_mermory(_final_train)
 	#joblib.dump(clf, model_path + "{}.pkl".format("model"))
 	clf = clf.fit(_final_feature, _final_label)
 	clear_mermory(_final_feature, _final_label)
-	probs = clf.predict_proba(_test_online)
-	save_score(probs[:,1], score_path)
 
-	#def parti()
+	############################################################################
+	# NOTE:  PU test_b
+	#Feed test online
+	_test_online = df_read_and_fillna(test_path, 0)
+	test_b_seg_1,  test_b_seg_2 = partical_fit(_test_online, 0.5)
+	test_b_seg_1, score_seg_1 = positive_unlabel_learning(clf, test_b_seg_1, 0.5) #pu threshold
+	test_b_seg_1_black = test_b_seg_a.loc[test_b_seg_a["label"] == 1]
+
+	increment_train = merged_file(test_b_seg_1_black, _final_train, "date")
+	increment_train_feature, increment_train_label = split_train_label(increment_train)
+	clf = clf.fit(increment_train_feature, increment_train_label)
+	score_seg_2 = clf.predict_proba(test_b_seg_2)
+
+	# TODO:  merge score_seg_a and score_seg_b
+	
+	save_score(probs[:,1], score_path)
+	_test_online = _test_online.sort_values('date')
+
+	def partical_fit(partical_data, feed_ratio):
+		data.iloc[:,1]
+		return part_test
+
+	_test_b_ = _test_online.iloc[:,2:]
+	probs = clf.predict_proba(_test_b_)
+	save_score(probs[:,1], score_path)
 
 	#Log all the data
 	log_parmas(clf, offline_validation, offline_score_1, offline_score_2,
