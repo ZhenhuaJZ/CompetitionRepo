@@ -110,10 +110,14 @@ def split_train_label(data, cache = True):
 
 # test_train_split_by_date split the test set by providing a range of dates in yyyymmdd
 def test_train_split_by_date(data, start_y_m_d, end_y_m_d, params_path = ""):
-
+    # Extract data sets within the start and end date
     split_data = data[(data["date"] >= start_y_m_d) & (data["date"] <= end_y_m_d)]
+    # Remove the data sets within the starting and end date
     data = data.drop(data.index[(data["date"] >= start_y_m_d) & (data["date"] <= end_y_m_d)])
     split_data_percent = round(len(split_data)/len(data.iloc[:,1]),2) * 100
+    # Reset both data set index to count from zero
+    data.reset_index(inplace = True)
+    split_data.reset_index(inplace = True)
     print("\n# Split by date from <<<{}>>> to <<<{}>>>".format(str(start_y_m_d), str(end_y_m_d)))
     print("\n# Offline test percentage {}%".format(split_data_percent))
     print("\n# Number of label 0 and 1 in test set:\n", split_data["label"].value_counts())
@@ -136,13 +140,13 @@ def file_merge(data_1, data_2, sort_by = "", reset_index = False):
     elif len(data_2) == 0:
         print("\n# Waring {} has 0 lengh !".format(data_2))
         return data_1
-    merged_file = pd.concat([data_1,data_2])
+    merged_file = pd.concat([data_1,data_2], axis = 0)
     clear_mermory(data_1, data_2)
     if sort_by != "":
         merged_file = merged_file.sort_values(by = str(sort_by))
         print("\n# Merged data in <{}> order".format(sort_by))
     if reset_index:
-        merged_file.reset_index()
+        merged_file.reset_index(inplace = True)
         print("\n# Merged data and sort in <Index Order>")
     return merged_file
 
