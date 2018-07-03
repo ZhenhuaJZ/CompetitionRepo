@@ -27,7 +27,6 @@ def segmentation_model(clf, data, test, feature_dic):
     seg_b_clf = clf.fit(seg_b_feature, seg_b_label)
     seg_b_test_score = clf.predict_proba(seg_b_test.iloc[:,2:])[:,1]
     seg_b_score = seg_b_score.assign(score = seg_b_test_score)
-
     final_score = seg_a_score.append(seg_b_score)
 
     return final_score
@@ -57,11 +56,7 @@ def partical_fit(data, feed_ratio, sort_by = ""):
 	data_seg_2 = data.iloc[partical_loc+1:,:]
 	print("# length of data_seg_2 : ", len(data_seg_2))
 	print("\n# length of data_seg_1 : ", len(data_seg_1))
-<<<<<<< HEAD
 	clear_mermory(data)
-=======
-
->>>>>>> 7688a90ce0d63dce61efc4aa36b6e476a5ea678d
 	return data_seg_1, data_seg_2
 
 def cv_fold(clf, _train_data, fold_time_split, params_path):
