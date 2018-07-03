@@ -40,7 +40,7 @@ def SMOTE_sampling(feature,label):
     exit()
     return data
 
-# TODO: uncompleted 
+# TODO: uncompleted
 def SMOTETomek(data):
     sm = SMOTE(random_state = 2)
     # feature = data.drop(columns = "label")
@@ -81,8 +81,8 @@ def batch_data(data, split_ratio):
         batch["batch_{}".format(i)] = data.loc[(i*size_per_batch):(size_per_batch*(i+1))]
     return batch
 
-def sample_segmentation(data, feature_list, value_range):
-    for feature in feature_list:
+#def sample_segmentation(data, feature_list, value_range):
+    #for feature in feature_list
 
 
 #Pass the training dataframe or datapath and split to feature and label
