@@ -81,15 +81,15 @@ def batch_data(data, split_ratio):
         batch["batch_{}".format(i)] = data.loc[(i*size_per_batch):(size_per_batch*(i+1))]
     return batch
 
-def sample_segmentation(data, feature_list, value_range):
+def sample_segmentation(data, feature_list):
     # seg_a_data is data that is larger than value_range
     # seg_b_data is data that is less than value_range
     seg_a_data = data
     # Interate through each feature in the feature_list
     # If the each feature_list is larger than value_range
     # Then it is stored inside seg_a_data
-    for i in range(len(feature_list)):
-        seg_a_data = seg_a_data.loc[seg_a_data[feature_list[i]] >= value_range[i]]
+    for feature in feature_list:
+        seg_a_data = seg_a_data.loc[seg_a_data[feature] >= feature_list[feature]]
     # create seg_b_data
     print(seg_a_data.index)
     seg_b_data = data.drop(seg_a_data.index)
@@ -97,6 +97,7 @@ def sample_segmentation(data, feature_list, value_range):
     print(len(seg_b_data))
     exit()
     return seg_a_data, seg_b_data
+
 #Pass the training dataframe or datapath and split to feature and label
 def split_train_label(data, cache = True):
     #print(type(data))
@@ -211,10 +212,3 @@ def save_score(preds, score_path):
     answer = answer_sheet.assign(score = preds)
     answer.to_csv(score_path + "score_day{}_time{}:{}.csv".format(now.day, now.hour, now.minute), index = None, float_format = "%.9f")
     return print("\n# Score saved in {}".format(score_path))
-
-############################## Code Test Section ################################
-#data = pd.read_csv("data/train.csv")
-#data = data.fillna(0)
-#data = data.loc[:10000]
-#feature,label = split_train_label(data)
-#balanced_data = SMOTE_sampling(feature,label)
