@@ -161,6 +161,8 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
 	_test_offline_black = _test_offline.loc[_test_offline["label"] == 1]
 	print("\n# Found <{}> black instances".format(len(_test_offline_black)))
 	_final_train = file_merge(pu_train_data, _test_offline_black, "date")
+	_final_train.to_csv("_final_train_test.csv", index = None)
+	sys.exit()
 	clear_mermory(_test_offline_black, pu_train_data, _test_offline)
 	_final_feature, _final_label = split_train_label(_final_train)
 	#clear_mermory(_final_train)
@@ -190,8 +192,8 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
 
 		#PU for test_b
 		test_b_seg_1_black = positive_unlabel_learning(clf, test_b_seg_1, 0.5) #pu threshold
-		test_b_seg_1_black.to_csv("test_b_seg_test.csv", index = None)
-		sys.exit()
+		#test_b_seg_1_black.to_csv("test_b_seg_test.csv", index = None)
+		#sys.exit()
 		clear_mermory(test_b_seg_1)
 		increment_train = file_merge(test_b_seg_1_black, _final_train, "date")
 		increment_train_path = log_path + "increment_train.csv"
