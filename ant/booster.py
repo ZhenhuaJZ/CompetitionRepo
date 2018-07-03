@@ -26,7 +26,7 @@ def main():
 	tunning = False
 	tuning_range = [0.4,0.5,0.6]
 
-	pu_thres = 0.2
+	pu_thres = 0.6
 	offline_validation = [20171025, 20171105] #20171025, 20171105
 	#CV
 	cv = False
