@@ -52,6 +52,8 @@ def partical_fit(data, feed_ratio, sort_by = ""):
 	if sort_by != "":
 		data = data.sort_values(by = str(sort_by))
 		print("\n# Sort data in <{}> order".format(sort_by))
+	print(data)
+	print(data['id'])
 	partical_loc = int(len(data) * feed_ratio)
 	print("loc", partical_loc)
 	data_seg_1 = data[:partical_loc]
