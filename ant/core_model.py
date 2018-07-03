@@ -179,7 +179,7 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
 
 	if not part_fit:
 		prob = clf.predict_proba(_test_online.iloc[:,2:])
-		save_score(prob[:1], score_path)
+		save_score(prob[:,1], score_path)
 
 	if part_fit:
 		##########################Partical_fit######################################
