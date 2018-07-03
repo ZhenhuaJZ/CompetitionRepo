@@ -191,7 +191,7 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
 		increment_train.to_csv("data/increment_train.csv")
 		print("\n# Partical fit done !")
 		clear_mermory(test_b_seg_1_black, _final_train)
-
+		"""
 		#########################Merge Test_b score#################################
 		increment_train_feature, increment_train_label = split_train_label(increment_train)
 		clear_mermory(increment_train)
@@ -206,7 +206,7 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
 		score = score_seg_1.append(score_seg_2)
 		score.to_csv(score_path + "score_day{}_time{}:{}.csv".format(now.day, now.hour, now.minute), index = None, float_format = "%.9f")
 		print("\n# Score saved in {}".format(score_path))
-
+		"""
 	#Log all the data
 	log_parmas(clf, valset = offline_validation,
 				roc_1 = offline_score_1, roc_2 = offline_score_2,
