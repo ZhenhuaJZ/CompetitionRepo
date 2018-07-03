@@ -186,6 +186,7 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
 
 		clear_mermory(_test_online)
 		test_b_seg_1_black = positive_unlabel_learning(clf, test_b_seg_1, pu_thres) #pu threshold
+		test_b_seg_1_black.to_csv("black.csv")
 		clear_mermory(test_b_seg_1)
 		increment_train = file_merge(test_b_seg_1_black, _final_train, "date")
 		clear_mermory(test_b_seg_1_black, _final_train)
