@@ -53,7 +53,7 @@ def cv_fold(clf, _train_data, fold_time_split, params_path):
 	roc_2_std = np.std(roc_1, axis = 0)
 	print("##"*40)
 	print("\n# ROC_1(JL) :{} (+/- {:2f})".format(roc_1_mean, roc_1_std*2))
-	print("\n# ROC_2 :{} (+/- {:2f})".format(roc_2_mean, roc_2_std*2))
+	#print("\n# ROC_2 :{} (+/- {:2f})".format(roc_2_mean, roc_2_std*2))
 	print("##"*40)
 	return roc_1_mean, roc_2_mean
 
