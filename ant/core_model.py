@@ -97,7 +97,7 @@ def cv_fold(clf, _train_data, fold_time_split, params_path):
 	print("##"*40)
 	return roc_1_mean, roc_2_mean
 
-def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_a_path, pu_thres, cv = False, fold_time_split = None, under_samp = False, partical_fit = True, partical_ratio = 0.5):
+def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_a_path, pu_thres, cv = False, fold_time_split = None, under_samp = False, part_fit = True, partical_ratio = 0.5):
 	params_path = log_path + "params/"
 	score_path = log_path + "score/"
 	model_path = log_path + "model/"
@@ -168,11 +168,11 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
 	clear_mermory(_final_feature, _final_label)
 	_test_online = df_read_and_fillna(test_path, fillna)
 
-	if not partical_fit:
+	if not part_fit:
 		prob = predict_proba(_test_online.iloc[:,2])
 		save_score(prob[:1], score_path)
 
-	if partical_fit:
+	if part_fit:
 		##########################Partical_fit######################################
 		# NOTE:  PU test_b
 		#Feed test online

@@ -98,10 +98,11 @@ def main():
 			log_path = "log/date_{}/Tuning_{}_{}/{}:{}_GS/".format(now.day, clf_name, tuning_name, now.hour,now.minute)
 			creat_project_dirs(log_path)
 			core(fillna, log_path, offline_validation, clf, train_path, test_path, test_a_path,
-					pu_thres = p, cv = cv, fold_time_split = fold_time_split, under_samp = under_samp, partical_ratio = partal_fit_thresh)
+					pu_thres = p, cv = cv, fold_time_split = fold_time_split,
+					under_samp = under_samp, part_fit = partical_fit, partical_ratio = partal_fit_thresh)
 	else:
 		classifier = {
-		"XGB" : XGBClassifier(max_depth = 4, n_estimators = 480, subsample = 0.8, gamma = 0,
+		"XGB" : XGBClassifier(max_depth = 4, n_estimators = 4, subsample = 0.8, gamma = 0,
 		min_child_weight = 1, scale_pos_weight = 1,
 		colsample_bytree = 0.8, learning_rate = 0.07, n_jobs = -1),
 
@@ -127,7 +128,7 @@ def main():
 		creat_project_dirs(log_path)
 		core(fillna, log_path, offline_validation, clf, train_path, test_path, test_a_path,
 		 			pu_thres = pu_thres, cv = cv, fold_time_split = fold_time_split, under_samp = under_samp,
-					partical_fit = partical_fit, partical_ratio = partal_fit_thresh)
+					part_fit = partical_fit, partical_ratio = partal_fit_thresh)
 
 if __name__ == '__main__':
 	main()
