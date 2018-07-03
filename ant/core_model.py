@@ -108,9 +108,9 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
 	_train_data = custom_imputation(_train_data)
 	_train_data.loc[_train_data["label"] == -1] = 1 #change -1 label to 1
 	#Split train and offine test
-	_train_data.to_csv("_train_data_test_b4_split.csv")
 	_train_data, _test_offline =  test_train_split_by_date(_train_data, offline_validation[0], offline_validation[1], params_path)
-	_test_offline.to_csv("_test_offline.csv")
+	_train_data.to_csv("duck1.csv")
+	_test_offline.to_csv("duck2.csv")
 	#under_sampling
 	if under_samp:
 		print("\n# Under_sampling")
@@ -141,9 +141,7 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
 	clear_mermory(_test_a)
 
 	pu_train_data = file_merge(_train_data, pu_black_data, "date")
-	_train_data.to_csv("_train_data_test.csv")
-	pu_black_data.to_csv("pu_black_data_test.csv")
-	pu_train_data.to_csv("pu_train_data_test.csv")
+	pu_train_data.to_csv("duck3.csv")
 	sys.exit()
 	clear_mermory(_train_data, pu_black_data)
 	_new_train, _new_label = split_train_label(pu_train_data)
