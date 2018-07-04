@@ -42,7 +42,7 @@ def positive_unlabel_learning(classifier, unlabel_data, threshold):
 	score = classifier.predict_proba(unlabel_data.iloc[:,2:])
 	print(score)
 	print(score.shape)
-	score = pd.Series(score[:,1])
+	score = pd.Series(score[:,1], index = unlabel_data["f1"].index)
 	#print(score)
 	score.loc[score >= threshold] = 1
 	score.loc[score < threshold] = 0
