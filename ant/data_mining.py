@@ -113,7 +113,7 @@ def part_fit(clf, train, partial_rate, pu_thresh_b, eval = True, save_score = Tr
         print("\n# Score saved in {}".format(_score_path))
         clear_mermory(probs, score_seg_2, score)
 
-    if eval
+    if eval:
 
         print("\n# EVAL PART FIT")
         validation_path = "data/_test_offline.csv"
