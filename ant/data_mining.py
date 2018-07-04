@@ -84,7 +84,7 @@ def get_score(clf, test_b_seg_2, score_seg_1, score_path):
 
 def main():
 
-    _, train = init_train(train_path)
+    clf, train = init_train(train_path)
     _, pu_train = positive_unlabel(clf, test_a_path, train)
     evl_pu(clf, validation_path)
     _, test_b_seg_2, score_seg_1 = part_fit(clf, test_b_path, pu_train)
