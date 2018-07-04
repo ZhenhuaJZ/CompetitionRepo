@@ -95,6 +95,7 @@ def validation_black(clf, train, save_score = False):
     validation_path = "data/_test_offline.csv"
     validation = pd.read_csv(validation_path)
     validation_black = validation.loc[validation["label"] == 1]
+    print("\n# Found <{}> black instances".format(len(validation_black)))
     _train = file_merge(train, validation_black, "date")
     _feature, _label = split_train_label(_train)
     clf = clf.fit(_feature, _label)
@@ -120,7 +121,7 @@ def part_fit(clf, train, partial_rate, pu_thresh_b, save_score = True):
     probs = clf.predict_proba(test_b_seg_1.iloc[:,2:])
     score_seg_1 = pd.DataFrame(test_b_seg_1["id"]).assign(score = probs[:,1])
     pu_test_b_seg_1 = positive_unlabel_learning(clf, test_b_seg_1, pu_thresh_b) #pu threshold
-    _train = file_merge(pu_test_b_seg_1, train, "date")
+    _train = file_merge(train, pu_test_b_seg_1, "date")
     _feature, _label = split_train_label(_train)
     clf.fit(_feature, _label)
     clear_mermory(test_b_path, test_b, probs, pu_test_b_seg_1, _train, _feature, _label, train)
