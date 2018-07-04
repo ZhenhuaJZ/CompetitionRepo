@@ -155,7 +155,7 @@ def offline_model_performance_2(ground_truth, predict, **kwargs):
 
 # #############################Log all the data ################################
 
-def log_parmas(clf, save_path, **kwargs):
+def log_parmas(clf, save_path, score_path, **kwargs):
     #formate log
     #valset = str(valset[0]) + "-" + str(valset[1])
     #roc_1 = round(roc_1, 6)
@@ -163,7 +163,7 @@ def log_parmas(clf, save_path, **kwargs):
     #if isinstance(cv_roc_1_mean, float):
         #cv_roc_1_mean = round(cv_roc_1_mean, 6)
         #cv_roc_2_mean = round(cv_roc_2_mean, 6)
-    #filename = re.split('log/', kwargs[score_path])[-1]
+    score_path = re.split('log/', score_path)[-1]
     split_string = re.split('[(,' '\n)' ']', str(clf))
 
     f = csv.writer(open(save_path, "a"))
@@ -180,6 +180,9 @@ def log_parmas(clf, save_path, **kwargs):
             if len(new) > 1:
                 header.append(new[0])
                 parmas.append(new[1])
+
+    header.append("score_path")
+    parmas.append(score_path)
 
     for key in kwargs:
         header.append(key)
