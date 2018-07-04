@@ -106,7 +106,10 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
 	# ##########################Edit data####################################
 	_train_data = pd.read_csv(train_path)
 	_train_data = custom_imputation(_train_data)
-	_train_data.loc[_train_data["label"] == -1] = 1 #change -1 label to 1
+	#_train_data.loc[_train_data["label"] == -1] = 1 #change -1 label to 1
+	_train_data = _train_data["label"].replace[to_replace = -1,value = 1]
+	print(_train_data)
+	sys.exit()
 	#Split train and offine test
 	_train_data, _test_offline =  test_train_split_by_date(_train_data, offline_validation[0], offline_validation[1], params_path)
 	_train_data.to_csv("duck1.csv")
@@ -142,7 +145,6 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
 
 	pu_train_data = file_merge(_train_data, pu_black_data, "date")
 	pu_train_data.to_csv("duck3.csv")
-	sys.exit()
 	clear_mermory(_train_data, pu_black_data)
 	_new_train, _new_label = split_train_label(pu_train_data)
 	clf = clf.fit(_new_train, _new_label)
