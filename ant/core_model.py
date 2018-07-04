@@ -108,12 +108,8 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
 	_train_data = custom_imputation(_train_data)
 	#_train_data.loc[_train_data["label"] == -1] = 1 #change -1 label to 1
 	_train_data.replace({"label" : -1}, value = 1)
-
 	#Split train and offine test
 	_train_data, _test_offline =  test_train_split_by_date(_train_data, offline_validation[0], offline_validation[1], params_path)
-	print(_train_data)
-	_train_data.to_csv("duck_ulitimate.csv")
-	sys.exit()
 	#under_sampling
 	if under_samp:
 		print("\n# Under_sampling")
@@ -144,7 +140,6 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
 	clear_mermory(_test_a)
 
 	pu_train_data = file_merge(_train_data, pu_black_data, "date")
-	pu_train_data.to_csv("duck3.csv")
 	clear_mermory(_train_data, pu_black_data)
 	_new_train, _new_label = split_train_label(pu_train_data)
 	clf = clf.fit(_new_train, _new_label)
@@ -169,8 +164,6 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
 	_test_offline_black = _test_offline.loc[_test_offline["label"] == 1]
 	print("\n# Found <{}> black instances".format(len(_test_offline_black)))
 	_final_train = file_merge(pu_train_data, _test_offline_black, "date")
-	#_final_train.to_csv("_final_train_test.csv", index = None)
-	#sys.exit()
 	clear_mermory(_test_offline_black, pu_train_data, _test_offline)
 	_final_feature, _final_label = split_train_label(_final_train)
 	#clear_mermory(_final_train)
