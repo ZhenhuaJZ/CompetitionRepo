@@ -4,14 +4,8 @@ from lib.model_performance import *
 import sys
 
 
-# DEBUG: for file merge
-data_1 = "_train_data_test.csv"
-data_2 = "pu_black_data_test.csv"
-
-df1 = pd.read_csv(data_1)
-df2 = pd.read_csv(data_2)
-
-merged_file = file_merge(df1, df2, "date")
-print(merged_file)
-
-## DEBUG: for call fit and add call DataFrame
+    train_path = "data/train.csv"
+	_train_data = pd.read_csv(train_path)
+	_train_data = custom_imputation(_train_data)
+	_train_data = _train_data.replace({"label" : -1}, value = 1)
+    _train_data.info(memory_usage='deep')

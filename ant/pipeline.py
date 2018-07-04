@@ -81,8 +81,8 @@ def main(method, train_path, test_path, fillna_value):
 	_test_online = pd.read_csv(test_path)
 	_train_data, _test_online = custom_imputation(_train_data, _test_online, fillna_value)
 	#change -1 label to 1
-	_train_data.loc[_train_data["label"] == -1] = 1
-	_train_data = _train_data[(_train_data.label==0)|(_train_data.label==1)]
+	_train_data = _train_data.replace({"label" : -1}, value = 1)
+	#_train_data = _train_data[(_train_data.label==0)|(_train_data.label==1)]
 	_train_data,  _test_offline = test_train_split_by_date(_train_data, 20171025, 20171105, params_path)
 
 	_train, _labels = split_train_label(_train_data[:3000])
