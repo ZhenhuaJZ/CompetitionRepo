@@ -16,8 +16,8 @@ test_a_path = "data/test_a.csv"
 validation_path = "data/_test_offline.csv"
 
 
-pu_thresh_a = 0.8 #PU threshold for testa
-pu_thresh_b = 0.95 #PU threshold for testb
+pu_thresh_a = 0.85 #PU threshold for testa
+pu_thresh_b = 0.90 #PU threshold for testb
 partial_rate = 0.4
 
 def init_train(eval = True, save_score = False):
@@ -108,8 +108,9 @@ def part_fit(clf, pu_train, partial_rate, pu_thresh_b, save_score = True):
         probs = clf.predict_proba(test_b_seg_2.iloc[:,2:])
         score_seg_2 = pd.DataFrame(test_b_seg_2["id"]).assign(score = probs[:,1])
         score = score_seg_1.append(score_seg_2).sort_index()
-        score.to_csv(score_path + "part_score_{}d_{}h_{}m.csv".format(now.day, now.hour, now.minute), index = None, float_format = "%.9f")
-        print("\n# Score saved in {}".format(log_path))
+        _score_path = score_path + "part_score_{}d_{}h_{}m.csv".format(now.day, now.hour, now.minute)
+        score.to_csv(_score_path, index = None, float_format = "%.9f")
+        print("\n# Score saved in {}".format(_score_path))
         clear_mermory(probs, score_seg_2, score)
 
     return
