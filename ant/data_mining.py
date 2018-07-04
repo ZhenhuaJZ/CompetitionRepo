@@ -9,7 +9,7 @@ now = datetime.datetime.now()
 train_path = "data/_train_data.csv"
 test_b_path = "data/test_b.csv"
 test_a_path = "data/test_a.csv"
-validation_path = "data/test_offline.csv"
+validation_path = "data/_test_offline.csv"
 score_path = "log/"
 
 def init_train(train_path):
