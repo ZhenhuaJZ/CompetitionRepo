@@ -151,7 +151,7 @@ def validation_black(clf, train, save_score = True):
 
 def main():
 
-    #os.makedirs(score_path)
+    os.makedirs(score_path)
     print("\n# Make dirs in {}".format(score_path))
 
     clf, train, roc_init = init_train(save_score = True)
