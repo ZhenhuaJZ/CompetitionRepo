@@ -91,7 +91,7 @@ def main(method, train_path, test_path, fillna_value):
 	_test_online = _test_online.iloc[:,2:]
 	_test_offline_feature, _test_offline_labels = split_train_label(_test_offline[:3000])
 	clear_mermory(_test_offline)
-
+	"""
 	with open(params_path  + "params.txt", 'a') as f:
 		f.write(
 				"**"*40 + "\n"*2
@@ -99,6 +99,7 @@ def main(method, train_path, test_path, fillna_value):
 				+"Workflow in the order as <<<{}>>>".format(str(strategy[method][2])) + "\n"*2
 				+"**"*40 + "\n"*2
 				)
+	"""
 	print("\n# Workflow in the order as {}".format(strategy[method][2]))
 	Hparams = strategy[method][0]
 	pipe = strategy[method][1]

@@ -1,5 +1,6 @@
 import pandas as pd
-from sklearn.externals import joblib
+from sklearn.pipeline import Pipeline, make_pipeline
+from sklearn.preprocessing import StandardScaler, Normalizer, MinMaxScaler
 from lib.data_processing import *
 from lib.model_performance import *
 import datetime, time
@@ -102,17 +103,24 @@ def cv_fold(clf, _train_data, fold_time_split, params_path):
 	return roc_1_mean, roc_2_mean
 
 def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_a_path, pu_thres, cv = False, fold_time_split = None, under_samp = False, part_fit = True, partical_ratio = 0.5):
+
+    # ###########################Feature Engineering############################
+    minmax_std = MinMaxScaler()
+
     params_path = log_path + "params/"
     score_path = log_path + "score/"
     model_path = log_path + "model/"
 
-    # ##########################Edit data####################################
+    # ##########################Edit data#######################################
     _train_data = pd.read_csv(train_path)
     #change -1 label to 1
     _train_data = _train_data.replace({"label" : -1}, value = 1)
-    _train_data.iloc[:,3:] = standarlization(_train_data.iloc[:,3:])
+    #_train_data.drop["f23", "f24", "f25", "f26" , "f37"]
+
     #Split train and offine test
     _train_data, _test_offline =  test_train_split_by_date(_train_data, offline_validation[0], offline_validation[1], params_path)
+    _test_offline.to_csv("_test_offline.csv")
+    sys.exit()
     #under_sampling
     if under_samp:
         print("\n# Under_sampling")
