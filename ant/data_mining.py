@@ -77,7 +77,7 @@ def get_score(clf, test_b_seg_2, score_seg_1, score_path):
     probs = clf.predict_proba(test_b_seg_2.iloc[:,2:])
     score_seg_2 = pd.DataFrame(test_b_seg_2["id"]).assign(score = probs[:,1])
     score = score_seg_1.append(score_seg_2).sort_index()
-    score.to_csv(score_path + "score_{}_{}_{}.csv".format(now.day, now.hour, now.minute))
+    score.to_csv(score_path + "last_3_days/score_{}d_{}h_{}m.csv".format(now.day, now.hour, now.minute))
     print("\n# Score saved in {}".format(score_path))
     clear_mermory(probs, score_seg_2, score)
     print("\n# >>>>Duration<<<< : {}min ".format(round((time.time()-start)/60,2)))
