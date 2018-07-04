@@ -25,6 +25,8 @@ def main():
     train = pd.read_csv(train_path)
     print(train)
     feature, label = split_train_label(train)
+    print(feature)
+    print(label)
     clf = clf.fit(feature, label)
     clear_mermory(feature, label)
     print("\n# >>>>Duration<<<< : {}min ".format(round((time.time()-start)/60,2)))
