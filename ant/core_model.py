@@ -106,7 +106,7 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
 	# ##########################Edit data####################################
 	_train_data = pd.read_csv(train_path)
 	_train_data = custom_imputation(_train_data)
-	#_train_data.loc[_train_data["label"] == -1] = 1 #change -1 label to 1
+	#change -1 label to 1
 	_train_data.replace({"label" : -1}, value = 1)
 	#Split train and offine test
 	_train_data, _test_offline =  test_train_split_by_date(_train_data, offline_validation[0], offline_validation[1], params_path)
@@ -186,31 +186,39 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
 		#Predict and save seg_1 score
 		prob_seg_1 = clf.predict_proba(test_b_seg_1.iloc[:,2:])
 		score_seg_1 = pd.DataFrame(test_b_seg_1["id"]).assign(score = prob_seg_1[:,1])
-		score_seg_1_path = score_path + "score_seg_a.csv"
-		score_seg_1.to_csv(score_seg_1_path) # delete index for testing
-		print("\n# Parrical_score_1 saved in path {} !".format(score_seg_1_path))
-		clear_mermory(_test_online, score_seg_1)
+		#score_seg_1_path = score_path + "score_seg_a.csv"
+		#score_seg_1.to_csv(score_seg_1_path) # delete index for testing
+		#print("\n# Parrical_score_1 saved in path {} !".format(score_seg_1_path))
+		clear_mermory(_test_online)
 
 		#PU for test_b
 		test_b_seg_1_black = positive_unlabel_learning(clf, test_b_seg_1, 0.5) #pu threshold
-		#test_b_seg_1_black.to_csv("test_b_seg_test.csv", index = None)
-		#sys.exit()
 		clear_mermory(test_b_seg_1)
 		increment_train = file_merge(test_b_seg_1_black, _final_train, "date")
-		increment_train_path = log_path + "increment_train.csv"
+		clear_mermory(test_b_seg_1_black, _final_train)
+		#increment_train_path = log_path + "increment_train.csv"
 
-
-		#Save increment_train to hard drive
-		increment_train.to_csv(increment_train_path, index = None)
+		increment_train_feature, increment_train_label = split_train_label(increment_train)
+		clear_mermory(increment_train)
+		clf.fit(increment_train_feature, increment_train_label)
 		print("\n# Partical fit done !")
-		print("# incremental train data saved in path {} !".format(increment_train_path))
-		clear_mermory(test_b_seg_1_black, _final_train, increment_train)
 
+		clear_mermory(increment_train_feature, increment_train_label)
+		prob_seg_2 = clf.predict_proba(test_b_seg_2.iloc[:,2:])
+		score_seg_2 = pd.DataFrame(test_b_seg_2["id"]).assign(score = prob_seg_2[:,1])
+		score = score_seg_1.append(score_seg_2)
+		score.to_csv(score_path + "score_day{}_time{}:{}.csv".format(now.day, now.hour, now.minute), float_format = "%.9f") #delete index for testing
+		print("\n# Score saved in {}".format(score_path))
+		#Save increment_train to hard drive
+		#increment_train.to_csv(increment_train_path, index = None)
+
+		#print("# incremental train data saved in path {} !".format(increment_train_path))
+
+		"""
 		#Read increment_train from hard drive
-		print("\n# Inititalize increment_train (read from hard drive)")
-		time.sleep(5)
-		_train_data = pd.read_csv(increment_train_path, low_memory = False)
-		increment_train = df_read_and_fillna(increment_train_path)
+		print("\n# Inititalize increment_train")
+		#_train_data = pd.read_csv(increment_train_path, low_memory = False)
+		#increment_train = df_read_and_fillna(increment_train_path)
 
 		#########################Merge Test_b score#################################
 		increment_train_feature, increment_train_label = split_train_label(increment_train)
@@ -228,7 +236,7 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
 		score = score_seg_1.append(score_seg_2)
 		score.to_csv(score_path + "score_day{}_time{}:{}.csv".format(now.day, now.hour, now.minute), float_format = "%.9f") #delete index for testing
 		print("\n# Score saved in {}".format(score_path))
-
+		"""
 	#Log all the data
 	log_parmas(clf, valset = offline_validation,
 				roc_1 = offline_score_1, roc_2 = offline_score_2,
