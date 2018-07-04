@@ -23,9 +23,9 @@ partial_rate = 0.4
 def init_train(eval = True, save_score = False):
 
     start = time.time()
-    clf = XGBClassifier(max_depth = 4, n_estimators = 4, subsample = 0.8, gamma = 0.1,
+    clf = XGBClassifier(max_depth = 4, n_estimators = 4, subsample = 0.8, gamma = 0,
                     min_child_weight = 1, scale_pos_weight = 1,
-                    colsample_bytree = 0.7, learning_rate = 0.07, n_jobs = -1)
+                    colsample_bytree = 0.8, learning_rate = 0.07, n_jobs = -1)
     #Train
     print("\n# Start Traing")
     train = pd.read_csv(train_path)
@@ -108,7 +108,7 @@ def part_fit(clf, pu_train, partial_rate, pu_thresh_b, save_score = True):
         probs = clf.predict_proba(test_b_seg_2.iloc[:,2:])
         score_seg_2 = pd.DataFrame(test_b_seg_2["id"]).assign(score = probs[:,1])
         score = score_seg_1.append(score_seg_2).sort_index()
-        score.to_csv(score_path + "score_{}d_{}h_{}m.csv".format(now.day, now.hour, now.minute), index = None, float_format = "%.9f")
+        score.to_csv(score_path + "part_score_{}d_{}h_{}m.csv".format(now.day, now.hour, now.minute), index = None, float_format = "%.9f")
         print("\n# Score saved in {}".format(log_path))
         clear_mermory(probs, score_seg_2, score)
 
@@ -117,7 +117,7 @@ def part_fit(clf, pu_train, partial_rate, pu_thresh_b, save_score = True):
 def main():
 
     clf, train, roc_init = init_train(save_score = True)
-    _, pu_train, roc_pu = positive_unlabel(clf, train, pu_thresh_a)
+    _, pu_train, roc_pu = positive_unlabel(clf, train, pu_thresh_a, save_score = True)
     part_fit(clf, pu_train, partial_rate, pu_thresh_b)
 
     log_parmas(clf, params_path, roc_init = roc_init, roc_pu = roc_pu,
