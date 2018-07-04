@@ -11,7 +11,9 @@ _train_data = _train_data.replace({"label" : -1}, value = 1)
 _train_data.info(memory_usage='deep')
 
 _train_data.iloc[:,1:].astype('int')
+print(_train_data)
 _train_data.loc["id"].astype('category')
+print(_train_data)
 _train_data.info(memory_usage='deep')
 print(_train_data)
 
