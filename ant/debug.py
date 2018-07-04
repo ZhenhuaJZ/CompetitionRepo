@@ -12,7 +12,7 @@ _train_data.info(memory_usage='deep')
 
 _train_data.iloc[:,1:].astype('int')
 print(_train_data)
-_train_data.iloc[:,0].astype('category')
+_train_data['label'].astype('category')
 print(_train_data)
 _train_data.info(memory_usage='deep')
 print(_train_data)
