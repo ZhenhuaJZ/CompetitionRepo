@@ -39,14 +39,13 @@ def positive_unlabel_learning(classifier, unlabel_data, threshold):
 	score = classifier.predict_proba(unlabel_data.iloc[:,2:])
 	score = pd.Series(score[:,1])
 	score.to_csv("check_score.csv")
-	print(score)
-	score.loc[score >= threshold] = int(1)
-	score.loc[score < threshold] = int(0)
+	score.loc[score >= threshold] = 1
+	score.loc[score < threshold] = 0
 	unlabel_data.insert(1, "label", score)
 	black_unlabel_data = unlabel_data.loc[unlabel_data["label"] == 1]
-	print(unlabel_data.loc[unlabel_data["label"] == 0])
+	print(unlabel_data.loc[unlabel_data["label"] == 0.0])
 	n_black = len(unlabel_data[unlabel_data.label == 1])
-	n_white = len(unlabel_data[unlabel_data.label == 0])
+	n_white = len(unlabel_data[unlabel_data.label == 0.0])
 	print("\n# After PU found <{}> potential black instances, and <{}> potential white instances".format(n_black, n_white))
 	clear_mermory(classifier)
 	return black_unlabel_data
