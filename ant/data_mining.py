@@ -6,9 +6,8 @@ from core_model import positive_unlabel_learning, partical_fit
 import time, sys, datetime
 now = datetime.datetime.now()
 
-log_path = "log/"
-score_path = "log/" + "last_3_days/"　+ "{}d_{}h_{}m/".format(now.day, now.hour, now.minute)
-params_path = "log/" + "last_3_days/" + "log_{}h.csv".format(now.hour)
+score_path = "log/last_3_days/{}d_{}h_{}m/".format(now.day, now.hour, now.minute)
+params_path = "log/last_3_days/log_{}h.csv".format(now.hour)
 
 train_path = "data/_train_data.csv"
 test_b_path = "data/test_b.csv"
