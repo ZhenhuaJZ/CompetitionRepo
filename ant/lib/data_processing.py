@@ -136,14 +136,15 @@ def test_train_split_by_date(data, start_y_m_d, end_y_m_d, params_path = ""):
     print("\n# Offline test percentage {}%".format(split_data_percent))
     print("\n# Number of label 0 and 1 in test set:\n", split_data["label"].value_counts())
     print("\n# Percentage of label 0 and 1 in test set:\n", split_data["label"].value_counts()* 100/len(split_data["label"]))
-    if params_path != "" :
-        with open(params_path  + "params.txt", 'a') as f:
-            f.write(
-            "##"*40 + "\n"*2
-            +"Split by date from <<<{}>>> to <<<{}>>>".format(str(start_y_m_d), str(end_y_m_d)) + "\n"
-            +"Offline test percentage {}%".format(str(split_data_percent)) + "\n"*2
-            +"**"*40 + "\n"*2
-            )
+
+    #if params_path != "" :
+        #with open(params_path  + "params.txt", 'a') as f:
+            #f.write(
+            #"##"*40 + "\n"*2
+            #+"Split by date from <<<{}>>> to <<<{}>>>".format(str(start_y_m_d), str(end_y_m_d)) + "\n"
+            #+"Offline test percentage {}%".format(str(split_data_percent)) + "\n"*2
+            #+"**"*40 + "\n"*2
+            #)
     return data, split_data
 
 # This function merges two dataframe and can be sort by provided string
