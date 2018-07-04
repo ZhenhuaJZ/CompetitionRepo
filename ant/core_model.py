@@ -35,6 +35,7 @@ def segmentation_model(clf, data, test, feature_dic):
     return final_score
 
 def positive_unlabel_learning(classifier, unlabel_data, threshold):
+	print(classifier)
 	print("\n# PU threshold = {}".format(threshold))
 	print(unlabel_data)
 	unlabel_data.to_csv("duck1.csv")
