@@ -137,6 +137,7 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
 	# NOTE: PU learning
 	_test_a = df_read_and_fillna(test_a_path, fillna)
 	pu_black_data = positive_unlabel_learning(clf, _test_a, pu_thres)
+	print(pu_black_data)
 	clear_mermory(_test_a)
 
 	pu_train_data = file_merge(_train_data, pu_black_data, "date")
