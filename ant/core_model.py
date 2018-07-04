@@ -102,11 +102,11 @@ def cv_fold(clf, _train_data, fold_time_split, params_path):
 	return roc_1_mean, roc_2_mean
 
 def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_a_path, pu_thres, cv = False, fold_time_split = None, under_samp = False, part_fit = True, partical_ratio = 0.5):
-	params_path = log_path + "params/"
-	score_path = log_path + "score/"
-	model_path = log_path + "model/"
-	print("\n# Filling missing data with <{}>".format(fillna))
-	# ##########################Edit data####################################
+    params_path = log_path + "params/"
+    score_path = log_path + "score/"
+    model_path = log_path + "model/"
+    print("\n# Filling missing data with <{}>".format(fillna))
+    # ##########################Edit data####################################
     _train_data = pd.read_csv(train_path)
     #_train_data = custom_imputation(_train_data)
     #change -1 label to 1
@@ -116,9 +116,9 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
     print(_train_data)
     _train_data.info(memory_usage='deep')
     sys.exit()
-	#Split train and offine test
-	_train_data, _test_offline =  test_train_split_by_date(_train_data, offline_validation[0], offline_validation[1], params_path)
-	#under_sampling
+    #Split train and offine test
+    _train_data, _test_offline =  test_train_split_by_date(_train_data, offline_validation[0], offline_validation[1], params_path)
+    #under_sampling
 	if under_samp:
 		print("\n# Under_sampling")
 		_train_data = under_sampling(_train_data)
