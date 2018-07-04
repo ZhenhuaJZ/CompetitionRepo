@@ -201,7 +201,7 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
 
 		increment_train_feature, increment_train_label = split_train_label(increment_train)
 		clear_mermory(increment_train)
-		clf.fit(increment_train_feature, increment_train_label)
+		clf = clf.fit(increment_train_feature, increment_train_label)
 		print("\n# Partical fit done !")
 
 		clear_mermory(increment_train_feature, increment_train_label)
