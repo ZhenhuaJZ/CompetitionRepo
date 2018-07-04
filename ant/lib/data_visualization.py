@@ -8,10 +8,12 @@ from subprocess import check_output
 from data_processing import *
 
 #correlation map
-def correlation_map():
-	f,ax = plt.subplots(figsize=(25, 25))
-	sns.heatmap(x.corr(), annot=True, linewidths=.5, fmt= '.1f',ax=ax)
-	plt.show()
+def correlation_map(start_samples, end_samples):
+	for s, e in zip(start, end):
+		_data = data.iloc[:, s+2: e+2]
+		f,ax = plt.subplots(figsize=(25, 25))
+		sns.heatmap(_data.corr(), annot=True, linewidths=.5, fmt= '.1f',ax=ax)
+		plt.show()
 
 #path pd data frame and save_hist path
 def hist_visualization(df_0, df_1, prefix, figure_1, figure_2):
@@ -142,6 +144,7 @@ def main():
 	#hist_visualization(_train, _test_online, "train_test_b", figure_1="train", figure_2="test_b")
 	#hist_visualization(_test_offline, _test_online, "on-off-1010-1020", figure_1="offline", figure_2="online")
 	save_features(train_path, "std_feats", mode = "train")
+	correlation_map([20,28,36,48],[27,35,47,63])
 
 if __name__ == '__main__':
 	main()
