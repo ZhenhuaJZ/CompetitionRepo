@@ -34,7 +34,7 @@ def main():
 	#under_sampling
 	under_samp = False
 
-	partical_fit = True
+	partical_fit = False
 	partal_fit_thresh = 0.5
 
 	"""
