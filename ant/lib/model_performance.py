@@ -155,18 +155,18 @@ def offline_model_performance_2(ground_truth, predict, **kwargs):
 
 # #############################Log all the data ################################
 
-def log_parmas(clf, valset, roc_1, roc_2, cv_roc_1_mean="n/a", cv_roc_2_mean ="n/a",  **kwargs):
+def log_parmas(clf, save_path, **kwargs):
     #formate log
-    valset = str(valset[0]) + "-" + str(valset[1])
-    roc_1 = round(roc_1, 6)
-    roc_2 = round(roc_2, 6)
-    if isinstance(cv_roc_1_mean, float):
-        cv_roc_1_mean = round(cv_roc_1_mean, 6)
-        cv_roc_2_mean = round(cv_roc_2_mean, 6)
+    #valset = str(valset[0]) + "-" + str(valset[1])
+    #roc_1 = round(roc_1, 6)
+    #roc_2 = round(roc_2, 6)
+    #if isinstance(cv_roc_1_mean, float):
+        #cv_roc_1_mean = round(cv_roc_1_mean, 6)
+        #cv_roc_2_mean = round(cv_roc_2_mean, 6)
     #filename = re.split('log/', kwargs[score_path])[-1]
     split_string = re.split('[(,' '\n)' ']', str(clf))
 
-    f = csv.writer(open("log/log.csv", "a"))
+    f = csv.writer(open(save_path, "a"))
 
     log = [] #clf name
     header = [] #header
@@ -181,14 +181,22 @@ def log_parmas(clf, valset, roc_1, roc_2, cv_roc_1_mean="n/a", cv_roc_2_mean ="n
                 header.append(new[0])
                 parmas.append(new[1])
 
+    for key in kwargs:
+        header.append(key)
+        parmas.append(kwargs[key])
+
+    f.writerow(log)
+    f.writerow(header)
+    f.writerow(parmas)
+    f.writerow([])
 
     #add header
 
-    header.append("Validation set")
-    header.append("ROC_1")
-    header.append("ROC_2")
-    header.append("5folds_ROC_1")
-    header.append("5folds_ROC_2")
+    #header.append("Validation set")
+    #header.append("ROC_1")
+    #header.append("ROC_2")
+    #header.append("5folds_ROC_1")
+    #header.append("5folds_ROC_2")
 
     """
     header.append("Score")
@@ -201,11 +209,11 @@ def log_parmas(clf, valset, roc_1, roc_2, cv_roc_1_mean="n/a", cv_roc_2_mean ="n
     """
     #add content
 
-    parmas.append(valset)
-    parmas.append(roc_1)
-    parmas.append(roc_2)
-    parmas.append(cv_roc_1_mean)
-    parmas.append(cv_roc_2_mean)
+    #parmas.append(valset)
+    #parmas.append(roc_1)
+    #parmas.append(roc_2)
+    #parmas.append(cv_roc_1_mean)
+    #parmas.append(cv_roc_2_mean)
     """
     parmas.append('')
     parmas.append(mode)
@@ -215,11 +223,3 @@ def log_parmas(clf, valset, roc_1, roc_2, cv_roc_1_mean="n/a", cv_roc_2_mean ="n
     parmas.append(under_samp)
     parmas.append(Feed_val_back)
     """
-    for key in kwargs:
-        header.append(key)
-        parmas.append(kwargs[key])
-
-    f.writerow(log)
-    f.writerow(header)
-    f.writerow(parmas)
-    f.writerow([])
