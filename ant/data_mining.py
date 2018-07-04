@@ -46,7 +46,7 @@ def init_train(train_path, eval = True):
 def positive_unlabel(clf, test_a_path, train, pu_thresh_a, eval = True):
     #PU
     start = time.time()
-    print("\n# START PU - TESTA")
+    print("\n# START PU - TESTA , PU_thresh_a = {}".format(pu_thresh_a))
     test_a = pd.read_csv(test_a_path)
     pu_black = positive_unlabel_learning(clf, test_a, pu_thresh_a)
     pu_train = file_merge(train, pu_black, "date")
@@ -71,7 +71,7 @@ def positive_unlabel(clf, test_a_path, train, pu_thresh_a, eval = True):
 def part_fit(clf, test_b_path, pu_train, partial_rate, pu_thresh_b):
     #Partical_Fit
     start = time.time()
-    print("\n# PART FIT TESTB")
+    print("\n# PART FIT TESTB, PU_thresh_b = {}, Partial_Rate = {}".format(pu_thresh_b, partial_rate))
     test_b = pd.read_csv(test_b_path)
     test_b_seg_1, test_b_seg_2 = partical_fit(test_b, partial_rate, "date")
     probs = clf.predict_proba(test_b_seg_1.iloc[:,2:])
@@ -105,7 +105,7 @@ def main():
     get_score(clf, test_b_seg_2, score_seg_1, score_path)
 
     log_parmas(clf, log_path + "log_{}h.csv".format(now.hour),
-            roc_init = roc_init, roc_pu = roc_pu
+            roc_init = roc_init, roc_pu = roc_pu,
             pu_thresh_a = pu_thresh_a, pu_thresh_b = pu_thresh_b )
 
 if __name__ == '__main__':
