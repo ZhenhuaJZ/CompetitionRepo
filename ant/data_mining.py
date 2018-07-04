@@ -120,7 +120,7 @@ def main():
     _, pu_train, roc_pu = positive_unlabel(clf, train, pu_thresh_a, save_score = True)
     part_fit(clf, pu_train, partial_rate, pu_thresh_b)
 
-    log_parmas(clf, params_path, roc_init = roc_init, roc_pu = roc_pu,
+    log_parmas(clf, params_path, roc_init = round(roc_init,6), roc_pu = round(roc_pu,6),
                 pu_thresh_a = pu_thresh_a, pu_thresh_b = pu_thresh_b )
 
 if __name__ == '__main__':
