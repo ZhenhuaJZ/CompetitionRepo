@@ -29,12 +29,27 @@ def main():
     print("\n# >>>>Duration<<<< : {}min ".format(round((time.time()-start)/60,2)))
 
     #PU
-    test_a = pd.read_csv(train_path)
+    test_a = pd.read_csv(test_a_path)
     pu_black = positive_unlabel_learning(clf, test_a, 0.5)
-    pu_train_data = file_merge(train_path, pu_black, "date")
-    clear_mermory(train_path, pu_black)
+    pu_train = file_merge(train, pu_black, "date")
+    clear_mermory(train, pu_black)
+    pu_feature, pu_label = split_train_label(pu_train)
+    clf = clf.fit(pu_feature, pu_label)
+    clear_mermory(pu_feature, pu_label)
+    print("\n# >>>>Duration<<<< : {}min ".format(round((time.time()-start)/60,2)))
+    
+    #Eval PU
+    validation = pd.read_csv(validation_path)
+    val_feature, val_label = split_train_label(validation)
+    val_probs = clf.predict_proba(val_feature)
+    ant_score = offline_model_performance(val_label, val_probs[:,1])
+    clear_mermory(val_feature, val_label, validation)
     print("\n# >>>>Duration<<<< : {}min ".format(round((time.time()-start)/60,2)))
     sys.exit()
+
+    #Partical_fit
+
+
 
 
     #probs = clf.predict_proba(test_online)
