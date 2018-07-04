@@ -1,4 +1,5 @@
 import pandas as pd
+from xgboost import XGBClassifier
 from lib.data_processing import *
 from lib.model_performance import *
 from core_model import positive_unlabel_learning, partical_fit
@@ -26,11 +27,14 @@ def main():
     clf = clf.fit(feature, label)
     clear_mermory(feature, label)
     print("\n# >>>>Duration<<<< : {}min ".format(round((time.time()-start)/60,2)))
-    sys.exit()
+
     #PU
     test_a = pd.read_csv(train_path)
     pu_black = positive_unlabel_learning(clf, test_a, 0.5)
-    pu_train_data = file_merge(_train_data, pu_black_data, "date")
+    pu_train_data = file_merge(train_path, pu_black, "date")
+    clear_mermory(train_path, pu_black)
+    print("\n# >>>>Duration<<<< : {}min ".format(round((time.time()-start)/60,2)))
+    sys.exit()
 
 
     #probs = clf.predict_proba(test_online)
