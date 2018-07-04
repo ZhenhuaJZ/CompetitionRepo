@@ -26,11 +26,12 @@ debug = False
 def init_train(eval = True, save_score = False):
 
     start = time.time()
-    clf = XGBClassifier(max_depth = 4, n_estimators = 480, subsample = 0.7, gamma = 0.1,
-                    min_child_weight = 1, scale_pos_weight = 1,
+    clf = XGBClassifier(max_depth = 4, n_estimators = 480, subsample = 0.8, gamma = 0.1,
+                    min_child_weight = 1, scale_pos_weight = 10,
                     colsample_bytree = 0.8, learning_rate = 0.07, n_jobs = -1)
     #Train
     print("\n# Start Traing")
+    print("\n# {}".format(clf))
     train = pd.read_csv(train_path)
     feature, label = split_train_label(train)
     clf.fit(feature, label)
