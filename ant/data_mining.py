@@ -15,9 +15,9 @@ score_path = "log/"
 def init_train(train_path):
 
     start = time.time()
-    clf = XGBClassifier(max_depth = 4, n_estimators = 480, subsample = 0.8, gamma = 0.1,
+    clf = XGBClassifier(max_depth = 4, n_estimators = 450, subsample = 0.8, gamma = 0.1,
                     min_child_weight = 1, scale_pos_weight = 1,
-                    colsample_bytree = 0.8, learning_rate = 0.07, n_jobs = -1)
+                    colsample_bytree = 0.7, learning_rate = 0.07, n_jobs = -1)
     #Train
     print("\n# Start Traing")
     train = pd.read_csv(train_path)
@@ -33,7 +33,7 @@ def positive_unlabel(clf, test_a_path, train):
     start = time.time()
     print("\n# START PU - TESTA")
     test_a = pd.read_csv(test_a_path)
-    pu_black = positive_unlabel_learning(clf, test_a, 0.7)
+    pu_black = positive_unlabel_learning(clf, test_a, 0.8)
     pu_train = file_merge(train, pu_black, "date")
     pu_feature, pu_label = split_train_label(pu_train)
     clf.fit(pu_feature, pu_label)
