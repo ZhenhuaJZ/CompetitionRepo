@@ -38,11 +38,11 @@ def positive_unlabel_learning(classifier, unlabel_data, threshold):
 	print(classifier)
 	print("\n# PU threshold = {}".format(threshold))
 	print(unlabel_data)
-	unlabel_data.to_csv("duck1.csv")
+	#unlabel_data.to_csv("duck1.csv")
 	score = classifier.predict_proba(unlabel_data.iloc[:,2:])
 	print(score)
-	score.to_csv("duck2.csv")
 	score = pd.Series(score[:,1])
+	#print(score)
 	score.loc[score >= threshold] = 1
 	score.loc[score < threshold] = 0
 	score.to_csv("checkscore.csv")
