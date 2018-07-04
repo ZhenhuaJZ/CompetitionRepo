@@ -88,7 +88,44 @@ def positive_unlabel(clf, train, pu_thresh_a, eval = True, save_score = False):
 
     return _train, roc
 
-def validation_black(clf, train, save_score = False):
+def part_fit(clf, train, partial_rate, pu_thresh_b, eval = True, save_score = True):
+    #Partical_Fit
+    start = time.time()
+    print("\n# PART FIT TESTB, PU_thresh_b = {}, Partial_Rate = {}".format(pu_thresh_b, partial_rate))
+    test_b = pd.read_csv(test_b_path)
+    test_b_seg_1, test_b_seg_2 = partical_fit(test_b, partial_rate, "date")
+    probs = clf.predict_proba(test_b_seg_1.iloc[:,2:])
+    score_seg_1 = pd.DataFrame(test_b_seg_1["id"]).assign(score = probs[:,1])
+    test_b_seg_1_black = positive_unlabel_learning(clf, test_b_seg_1, pu_thresh_b) #pu threshold
+    _train = file_merge(train, test_b_seg_1_black, "date")
+    _feature, _label = split_train_label(_train)
+    clf.fit(_feature, _label)
+    clear_mermory(test_b_path, test_b, probs, test_b_seg_1_black, _train, _feature, _label, train)
+    print("\n# >>>>Duration<<<< : {}min ".format(round((time.time()-start)/60,2)))
+
+    if save_score:
+        #Get score
+        probs = clf.predict_proba(test_b_seg_2.iloc[:,2:])
+        score_seg_2 = pd.DataFrame(test_b_seg_2["id"]).assign(score = probs[:,1])
+        score = score_seg_1.append(score_seg_2).sort_index()
+        _score_path = score_path + "part_score_{}d_{}h_{}m.csv".format(now.day, now.hour, now.minute)
+        score.to_csv(_score_path, index = None, float_format = "%.9f")
+        print("\n# Score saved in {}".format(_score_path))
+        clear_mermory(probs, score_seg_2, score)
+
+    if eval
+
+        print("\n# EVAL PART FIT")
+        validation_path = "data/_test_offline.csv"
+        validation = pd.read_csv(validation_path)
+        val_feature, val_label = split_train_label(validation)
+        val_probs = clf.predict_proba(val_feature)
+        roc = offline_model_performance(val_label, val_probs[:,1])
+        clear_mermory(val_feature, val_label, validation, validation_path, val_probs)
+
+    return roc
+
+def validation_black(clf, train, save_score = True):
     #Feed validation black label Back
     print("\n# Feed Validation Black Label Back")
     start = time.time()
@@ -110,45 +147,21 @@ def validation_black(clf, train, save_score = False):
         score.to_csv(_score_path, index = None, float_format = "%.9f")
         print("\n# Score saved in {}".format(_score_path))
 
-    return _train
-
-def part_fit(clf, train, partial_rate, pu_thresh_b, save_score = True):
-    #Partical_Fit
-    start = time.time()
-    print("\n# PART FIT TESTB, PU_thresh_b = {}, Partial_Rate = {}".format(pu_thresh_b, partial_rate))
-    test_b = pd.read_csv(test_b_path)
-    test_b_seg_1, test_b_seg_2 = partical_fit(test_b, partial_rate, "date")
-    probs = clf.predict_proba(test_b_seg_1.iloc[:,2:])
-    score_seg_1 = pd.DataFrame(test_b_seg_1["id"]).assign(score = probs[:,1])
-    pu_test_b_seg_1 = positive_unlabel_learning(clf, test_b_seg_1, pu_thresh_b) #pu threshold
-    _train = file_merge(train, pu_test_b_seg_1, "date")
-    _feature, _label = split_train_label(_train)
-    clf.fit(_feature, _label)
-    clear_mermory(test_b_path, test_b, probs, pu_test_b_seg_1, _train, _feature, _label, train)
-    print("\n# >>>>Duration<<<< : {}min ".format(round((time.time()-start)/60,2)))
-
-    if save_score:
-        #Get score
-        probs = clf.predict_proba(test_b_seg_2.iloc[:,2:])
-        score_seg_2 = pd.DataFrame(test_b_seg_2["id"]).assign(score = probs[:,1])
-        score = score_seg_1.append(score_seg_2).sort_index()
-        _score_path = score_path + "part_score_{}d_{}h_{}m.csv".format(now.day, now.hour, now.minute)
-        score.to_csv(_score_path, index = None, float_format = "%.9f")
-        print("\n# Score saved in {}".format(_score_path))
-        clear_mermory(probs, score_seg_2, score)
-
     return
+
 
 def main():
 
     os.makedirs(score_path)
+    print("\n# Make dirs in {}".format(score_path))
     clf, train, roc_init = init_train(save_score = True)
     pu_train, roc_pu = positive_unlabel(clf, train, pu_thresh_a, save_score = True)
-    val_train = validation_black(clf, pu_train, save_score = True)
-    part_fit(clf, val_train, partial_rate, pu_thresh_b)
+    part_train, roc_part = part_fit(clf, pu_train, partial_rate, pu_thresh_b, save_score = True)
+    val_train = validation_black(clf, part_train, save_score = True)
 
     log_parmas(clf, params_path, score_path = score_path, roc_init = round(roc_init,6), roc_pu = round(roc_pu,6),
-                pu_thresh_a = pu_thresh_a, pu_thresh_b = pu_thresh_b, partial_rate = partial_rate )
+                roc_part = round(roc_part,6), pu_thresh_a = pu_thresh_a, pu_thresh_b = pu_thresh_b,
+                partial_rate = partial_rate )
 
 if __name__ == '__main__':
     main()
