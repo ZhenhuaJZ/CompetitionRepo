@@ -170,7 +170,7 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
 	#clear_mermory(_final_train)
 	clf = clf.fit(_final_feature, _final_label)
 	clear_mermory(_final_feature, _final_label)
-	_test_online = df_read_and_fillna(test_path, fillna)
+	#_test_online = df_read_and_fillna(test_path, fillna)
 
 	if not part_fit:
 		prob = clf.predict_proba(_test_online.iloc[:,2:])
