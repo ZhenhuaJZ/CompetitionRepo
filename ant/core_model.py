@@ -36,15 +36,19 @@ def segmentation_model(clf, data, test, feature_dic):
 
 def positive_unlabel_learning(classifier, unlabel_data, threshold):
 	print("\n# PU threshold = {}".format(threshold))
+	print(unlabel_data)
+	unlabel_data.to_csv("duck1.csv")
 	score = classifier.predict_proba(unlabel_data.iloc[:,2:])
+	print(score)
+	score.to_csv("duck2.csv")
 	score = pd.Series(score[:,1])
 	score.loc[score >= threshold] = 1
 	score.loc[score < threshold] = 0
 	score.to_csv("checkscore.csv")
 	unlabel_data.insert(1, "label", score)
-	print(unlabel_data)
+	#print(unlabel_data)
 	black_unlabel_data = unlabel_data.loc[unlabel_data["label"] == 1]
-	print(unlabel_data.loc[unlabel_data["label"] == 0])
+	#print(unlabel_data.loc[unlabel_data["label"] == 0])
 	n_black = len(unlabel_data[unlabel_data.label == 1])
 	n_white = len(unlabel_data[unlabel_data.label == 0])
 	print("\n# After PU found <{}> potential black instances, and <{}> potential white instances".format(n_black, n_white))
