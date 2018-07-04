@@ -23,6 +23,7 @@ def main():
                     colsample_bytree = 0.8, learning_rate = 0.07, n_jobs = -1),
     #Train
     train = pd.read_csv(train_path)
+    print(train)
     feature, label = split_train_label(train)
     clf = clf.fit(feature, label)
     clear_mermory(feature, label)
@@ -37,7 +38,7 @@ def main():
     clf = clf.fit(pu_feature, pu_label)
     clear_mermory(pu_feature, pu_label)
     print("\n# >>>>Duration<<<< : {}min ".format(round((time.time()-start)/60,2)))
-    
+
     #Eval PU
     validation = pd.read_csv(validation_path)
     val_feature, val_label = split_train_label(validation)
