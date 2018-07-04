@@ -153,15 +153,27 @@ def validation_black(clf, train, save_score = True):
 
     return
 
+def pu_a():
+    clf, train, roc_init = init_train(save_score = True)
+    pu_train, roc_pu = positive_unlabel(clf, train, pu_thresh_a, save_score = True)
+    return clf, pu_train, roc_init, roc_pu
+
+def pu_b(clf, pu_train):
+    part_train, roc_part = part_fit(clf, pu_train, partial_rate, pu_thresh_b, save_score = True)
+    validation_black(clf, part_train, save_score = True)
+
 def main():
 
     os.makedirs(score_path)
     print("\n# Make dirs in {}".format(score_path))
 
-    clf, train, roc_init = init_train(save_score = True)
-    pu_train, roc_pu = positive_unlabel(clf, train, pu_thresh_a, save_score = True)
-    part_train, roc_part = part_fit(clf, pu_train, partial_rate, pu_thresh_b, save_score = True)
-    val_train = validation_black(clf, part_train, save_score = True)
+    # clf, train, roc_init = init_train(save_score = True)
+    # pu_train, roc_pu = positive_unlabel(clf, train, pu_thresh_a, save_score = True)
+    clf, pu_train, roc_init, roc_pu = pu_a()
+
+    # part_train, roc_part = part_fit(clf, pu_train, partial_rate, pu_thresh_b, save_score = True)
+    # validation_black(clf, part_train, save_score = True)
+    pu_b(clf, pu_train)
 
     if not debug:
         log_parmas(clf, params_path, score_path = score_path, roc_init = round(roc_init,6), roc_pu = round(roc_pu,6),
