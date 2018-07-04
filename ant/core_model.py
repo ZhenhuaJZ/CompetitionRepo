@@ -104,9 +104,6 @@ def cv_fold(clf, _train_data, fold_time_split, params_path):
 
 def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_a_path, pu_thres, cv = False, fold_time_split = None, under_samp = False, part_fit = True, partical_ratio = 0.5):
 
-    # ###########################Feature Engineering############################
-    minmax_std = MinMaxScaler()
-
     params_path = log_path + "params/"
     score_path = log_path + "score/"
     model_path = log_path + "model/"
@@ -115,11 +112,9 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
     _train_data = pd.read_csv(train_path)
     #change -1 label to 1
     _train_data = _train_data.replace({"label" : -1}, value = 1)
-    #_train_data.drop["f23", "f24", "f25", "f26" , "f37"]
-
     #Split train and offine test
     _train_data, _test_offline =  test_train_split_by_date(_train_data, offline_validation[0], offline_validation[1], params_path)
-    
+
     #under_sampling
     if under_samp:
         print("\n# Under_sampling")
@@ -196,7 +191,7 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
         clear_mermory(_test_online)
 
         #PU for test_b
-        test_b_seg_1_black = positive_unlabel_learning(clf, test_b_seg_1, 0.9) #pu threshold
+        test_b_seg_1_black = positive_unlabel_learning(clf, test_b_seg_1, 0.95) #pu threshold
         clear_mermory(test_b_seg_1)
         increment_train = file_merge(test_b_seg_1_black, _final_train, "date")
         clear_mermory(test_b_seg_1_black, _final_train)
