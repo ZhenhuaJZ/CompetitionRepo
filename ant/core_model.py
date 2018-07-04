@@ -132,120 +132,120 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
     clear_mermory(_train, _labels)
 
 	# ##########################PU Learning#####################################
-	print("\n# *******************PU Traing Start*****************************")
-	# NOTE: PU learning
-	_test_a = df_read_and_fillna(test_a_path, fillna)
-	pu_black_data = positive_unlabel_learning(clf, _test_a, pu_thres)
-	clear_mermory(_test_a)
+    print("\n# *******************PU Traing Start*****************************")
+    # NOTE: PU learning
+    _test_a = df_read_and_fillna(test_a_path, fillna)
+    pu_black_data = positive_unlabel_learning(clf, _test_a, pu_thres)
+    clear_mermory(_test_a)
 
-	pu_train_data = file_merge(_train_data, pu_black_data, "date")
-	clear_mermory(_train_data, pu_black_data)
-	_new_train, _new_label = split_train_label(pu_train_data)
-	clf = clf.fit(_new_train, _new_label)
-	clear_mermory(_new_train, _new_label)
-	print("\n# ********************PU Traing Done*****************************")
-	print("\n# >>>>Duration<<<< : {}min ".format(round((time.time()-start)/60,2)))
+    pu_train_data = file_merge(_train_data, pu_black_data, "date")
+    clear_mermory(_train_data, pu_black_data)
+    _new_train, _new_label = split_train_label(pu_train_data)
+    clf = clf.fit(_new_train, _new_label)
+    clear_mermory(_new_train, _new_label)
+    print("\n# ********************PU Traing Done*****************************")
+    print("\n# >>>>Duration<<<< : {}min ".format(round((time.time()-start)/60,2)))
 
-	roc_1_mean, roc_2_mean = "n/a","n/a"
-	if cv:
-		cv_clf = clf
-		print("\n# 5-Fold CV (Evaluation Classifier)")
-		roc_1_mean, roc_2_mean = cv_fold(cv_clf, pu_train_data, fold_time_split, params_path)
+    roc_1_mean, roc_2_mean = "n/a","n/a"
+    if cv:
+        cv_clf = clf
+        print("\n# 5-Fold CV (Evaluation Classifier)")
+        roc_1_mean, roc_2_mean = cv_fold(cv_clf, pu_train_data, fold_time_split, params_path)
 
-	offline_probs = clf.predict_proba(_test_offline_feature)
-	#evl pu model
-	offline_score_1 = offline_model_performance(_test_offline_labels, offline_probs[:,1], params_path = params_path)
-	offline_score_2 = offline_model_performance_2(_test_offline_labels, offline_probs[:,1], params_path = params_path)
-	clear_mermory(_test_offline_feature, _test_offline_labels, offline_probs)
+    offline_probs = clf.predict_proba(_test_offline_feature)
+    #evl pu model
+    offline_score_1 = offline_model_performance(_test_offline_labels, offline_probs[:,1], params_path = params_path)
+    offline_score_2 = offline_model_performance_2(_test_offline_labels, offline_probs[:,1], params_path = params_path)
+    clear_mermory(_test_offline_feature, _test_offline_labels, offline_probs)
 
-	############################Feed val black back#############################
-	# NOTE:  Feed validation black label Back
-	print("\n# Feed Only black instances from the validation set to the dataset")
-	_test_offline_black = _test_offline.loc[_test_offline["label"] == 1]
-	print("\n# Found <{}> black instances".format(len(_test_offline_black)))
-	_final_train = file_merge(pu_train_data, _test_offline_black, "date")
-	clear_mermory(_test_offline_black, pu_train_data, _test_offline)
-	_final_feature, _final_label = split_train_label(_final_train)
-	#clear_mermory(_final_train)
-	clf = clf.fit(_final_feature, _final_label)
-	clear_mermory(_final_feature, _final_label)
-	print("\n# >>>>Duration<<<< : {}min ".format(round((time.time()-start)/60,2)))
-	#_test_online = df_read_and_fillna(test_path, fillna)
+    ############################Feed val black back#############################
+    # NOTE:  Feed validation black label Back
+    print("\n# Feed Only black instances from the validation set to the dataset")
+    _test_offline_black = _test_offline.loc[_test_offline["label"] == 1]
+    print("\n# Found <{}> black instances".format(len(_test_offline_black)))
+    _final_train = file_merge(pu_train_data, _test_offline_black, "date")
+    clear_mermory(_test_offline_black, pu_train_data, _test_offline)
+    _final_feature, _final_label = split_train_label(_final_train)
+    #clear_mermory(_final_train)
+    clf = clf.fit(_final_feature, _final_label)
+    clear_mermory(_final_feature, _final_label)
+    print("\n# >>>>Duration<<<< : {}min ".format(round((time.time()-start)/60,2)))
+    #_test_online = df_read_and_fillna(test_path, fillna)
 
-	if not part_fit:
-		prob = clf.predict_proba(_test_online.iloc[:,2:])
-		save_score(prob[:,1], score_path)
+    if not part_fit:
+        prob = clf.predict_proba(_test_online.iloc[:,2:])
+        save_score(prob[:,1], score_path)
 
-	if part_fit:
-		##########################Partical_fit######################################
-		# NOTE:  PU test_b
-		#Feed test online
-		print("\n# Partical fit {} * <test_b> to the dataset".format(partical_ratio))
-		_test_online = df_read_and_fillna(test_path, fillna)
+    if part_fit:
+        ##########################Partical_fit######################################
+        # NOTE:  PU test_b
+        #Feed test online
+        print("\n# Partical fit {} * <test_b> to the dataset".format(partical_ratio))
+        _test_online = df_read_and_fillna(test_path, fillna)
 
-		test_b_seg_1,  test_b_seg_2 = partical_fit(_test_online, partical_ratio, "date")
+        test_b_seg_1,  test_b_seg_2 = partical_fit(_test_online, partical_ratio, "date")
 
-		#Predict and save seg_1 score
-		prob_seg_1 = clf.predict_proba(test_b_seg_1.iloc[:,2:])
-		score_seg_1 = pd.DataFrame(test_b_seg_1["id"]).assign(score = prob_seg_1[:,1])
-		#score_seg_1_path = score_path + "score_seg_a.csv"
-		#score_seg_1.to_csv(score_seg_1_path) # delete index for testing
-		#print("\n# Parrical_score_1 saved in path {} !".format(score_seg_1_path))
-		clear_mermory(_test_online)
+        #Predict and save seg_1 score
+        prob_seg_1 = clf.predict_proba(test_b_seg_1.iloc[:,2:])
+        score_seg_1 = pd.DataFrame(test_b_seg_1["id"]).assign(score = prob_seg_1[:,1])
+        #score_seg_1_path = score_path + "score_seg_a.csv"
+        #score_seg_1.to_csv(score_seg_1_path) # delete index for testing
+        #print("\n# Parrical_score_1 saved in path {} !".format(score_seg_1_path))
+        clear_mermory(_test_online)
 
-		#PU for test_b
-		test_b_seg_1_black = positive_unlabel_learning(clf, test_b_seg_1, 0.9) #pu threshold
-		clear_mermory(test_b_seg_1)
-		increment_train = file_merge(test_b_seg_1_black, _final_train, "date")
-		clear_mermory(test_b_seg_1_black, _final_train)
-		#increment_train_path = log_path + "increment_train.csv"
+        #PU for test_b
+        test_b_seg_1_black = positive_unlabel_learning(clf, test_b_seg_1, 0.9) #pu threshold
+        clear_mermory(test_b_seg_1)
+        increment_train = file_merge(test_b_seg_1_black, _final_train, "date")
+        clear_mermory(test_b_seg_1_black, _final_train)
+        #increment_train_path = log_path + "increment_train.csv"
 
-		increment_train_feature, increment_train_label = split_train_label(increment_train)
-		clear_mermory(increment_train)
-		clf = clf.fit(increment_train_feature, increment_train_label)
-		print("\n# Partical fit done !")
-		print("\n# >>>>Duration<<<< : {}min ".format(round((time.time()-start)/60,2)))
+        increment_train_feature, increment_train_label = split_train_label(increment_train)
+        clear_mermory(increment_train)
+        clf = clf.fit(increment_train_feature, increment_train_label)
+        print("\n# Partical fit done !")
+        print("\n# >>>>Duration<<<< : {}min ".format(round((time.time()-start)/60,2)))
 
-		clear_mermory(increment_train_feature, increment_train_label)
-		prob_seg_2 = clf.predict_proba(test_b_seg_2.iloc[:,2:])
-		score_seg_2 = pd.DataFrame(test_b_seg_2["id"]).assign(score = prob_seg_2[:,1])
-		score = score_seg_1.append(score_seg_2).sort_index()
-		score.to_csv(score_path + "score_day{}_time{}:{}.csv".format(now.day, now.hour, now.minute), index = None, float_format = "%.9f") #delete index for testing
-		print("\n# Score saved in {}".format(score_path))
-		print("\n# >>>>Duration<<<< : {}min ".format(round((time.time()-start)/60,2)))
-		#Save increment_train to hard drive
-		#increment_train.to_csv(increment_train_path, index = None)
+        clear_mermory(increment_train_feature, increment_train_label)
+        prob_seg_2 = clf.predict_proba(test_b_seg_2.iloc[:,2:])
+        score_seg_2 = pd.DataFrame(test_b_seg_2["id"]).assign(score = prob_seg_2[:,1])
+        score = score_seg_1.append(score_seg_2).sort_index()
+        score.to_csv(score_path + "score_day{}_time{}:{}.csv".format(now.day, now.hour, now.minute), index = None, float_format = "%.9f") #delete index for testing
+        print("\n# Score saved in {}".format(score_path))
+        print("\n# >>>>Duration<<<< : {}min ".format(round((time.time()-start)/60,2)))
+        #Save increment_train to hard drive
+        #increment_train.to_csv(increment_train_path, index = None)
 
-		#print("# incremental train data saved in path {} !".format(increment_train_path))
+        #print("# incremental train data saved in path {} !".format(increment_train_path))
 
-		"""
-		#Read increment_train from hard drive
-		print("\n# Inititalize increment_train")
-		#_train_data = pd.read_csv(increment_train_path, low_memory = False)
-		#increment_train = df_read_and_fillna(increment_train_path)
+        """
+        #Read increment_train from hard drive
+        print("\n# Inititalize increment_train")
+        #_train_data = pd.read_csv(increment_train_path, low_memory = False)
+        #increment_train = df_read_and_fillna(increment_train_path)
 
-		#########################Merge Test_b score#################################
-		increment_train_feature, increment_train_label = split_train_label(increment_train)
-		clear_mermory(increment_train)
-		#Fit new classifier
-		clf.fit(increment_train_feature, increment_train_label)
-		clear_mermory(increment_train_feature, increment_train_label)
+        #########################Merge Test_b score#################################
+        increment_train_feature, increment_train_label = split_train_label(increment_train)
+        clear_mermory(increment_train)
+        #Fit new classifier
+        clf.fit(increment_train_feature, increment_train_label)
+        clear_mermory(increment_train_feature, increment_train_label)
 
-		#Predict and save seg_2 score
-		prob_seg_2 = clf.predict_proba(test_b_seg_2.iloc[:,2:])
-		score_seg_2 = pd.DataFrame(test_b_seg_2["id"]).assign(score = prob_seg_2[:,1])
+        #Predict and save seg_2 score
+        prob_seg_2 = clf.predict_proba(test_b_seg_2.iloc[:,2:])
+        score_seg_2 = pd.DataFrame(test_b_seg_2["id"]).assign(score = prob_seg_2[:,1])
 
-		##############################Merge Score###################################
-		score_seg_1 = pd.read_csv(score_seg_1_path)
-		score = score_seg_1.append(score_seg_2)
-		score.to_csv(score_path + "score_day{}_time{}:{}.csv".format(now.day, now.hour, now.minute), float_format = "%.9f") #delete index for testing
-		print("\n# Score saved in {}".format(score_path))
-		"""
+        ##############################Merge Score###################################
+        score_seg_1 = pd.read_csv(score_seg_1_path)
+        score = score_seg_1.append(score_seg_2)
+        score.to_csv(score_path + "score_day{}_time{}:{}.csv".format(now.day, now.hour, now.minute), float_format = "%.9f") #delete index for testing
+        print("\n# Score saved in {}".format(score_path))
+        """
 	#Log all the data
-	log_parmas(clf, valset = offline_validation,
-				roc_1 = offline_score_1, roc_2 = offline_score_2,
-				CV_ROC_1 = roc_1_mean, CV_ROC_2 = roc_2_mean, Score = "",
-				score_path = score_path, pu_thres = pu_thres, partical_fit = partical_fit,
-				under_samp = under_samp, fillna = fillna)
+    log_parmas(clf, valset = offline_validation,
+        roc_1 = offline_score_1, roc_2 = offline_score_2,
+        CV_ROC_1 = roc_1_mean, CV_ROC_2 = roc_2_mean, Score = "",
+        score_path = score_path, pu_thres = pu_thres, partical_fit = partical_fit,
+        under_samp = under_samp, fillna = fillna)
 
-	clear_mermory(now)
+    clear_mermory(now)
