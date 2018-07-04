@@ -91,7 +91,7 @@ def save_features(data_path, prefix, mode = "train"):
 	#read data and choose column
 	df = pd.read_csv(data_path)
 	df = df.sort_values('date')
-	#date = df.loc[:,["date"]]
+	date = df.loc[:,["date"]]
 	#df.iloc[:,3:]
 	#df = (df - df.mean()) / (df.max() - df.min())
 	df.iloc[:,3:] = (df.iloc[:,3:] - df.iloc[:,3:].mean()) / (df.iloc[:,3:].max() - df.iloc[:,3:].min())
