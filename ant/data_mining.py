@@ -49,7 +49,7 @@ def init_train(train_path, eval = True, save_score = False):
         test_b = pd.read_csv(test_b_path)
         probs = clf.predict_proba(test_b.iloc[:,2:])
         score = pd.DataFrame(test_b["id"]).assign(score = probs[:,1])
-        _score_path =   + "inti_score_{}d_{}h_{}m.csv".format(now.day, now.hour, now.minute)
+        _score_path = score_path + "inti_score_{}d_{}h_{}m.csv".format(now.day, now.hour, now.minute)
         score.to_csv(_score_path, index = None, float_format = "%.9f")
         print("\n# Score saved in {}".format(_score_path))
 
@@ -117,17 +117,23 @@ def part_fit(clf, test_b_path, pu_train, partial_rate, pu_thresh_b, save_score =
 def main():
 
     clf, train, roc_init = init_train(train_path, save_score = True)
-    #_, pu_train, roc_pu = positive_unlabel(clf, test_a_path, train, pu_thresh_a)
-    #part_fit(clf, test_b_path, pu_train, pu_thresh_b)
+    _, pu_train, roc_pu = positive_unlabel(clf, test_a_path, train, pu_thresh_a)
+    part_fit(clf, test_b_path, pu_train, pu_thresh_b)
 
-    log_parmas(clf, params_path, roc_init = roc_init, roc_pu = roc_pu)
-    """
-    log_parmas(clf, params_path, roc_init = roc_init, roc_pu = roc_pu,
-                pu_thresh_a = pu_thresh_a, pu_thresh_b = pu_thresh_b )
+    try:
 
-    log_parmas(clf, params_path, roc_init = roc_init, roc_pu = roc_pu,
-                pu_thresh_a = pu_thresh_a, pu_thresh_b = pu_thresh_b )
-    """
-    
+        log_parmas(clf, params_path, roc_init = roc_init, roc_pu = roc_pu)
+
+
+        #log_parmas(clf, params_path, roc_init = roc_init, roc_pu = roc_pu,
+                    #pu_thresh_a = pu_thresh_a, pu_thresh_b = pu_thresh_b )
+
+
+        #log_parmas(clf, params_path, roc_init = roc_init, roc_pu = roc_pu,
+                    #pu_thresh_a = pu_thresh_a, pu_thresh_b = pu_thresh_b )
+
+    except Exception as e:
+        pass
+
 if __name__ == '__main__':
     main()
