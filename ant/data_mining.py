@@ -23,7 +23,7 @@ partial_rate = 0.4
 def init_train(eval = True, save_score = False):
 
     start = time.time()
-    clf = XGBClassifier(max_depth = 4, n_estimators = 4, subsample = 0.8, gamma = 0,
+    clf = XGBClassifier(max_depth = 4, n_estimators = 480, subsample = 0.8, gamma = 0,
                     min_child_weight = 1, scale_pos_weight = 1,
                     colsample_bytree = 0.8, learning_rate = 0.07, n_jobs = -1)
     #Train
@@ -121,7 +121,7 @@ def main():
     part_fit(clf, pu_train, partial_rate, pu_thresh_b)
 
     log_parmas(clf, params_path, roc_init = round(roc_init,6), roc_pu = round(roc_pu,6),
-                pu_thresh_a = pu_thresh_a, pu_thresh_b = pu_thresh_b )
+                pu_thresh_a = pu_thresh_a, pu_thresh_b = pu_thresh_b, partial_rate = partial_rate )
 
 if __name__ == '__main__':
     main()
