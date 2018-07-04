@@ -19,10 +19,19 @@ def under_sampling(data, ratio = 1):
     label_1_size = len(label_1_data["label"])
     label_0_data = data.drop(data.index[data["label"] == 1])
     label_0_data = label_0_data.sample(n = int(label_1_size*ratio), random_state = 10)
-    print(label_0_data)
     under_sample_data = file_merge(label_1_data, label_0_data, sort_by = "date", reset_index = True)
     print("\n# Number of label 1 and 0:\n", under_sample_data["label"].value_counts())
     return under_sample_data
+
+def over_sampling(data, ratio = 1):
+    label_1_data = data.loc[data["label"] == 1]
+    label_1_size = len(label_1_data["label"])
+    sampled_data = label_1_data.sample(n = int(label_1_size*ratio), replace = True, random_state = 10)
+    over_sampled_data = file_merge(data, sampled_data, sort_by = "date", reset_index = True)
+    print("\n# Original data number of label 1:{}, label 0:{}".format(len(data.loc[data["label"] == 1]),len(data.loc[data["label"] == 0])))
+    print("\n# After over sample number of label 1:{}, label 0:{}".format(
+            len(over_sampled_data.loc[over_sampled_data["label"] == 1]),len(over_sampled_data.loc[over_sampled_data["label"] == 0])))
+    return over_sampled_data
 
 # TODO: SMOTE sampling technique
 # Synthetic Minority Over-sampling technique
@@ -160,7 +169,7 @@ def file_merge(data_1, data_2, sort_by = "", reset_index = False):
         merged_file = merged_file.sort_values(by = str(sort_by))
         print("\n# Merged data in <{}> order".format(sort_by))
     if reset_index:
-        merged_file.reset_index(inplace = True)
+        merged_file.reset_index(inplace = True, drop = True)
         print("\n# Merged data and sort in <Index Order>")
     return merged_file
 
