@@ -107,10 +107,10 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
 	model_path = log_path + "model/"
 	print("\n# Filling missing data with <{}>".format(fillna))
 	# ##########################Edit data####################################
-	_train_data = pd.read_csv(train_path)
-	#_train_data = custom_imputation(_train_data)
-	#change -1 label to 1
-	_train_data = _train_data.replace({"label" : -1}, value = 1)
+    _train_data = pd.read_csv(train_path)
+    #_train_data = custom_imputation(_train_data)
+    #change -1 label to 1
+    _train_data = _train_data.replace({"label" : -1}, value = 1)
     _train_data.info(memory_usage='deep')
     _train_data.iloc[:,3:] = standarlization(_train_data.iloc[:,3:])
     print(_train_data)
