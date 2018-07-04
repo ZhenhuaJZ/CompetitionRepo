@@ -58,6 +58,17 @@ def clear_mermory(*args):
     for a in args:
         del a
     gc.collect()
+
+#check the dtype of a dataframe
+def dataframe_management():
+    #df.iloc[:,1:] = df.iloc[:,:].astype('int32')
+    df.info(memory_usage='deep')
+    for dtype in ['float','int','object']:
+        selected_dtype = _train_data.select_dtypes(include=[dtype])
+        mean_usage_b = selected_dtype.memory_usage(deep=True).mean()
+        mean_usage_mb = mean_usage_b / 1024 ** 2
+        print("Average memory usage for {} columns: {:03.2f} MB".format(dtype,mean_usage_mb))
+
 # #####################Creat path###############################################
 def creat_project_dirs(log_path):
     params_path = log_path + "params/"
