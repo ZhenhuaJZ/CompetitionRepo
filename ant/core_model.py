@@ -35,13 +35,8 @@ def segmentation_model(clf, data, test, feature_dic):
     return final_score
 
 def positive_unlabel_learning(classifier, unlabel_data, threshold):
-	print(classifier)
-	print("\n# PU threshold = {}".format(threshold))
-	print(unlabel_data)
 	#unlabel_data.to_csv("duck1.csv")
 	score = classifier.predict_proba(unlabel_data.iloc[:,2:])
-	print(score)
-	print(score.shape)
 	score = pd.Series(score[:,1], index = unlabel_data["f1"].index)
 	#print(score)
 	score.loc[score >= threshold] = 1
@@ -204,7 +199,7 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
 		clear_mermory(_test_online)
 
 		#PU for test_b
-		test_b_seg_1_black = positive_unlabel_learning(clf, test_b_seg_1, 0.8) #pu threshold
+		test_b_seg_1_black = positive_unlabel_learning(clf, test_b_seg_1, 0.85) #pu threshold
 		clear_mermory(test_b_seg_1)
 		increment_train = file_merge(test_b_seg_1_black, _final_train, "date")
 		clear_mermory(test_b_seg_1_black, _final_train)
