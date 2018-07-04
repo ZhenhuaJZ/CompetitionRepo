@@ -35,17 +35,16 @@ def segmentation_model(clf, data, test, feature_dic):
     return final_score
 
 def positive_unlabel_learning(classifier, unlabel_data, threshold):
-	#unlabel_data.to_csv("duck1.csv")
+
 	score = classifier.predict_proba(unlabel_data.iloc[:,2:])
 	score = pd.Series(score[:,1], index = unlabel_data["f1"].index)
-	#print(score)
+
 	score.loc[score >= threshold] = 1
 	score.loc[score < threshold] = 0
 	score.to_csv("checkscore.csv")
 	unlabel_data.insert(1, "label", score)
-	#print(unlabel_data)
+
 	black_unlabel_data = unlabel_data.loc[unlabel_data["label"] == 1]
-	#print(unlabel_data.loc[unlabel_data["label"] == 0])
 	n_black = len(unlabel_data[unlabel_data.label == 1])
 	n_white = len(unlabel_data[unlabel_data.label == 0])
 	print("\n# After PU found <{}> potential black instances, and <{}> potential white instances".format(n_black, n_white))
@@ -199,7 +198,7 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
 		clear_mermory(_test_online)
 
 		#PU for test_b
-		test_b_seg_1_black = positive_unlabel_learning(clf, test_b_seg_1, 0.85) #pu threshold
+		test_b_seg_1_black = positive_unlabel_learning(clf, test_b_seg_1, 0.9) #pu threshold
 		clear_mermory(test_b_seg_1)
 		increment_train = file_merge(test_b_seg_1_black, _final_train, "date")
 		clear_mermory(test_b_seg_1_black, _final_train)
