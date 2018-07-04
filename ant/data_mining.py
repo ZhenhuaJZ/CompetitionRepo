@@ -140,6 +140,7 @@ def part_fit(clf, train, partial_rate, pu_thresh_b, save_score = True):
 
 def main():
 
+    os.makedirs(score_path)
     clf, train, roc_init = init_train(save_score = True)
     pu_train, roc_pu = positive_unlabel(clf, train, pu_thresh_a, save_score = True)
     val_train = validation_black(clf, pu_train, save_score = True)
