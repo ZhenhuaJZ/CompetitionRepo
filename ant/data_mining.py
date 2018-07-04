@@ -19,7 +19,7 @@ def init_train(train_path):
                     min_child_weight = 1, scale_pos_weight = 1,
                     colsample_bytree = 0.8, learning_rate = 0.07, n_jobs = -1)
     #Train
-    print("\n# Start Traing)
+    print("\n# Start Traing")
     train = pd.read_csv(train_path)
     feature, label = split_train_label(train)
     clf.fit(feature, label)
@@ -30,7 +30,7 @@ def init_train(train_path):
 
 def positive_unlabel(clf, test_a_path, train):
     #PU
-    print("\n# START PU - TESTA)
+    print("\n# START PU - TESTA")
     test_a = pd.read_csv(test_a_path)
     pu_black = positive_unlabel_learning(clf, test_a, 0.5)
     pu_train = file_merge(train, pu_black, "date")
@@ -44,7 +44,7 @@ def positive_unlabel(clf, test_a_path, train):
 
 def evl_pu(clf, validation_path):
     #Eval PU
-    print("\n# EVAL PU)
+    print("\n# EVAL PU")
     validation = pd.read_csv(validation_path)
     val_feature, val_label = split_train_label(validation)
     val_probs = clf.predict_proba(val_feature)
@@ -53,7 +53,7 @@ def evl_pu(clf, validation_path):
     print("\n# >>>>Duration<<<< : {}min ".format(round((time.time()-start)/60,2)))
 
 def partical_fit():
-    print("\n# PART FIT TESTB)
+    print("\n# PART FIT TESTB")
     test_b = pd.read_csv(test_b_path)
     test_b_seg_1, test_b_seg_2 = partical_fit(test_b, 0.4, "date")
     probs = clf.predict_proba(test_b_seg_1.iloc[:,2:])
@@ -68,11 +68,12 @@ def partical_fit():
 
 def get_score(clf, test_b_seg_2, score_seg_1, score_path):
     #Get score
-    print("\n# GET RESULT)
+    print("\n# GET RESULT")
     probs = clf.predict_proba(test_b_seg_2.iloc[:,2:])
     score_seg_2 = pd.DataFrame(test_b_seg_2["id"]).assign(score = probs[:,1])
     score = score_seg_1.append(score_seg_2).sort_index()
     score.to_csv(score_path + "score_{}_{}_{}.csv".format(now.day, now.hour, now.minute))
+    print("\n# Score saved in {}".format(score_path))
     clear_mermory(probs, score_seg_2, score)
     print("\n# >>>>Duration<<<< : {}min ".format(round((time.time()-start)/60,2)))
 
