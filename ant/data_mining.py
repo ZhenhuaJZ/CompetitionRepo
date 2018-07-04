@@ -20,7 +20,7 @@ pu_thresh_a = 0.8 #PU threshold for testa
 pu_thresh_b = 0.95 #PU threshold for testb
 partial_rate = 0.4
 
-def init_train(train_path, eval = True, save_score = False):
+def init_train(eval = True, save_score = False):
 
     start = time.time()
     clf = XGBClassifier(max_depth = 4, n_estimators = 4, subsample = 0.8, gamma = 0.1,
@@ -55,7 +55,7 @@ def init_train(train_path, eval = True, save_score = False):
 
     return clf, train, roc
 
-def positive_unlabel(clf, test_a_path, train, pu_thresh_a, eval = True, save_score = False):
+def positive_unlabel(clf, train, pu_thresh_a, eval = True, save_score = False):
     #PU
     start = time.time()
     print("\n# START PU - TESTA , PU_thresh_a = {}".format(pu_thresh_a))
@@ -88,7 +88,7 @@ def positive_unlabel(clf, test_a_path, train, pu_thresh_a, eval = True, save_sco
 
     return clf, train, roc
 
-def part_fit(clf, test_b_path, pu_train, partial_rate, pu_thresh_b, save_score = True):
+def part_fit(clf, pu_train, partial_rate, pu_thresh_b, save_score = True):
     #Partical_Fit
     start = time.time()
     print("\n# PART FIT TESTB, PU_thresh_b = {}, Partial_Rate = {}".format(pu_thresh_b, partial_rate))
@@ -116,24 +116,18 @@ def part_fit(clf, test_b_path, pu_train, partial_rate, pu_thresh_b, save_score =
 
 def main():
 
-    clf, train, roc_init = init_train(train_path, save_score = True)
-    _, pu_train, roc_pu = positive_unlabel(clf, test_a_path, train, pu_thresh_a)
-    part_fit(clf, test_b_path, pu_train, pu_thresh_b)
+    clf, train, roc_init = init_train(save_score = True)
+    _, pu_train, roc_pu = positive_unlabel(clf, train, pu_thresh_a)
+    part_fit(clf, pu_train, partial_rate, pu_thresh_b)
 
     try:
-
+        log_parmas(clf, params_path, roc_init = roc_init, roc_pu = roc_pu,
+                #pu_thresh_a = pu_thresh_a, pu_thresh_b = pu_thresh_b )
+        #log_parmas(clf, params_path, roc_init = roc_init, roc_pu = roc_pu,
+                    #pu_thresh_a = pu_thresh_a, pu_thresh_b = pu_thresh_b )
+    except Exception as e:
         log_parmas(clf, params_path, roc_init = roc_init, roc_pu = roc_pu)
 
-
-        #log_parmas(clf, params_path, roc_init = roc_init, roc_pu = roc_pu,
-                    #pu_thresh_a = pu_thresh_a, pu_thresh_b = pu_thresh_b )
-
-
-        #log_parmas(clf, params_path, roc_init = roc_init, roc_pu = roc_pu,
-                    #pu_thresh_a = pu_thresh_a, pu_thresh_b = pu_thresh_b )
-
-    except Exception as e:
-        pass
 
 if __name__ == '__main__':
     main()
