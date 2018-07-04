@@ -64,10 +64,10 @@ def part_fit(clf, test_b_path, pu_train):
     pu_test_b_seg_1 = positive_unlabel_learning(clf, test_b_seg_1, 0.95) #pu threshold
     incre = file_merge(pu_test_b_seg_1, pu_train, "date")
     incre_feature, incre_label = split_train_label(incre)
-    clf.fit(incre_feature, incre_label)
+    _clf = clf.fit(incre_feature, incre_label)
     clear_mermory(test_b_path, test_b, probs, pu_test_b_seg_1, incre, incre_feature, incre_label)
 
-    return clf
+    return _clf
 
 def get_score(clf, test_b_seg_2, score_seg_1, score_path):
 
@@ -87,8 +87,8 @@ def main():
     clf, train = init_train(train_path)
     _, pu_train = positive_unlabel(clf, test_a_path, train)
     evl_pu(clf, validation_path)
-    _, test_b_seg_2, score_seg_1 = part_fit(clf, test_b_path, pu_train)
-    get_score(clf, test_b_seg_2, score_seg_1, score_path)
+    _clf, test_b_seg_2, score_seg_1 = part_fit(clf, test_b_path, pu_train)
+    get_score(_clf, test_b_seg_2, score_seg_1, score_path)
 
 if __name__ == '__main__':
     main()
