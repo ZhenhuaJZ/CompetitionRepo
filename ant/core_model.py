@@ -142,6 +142,7 @@ def core(fillna, log_path, offline_validation, clf, _train_data, _test_a, _test_
 	clf = clf.fit(_new_train, _new_label)
 	clear_mermory(_new_train, _new_label)
 	print("\n# ********************PU Traing Done*****************************")
+	print("\n# >>>>Duration<<<< : {}min ".format(round((time.time()-start)/60,2)))
 
 	roc_1_mean, roc_2_mean = "n/a","n/a"
 	if cv:
@@ -196,8 +197,9 @@ def core(fillna, log_path, offline_validation, clf, _train_data, _test_a, _test_
 
 		increment_train_feature, increment_train_label = split_train_label(increment_train)
 		clear_mermory(increment_train)
-		clf.fit(increment_train_feature, increment_train_label)
+		clf = clf.fit(increment_train_feature, increment_train_label)
 		print("\n# Partical fit done !")
+		print("\n# >>>>Duration<<<< : {}min ".format(round((time.time()-start)/60,2)))
 
 		clear_mermory(increment_train_feature, increment_train_label)
 		prob_seg_2 = clf.predict_proba(test_b_seg_2.iloc[:,2:])
@@ -205,6 +207,7 @@ def core(fillna, log_path, offline_validation, clf, _train_data, _test_a, _test_
 		score = score_seg_1.append(score_seg_2).sort_index()
 		score.to_csv(score_path + "score_day{}_time{}:{}.csv".format(now.day, now.hour, now.minute), index = None, float_format = "%.9f") #delete index for testing
 		print("\n# Score saved in {}".format(score_path))
+		print("\n# >>>>Duration<<<< : {}min ".format(round((time.time()-start)/60,2)))
 		#Save increment_train to hard drive
 		#increment_train.to_csv(increment_train_path, index = None)
 

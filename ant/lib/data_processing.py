@@ -8,6 +8,11 @@ import gc
 now = datetime.datetime.now()
 
 ##################### Data subsampling / imbalanced data ######################
+
+#standarlization data
+def standarlization(df):
+    df = (df - df.mean()) / (df.max() - df.min())
+    return df
 # The ratio defines what is the output label 1 and 0 ratio
 def under_sampling(data, ratio = 1):
     label_1_data = data.loc[data["label"] == 1]
@@ -58,6 +63,17 @@ def clear_mermory(*args):
     for a in args:
         del a
     gc.collect()
+
+#check the dtype of a dataframe
+def dataframe_management():
+    #df.iloc[:,1:] = df.iloc[:,:].astype('int32')
+    df.info(memory_usage='deep')
+    for dtype in ['float','int','object']:
+        selected_dtype = _train_data.select_dtypes(include=[dtype])
+        mean_usage_b = selected_dtype.memory_usage(deep=True).mean()
+        mean_usage_mb = mean_usage_b / 1024 ** 2
+        print("Average memory usage for {} columns: {:03.2f} MB".format(dtype,mean_usage_mb))
+
 # #####################Creat path###############################################
 def creat_project_dirs(log_path):
     params_path = log_path + "params/"
@@ -162,6 +178,7 @@ def file_merge_hard_drive(srcpath, despath):
                 data = infile.read()
                 output.write(data)
     print("# File merge done")
+
 def df_read_and_fillna(data_path, fillna_value = 0):
 	data = pd.read_csv(data_path)
 	data = custom_imputation(data, fillna_value)
