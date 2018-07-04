@@ -8,6 +8,11 @@ import gc
 now = datetime.datetime.now()
 
 ##################### Data subsampling / imbalanced data ######################
+
+#standarlization data
+def standarlization(df):
+    df = (df - df.mean()) / (df.max() - df.min())
+    return df
 # The ratio defines what is the output label 1 and 0 ratio
 def under_sampling(data, ratio = 1):
     label_1_data = data.loc[data["label"] == 1]
@@ -173,6 +178,7 @@ def file_merge_hard_drive(srcpath, despath):
                 data = infile.read()
                 output.write(data)
     print("# File merge done")
+
 def df_read_and_fillna(data_path, fillna_value = 0):
 	data = pd.read_csv(data_path)
 	data = custom_imputation(data, fillna_value)
