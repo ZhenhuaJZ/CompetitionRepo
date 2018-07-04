@@ -10,6 +10,11 @@ _train_data = custom_imputation(_train_data)
 _train_data = _train_data.replace({"label" : -1}, value = 1)
 _train_data.info(memory_usage='deep')
 
+_train_data[:,1:].astype('int')
+_train_data[:,0].astype('category')
+
+_train_data.info(memory_usage='deep')
+
 for dtype in ['float','int','object']:
     selected_dtype = _train_data.select_dtypes(include=[dtype])
     mean_usage_b = selected_dtype.memory_usage(deep=True).mean()
