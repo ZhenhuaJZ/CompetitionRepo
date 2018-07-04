@@ -53,7 +53,7 @@ def evl_pu(clf, validation_path):
     clear_mermory(val_feature, val_label, validation, validation_path, val_probs)
     print("\n# >>>>Duration<<<< : {}min ".format(round((time.time()-start)/60,2)))
 
-def partical_fit():
+def partical_fit(clf, test_b_path, pu_train):
     #Partical_Fit
     start = time.time()
     print("\n# PART FIT TESTB")
