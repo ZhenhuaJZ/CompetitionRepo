@@ -143,8 +143,8 @@ def main():
 	_test_offline = _test_offline.iloc[:,3:]
 	#hist_visualization(_train, _test_online, "train_test_b", figure_1="train", figure_2="test_b")
 	#hist_visualization(_test_offline, _test_online, "on-off-1010-1020", figure_1="offline", figure_2="online")
-	#save_features(train_path, "std_feats", mode = "train")
-	correlation_map(_train_data, [20,28,36,48],[27,35,47,63])
+	save_features(train_path, "std_feats", mode = "train")
+	#correlation_map(_train_data, [20,28,36,48],[27,35,47,63])
 
 if __name__ == '__main__':
 	main()
