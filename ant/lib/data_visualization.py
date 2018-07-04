@@ -135,12 +135,12 @@ def main():
 	test_path = "../data/test_a.csv"
 
 	_train_data = pd.read_csv(train_path)
-	_test_online = pd.read_csv(test_path)
+	#_test_online = pd.read_csv(test_path)
 
-	_train_data, _test_offline =  test_train_split_by_date(_train_data, 20171010, 20171020)
-	clear_mermory(_train_data)
-	_test_online = _test_online.iloc[:,2:]
-	_test_offline = _test_offline.iloc[:,3:]
+	#_train_data, _test_offline =  test_train_split_by_date(_train_data, 20171010, 20171020)
+	#clear_mermory(_train_data)
+	#_test_online = _test_online.iloc[:,2:]
+	#_test_offline = _test_offline.iloc[:,3:]
 	#hist_visualization(_train, _test_online, "train_test_b", figure_1="train", figure_2="test_b")
 	#hist_visualization(_test_offline, _test_online, "on-off-1010-1020", figure_1="offline", figure_2="online")
 	save_features(train_path, "std_feats", mode = "train")
