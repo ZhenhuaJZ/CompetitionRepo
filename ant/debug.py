@@ -3,6 +3,7 @@ from lib.data_processing import *
 from lib.model_performance import *
 import sys
 
+"""
 ## DEBUG:
 train_path = "data/train.csv"
 _train_data = pd.read_csv(train_path)
@@ -21,3 +22,6 @@ for dtype in ['float','int','object']:
     mean_usage_b = selected_dtype.memory_usage(deep=True).mean()
     mean_usage_mb = mean_usage_b / 1024 ** 2
     print("Average memory usage for {} columns: {:03.2f} MB".format(dtype,mean_usage_mb))
+"""
+from xgboost import XGBClassifier
+xgb = XGBClassifier(n_estimators = 1)

@@ -23,7 +23,7 @@ partial_rate = 0.4
 def init_train(eval = True, save_score = False):
 
     start = time.time()
-    clf = XGBClassifier(max_depth = 4, n_estimators = 480, subsample = 0.8, gamma = 0.1,
+    clf = XGBClassifier(max_depth = 4, n_estimators = 4, subsample = 0.8, gamma = 0.1,
                     min_child_weight = 2, scale_pos_weight = 1,
                     colsample_bytree = 0.8, learning_rate = 0.07, n_jobs = -1)
     #Train
@@ -149,19 +149,19 @@ def validation_black(clf, train, save_score = True):
 
     return
 
-
 def main():
 
-    os.makedirs(score_path)
+    #os.makedirs(score_path)
     print("\n# Make dirs in {}".format(score_path))
+
     clf, train, roc_init = init_train(save_score = True)
     pu_train, roc_pu = positive_unlabel(clf, train, pu_thresh_a, save_score = True)
     part_train, roc_part = part_fit(clf, pu_train, partial_rate, pu_thresh_b, save_score = True)
     val_train = validation_black(clf, part_train, save_score = True)
-
+    """
     log_parmas(clf, params_path, score_path = score_path, roc_init = round(roc_init,6), roc_pu = round(roc_pu,6),
                 roc_part = round(roc_part,6), pu_thresh_a = pu_thresh_a, pu_thresh_b = pu_thresh_b,
                 partial_rate = partial_rate )
-
+    """
 if __name__ == '__main__':
     main()
