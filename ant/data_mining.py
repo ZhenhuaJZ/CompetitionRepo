@@ -67,7 +67,7 @@ def part_fit(clf, test_b_path, pu_train):
     _clf = clf.fit(incre_feature, incre_label)
     clear_mermory(test_b_path, test_b, probs, pu_test_b_seg_1, incre, incre_feature, incre_label)
 
-    return _clf
+    return _clf, test_b_seg_2, score_seg_1
 
 def get_score(clf, test_b_seg_2, score_seg_1, score_path):
 
