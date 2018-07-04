@@ -126,6 +126,7 @@ def main():
         #log_parmas(clf, params_path, roc_init = roc_init, roc_pu = roc_pu,
                     #pu_thresh_a = pu_thresh_a, pu_thresh_b = pu_thresh_b )
     except Exception as e:
+        pass
         log_parmas(clf, params_path, roc_init = roc_init, roc_pu = roc_pu)
 
 
