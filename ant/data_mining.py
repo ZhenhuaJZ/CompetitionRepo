@@ -23,7 +23,7 @@ partial_rate = 0.4
 def init_train(train_path, eval = True, save_score = False):
 
     start = time.time()
-    clf = XGBClassifier(max_depth = 4, n_estimators = 450, subsample = 0.8, gamma = 0.1,
+    clf = XGBClassifier(max_depth = 4, n_estimators = 4, subsample = 0.8, gamma = 0.1,
                     min_child_weight = 1, scale_pos_weight = 1,
                     colsample_bytree = 0.7, learning_rate = 0.07, n_jobs = -1)
     #Train
