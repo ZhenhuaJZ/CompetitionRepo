@@ -53,7 +53,7 @@ def evl_pu(clf, validation_path):
     clear_mermory(val_feature, val_label, validation, validation_path, val_probs)
     print("\n# >>>>Duration<<<< : {}min ".format(round((time.time()-start)/60,2)))
 
-def partical_fit(clf, test_b_path, pu_train):
+def part_fit(clf, test_b_path, pu_train):
     #Partical_Fit
     start = time.time()
     print("\n# PART FIT TESTB")
@@ -87,7 +87,7 @@ def main():
     clf, train = init_train(train_path)
     clf, pu_train = positive_unlabel(clf, test_a_path, train)
     evl_pu(clf, validation_path)
-    clf, test_b_seg_2, score_seg_1 = partical_fit(clf, test_b_path, pu_train)
+    clf, test_b_seg_2, score_seg_1 = part_fit(clf, test_b_path, pu_train)
     get_score(clf, test_b_seg_2, score_seg_1, score_path)
 
 if __name__ == '__main__':
