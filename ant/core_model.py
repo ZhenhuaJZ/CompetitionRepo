@@ -151,7 +151,7 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
 		cv_clf = clf
 		print("\n# 5-Fold CV (Evaluation Classifier)")
 		roc_1_mean, roc_2_mean = cv_fold(cv_clf, pu_train_data, fold_time_split, params_path)
-		
+
 	offline_probs = clf.predict_proba(_test_offline_feature)
 	#evl pu model
 	offline_score_1 = offline_model_performance(_test_offline_labels, offline_probs[:,1], params_path = params_path)
@@ -206,8 +206,8 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
 		clear_mermory(increment_train_feature, increment_train_label)
 		prob_seg_2 = clf.predict_proba(test_b_seg_2.iloc[:,2:])
 		score_seg_2 = pd.DataFrame(test_b_seg_2["id"]).assign(score = prob_seg_2[:,1])
-		score = score_seg_1.append(score_seg_2)
-		score.to_csv(score_path + "score_day{}_time{}:{}.csv".format(now.day, now.hour, now.minute), float_format = "%.9f") #delete index for testing
+		score = score_seg_1.append(score_seg_2).sort_index()
+		score.to_csv(score_path + "score_day{}_time{}:{}.csv".format(now.day, now.hour, now.minute), index = None, float_format = "%.9f") #delete index for testing
 		print("\n# Score saved in {}".format(score_path))
 		#Save increment_train to hard drive
 		#increment_train.to_csv(increment_train_path, index = None)
