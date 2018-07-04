@@ -40,7 +40,8 @@ def positive_unlabel_learning(classifier, unlabel_data, threshold):
 	score = pd.Series(score[:,1])
 	score.loc[score >= threshold] = 1
 	score.loc[score < threshold] = 0
-	print(score.loc[score >= threshold] = 1)
+	score.to_csv("checkscore.csv")
+	print(score)
 	unlabel_data.insert(1, "label", score)
 	black_unlabel_data = unlabel_data.loc[unlabel_data["label"] == 1]
 	print(unlabel_data.loc[unlabel_data["label"] == 0])
