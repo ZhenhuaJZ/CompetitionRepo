@@ -241,10 +241,11 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
         print("\n# Score saved in {}".format(score_path))
         """
 	#Log all the data
+    """
     log_parmas(clf, valset = offline_validation,
         roc_1 = offline_score_1, roc_2 = offline_score_2,
         CV_ROC_1 = roc_1_mean, CV_ROC_2 = roc_2_mean, Score = "",
         score_path = score_path, pu_thres = pu_thres, partical_fit = partical_fit,
         under_samp = under_samp, fillna = fillna)
-
+    """
     clear_mermory(now)
