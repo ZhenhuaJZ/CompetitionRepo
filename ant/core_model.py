@@ -119,27 +119,17 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
     #Split train and offine test
     _train_data, _test_offline =  test_train_split_by_date(_train_data, offline_validation[0], offline_validation[1], params_path)
     #under_sampling
-	if under_samp:
-		print("\n# Under_sampling")
-		_train_data = under_sampling(_train_data)
+    if under_samp:
+        print("\n# Under_sampling")
+        _train_data = under_sampling(_train_data)
 
-	_train, _labels = split_train_label(_train_data)
-	#offline data
+    _train, _labels = split_train_label(_train_data)
 	_test_offline_feature, _test_offline_labels = split_train_label(_test_offline)
 
-	# ##########################Traing model####################################
-	start = time.time()
-    """
-	with open(params_path  + "params.txt", 'a') as f:
-		print("\n# Training clf :{}".format(clf))
-		f.write(
-		"**"*40 + "\n"*2
-		+ str(clf) + "\n"*2
-		+"**"*40 + "\n"*2
-		)
-    """
-	clf = clf.fit(_train, _labels)
-	clear_mermory(_train, _labels)
+    # ##########################Traing model####################################
+    start = time.time()
+    clf = clf.fit(_train, _labels)
+    clear_mermory(_train, _labels)
 
 	# ##########################PU Learning#####################################
 	print("\n# *******************PU Traing Start*****************************")
