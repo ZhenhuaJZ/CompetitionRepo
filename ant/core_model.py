@@ -108,10 +108,12 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
 	print("\n# Filling missing data with <{}>".format(fillna))
 	# ##########################Edit data####################################
 	_train_data = pd.read_csv(train_path)
-	_train_data = custom_imputation(_train_data)
+	#_train_data = custom_imputation(_train_data)
 	#change -1 label to 1
 	_train_data = _train_data.replace({"label" : -1}, value = 1)
-	print(_train_data.info())
+    _train_data.iloc[:,3:] = standarlization(_train_data.iloc[:,3:])
+    print(_train_data)
+    sys.exit()
 	#Split train and offine test
 	_train_data, _test_offline =  test_train_split_by_date(_train_data, offline_validation[0], offline_validation[1], params_path)
 	#under_sampling
@@ -125,6 +127,7 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
 
 	# ##########################Traing model####################################
 	start = time.time()
+    """
 	with open(params_path  + "params.txt", 'a') as f:
 		print("\n# Training clf :{}".format(clf))
 		f.write(
@@ -132,7 +135,7 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
 		+ str(clf) + "\n"*2
 		+"**"*40 + "\n"*2
 		)
-
+    """
 	clf = clf.fit(_train, _labels)
 	clear_mermory(_train, _labels)
 
