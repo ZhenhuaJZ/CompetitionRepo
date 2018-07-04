@@ -41,6 +41,7 @@ def positive_unlabel_learning(classifier, unlabel_data, threshold):
 	#unlabel_data.to_csv("duck1.csv")
 	score = classifier.predict_proba(unlabel_data.iloc[:,2:])
 	print(score)
+	print(score.shape)
 	score = pd.Series(score[:,1])
 	#print(score)
 	score.loc[score >= threshold] = 1
