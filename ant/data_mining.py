@@ -30,6 +30,7 @@ def init_train(train_path):
 
 def positive_unlabel(clf, test_a_path, train):
     #PU
+    start = time.time()
     print("\n# START PU - TESTA")
     test_a = pd.read_csv(test_a_path)
     pu_black = positive_unlabel_learning(clf, test_a, 0.5)
@@ -41,9 +42,9 @@ def positive_unlabel(clf, test_a_path, train):
 
     return clf, pu_train
 
-
 def evl_pu(clf, validation_path):
     #Eval PU
+    start = time.time()
     print("\n# EVAL PU")
     validation = pd.read_csv(validation_path)
     val_feature, val_label = split_train_label(validation)
@@ -53,6 +54,8 @@ def evl_pu(clf, validation_path):
     print("\n# >>>>Duration<<<< : {}min ".format(round((time.time()-start)/60,2)))
 
 def partical_fit():
+    #Partical_Fit
+    start = time.time()
     print("\n# PART FIT TESTB")
     test_b = pd.read_csv(test_b_path)
     test_b_seg_1, test_b_seg_2 = partical_fit(test_b, 0.4, "date")
@@ -67,7 +70,9 @@ def partical_fit():
     return clf
 
 def get_score(clf, test_b_seg_2, score_seg_1, score_path):
+
     #Get score
+    start = time.time()
     print("\n# GET RESULT")
     probs = clf.predict_proba(test_b_seg_2.iloc[:,2:])
     score_seg_2 = pd.DataFrame(test_b_seg_2["id"]).assign(score = probs[:,1])
