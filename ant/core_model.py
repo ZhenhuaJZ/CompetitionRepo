@@ -185,8 +185,9 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
 		##########################Partical_fit######################################
 		# NOTE:  PU test_b
 		#Feed test online
-		print("\n# Partical fit <test_b> to the dataset")
+		print("\n# Partical fit {} * <test_b> to the dataset".format(partical_ratio))
 		_test_online = df_read_and_fillna(test_path, fillna)
+
 		test_b_seg_1,  test_b_seg_2 = partical_fit(_test_online, partical_ratio, "date")
 
 		#Predict and save seg_1 score
