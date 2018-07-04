@@ -17,6 +17,7 @@ test_a_path = "data/test_a.csv"
 
 def main():
 	# #####################################################################
+
 	fillna = 0
 	clf_name = "XGB" #LR,MLP,RF,XGB
 
@@ -34,17 +35,7 @@ def main():
 	under_samp = False
 
 	partical_fit = True
-	partal_fit_thresh = 0.5
-
-	# Read and Initial data
-	# Training data
-	_train_data = pd.read_csv(train_path)
-	_train_data = custom_imputation(_train_data)
-	_train_data = _train_data.replace({"label" : -1}, value = 1)
-	# Test a data
-	_test_a = df_read_and_fillna(test_a_path, fillna)
-	# Test b data
-	_test_b = df_read_and_fillna(test_path, fillna)
+	partal_fit_thresh = 0.7
 
 	"""
 	command = {
@@ -54,20 +45,15 @@ def main():
 				#Tunning params
 				"tunning" : True,
 				"tuning_range" : [0.5, 0.6, 0.4, 0.3, 0.2, 0.1],
-
 				"pu_thres" : 0.5,
 				"offline_validation" : [20171025, 20171105], #20171025, 20171105
-
 				"cv" : False,
 				#"fold_time_split" : [[20170905, 20170910], [20170911, 20170920], [20170921, 20171001],[20171002,20171015],[20171015,20171027]],
-
 				"partical_fit" : True,
 				"partal_fit_thresh" : 0.5,
 				"under_samp" : False,
 			  }
-
 	double_check(command)
-
 	fillna = command["fillna"]
 	clf_name = command["clf_name"]
 	tuning_name = command["tuning_name"]
@@ -82,7 +68,7 @@ def main():
 	if tunning:
 		for p in tuning_range:
 			classifier = {
-			"XGB" : XGBClassifier(max_depth = 4, n_estimators = 4, subsample = 0.8, gamma = 0,
+			"XGB" : XGBClassifier(max_depth = 4, n_estimators = 480, subsample = 0.8, gamma = 0,
 			min_child_weight = 1, scale_pos_weight = 1, reg_alpha = 0,
 			colsample_bytree = 0.8, learning_rate = 0.07, n_jobs = -1),
 
@@ -106,12 +92,12 @@ def main():
 			now = datetime.datetime.now()
 			log_path = "log/date_{}/Tuning_{}_{}/{}:{}_GS/".format(now.day, clf_name, tuning_name, now.hour,now.minute)
 			creat_project_dirs(log_path)
-			core(fillna, log_path, offline_validation, clf, _train_data, _test_a, _test_b,
+			core(fillna, log_path, offline_validation, clf, train_path, test_path, test_a_path,
 					pu_thres = p, cv = cv, fold_time_split = fold_time_split,
 					under_samp = under_samp, part_fit = partical_fit, partical_ratio = partal_fit_thresh)
 	else:
 		classifier = {
-		"XGB" : XGBClassifier(max_depth = 4, n_estimators = 5, subsample = 0.8, gamma = 0,
+		"XGB" : XGBClassifier(max_depth = 4, n_estimators = 4, subsample = 0.8, gamma = 0,
 		min_child_weight = 1, scale_pos_weight = 1,
 		colsample_bytree = 0.8, learning_rate = 0.07, n_jobs = -1),
 
@@ -135,7 +121,7 @@ def main():
 		now = datetime.datetime.now()
 		log_path = "log/date_{}/{}:{}_SM/".format(now.day,now.hour,now.minute)
 		creat_project_dirs(log_path)
-		core(fillna, log_path, offline_validation, clf, _train_data, _test_a, _test_b,
+		core(fillna, log_path, offline_validation, clf, train_path, test_path, test_a_path,
 		 			pu_thres = pu_thres, cv = cv, fold_time_split = fold_time_split, under_samp = under_samp,
 					part_fit = partical_fit, partical_ratio = partal_fit_thresh)
 

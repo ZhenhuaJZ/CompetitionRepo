@@ -98,13 +98,16 @@ def cv_fold(clf, _train_data, fold_time_split, params_path):
 	print("##"*40)
 	return roc_1_mean, roc_2_mean
 
-def core(fillna, log_path, offline_validation, clf, _train_data, _test_a, _test_b, pu_thres, cv = False, fold_time_split = None, under_samp = False, part_fit = True, partical_ratio = 0.5):
+def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_a_path, pu_thres, cv = False, fold_time_split = None, under_samp = False, part_fit = True, partical_ratio = 0.5):
 	params_path = log_path + "params/"
 	score_path = log_path + "score/"
 	model_path = log_path + "model/"
 	print("\n# Filling missing data with <{}>".format(fillna))
 	# ##########################Edit data####################################
+	_train_data = pd.read_csv(train_path)
+	_train_data = custom_imputation(_train_data)
 	#change -1 label to 1
+	_train_data = _train_data.replace({"label" : -1}, value = 1)
 	print(_train_data.info())
 	#Split train and offine test
 	_train_data, _test_offline =  test_train_split_by_date(_train_data, offline_validation[0], offline_validation[1], params_path)
@@ -133,6 +136,7 @@ def core(fillna, log_path, offline_validation, clf, _train_data, _test_a, _test_
 	# ##########################PU Learning#####################################
 	print("\n# *******************PU Traing Start*****************************")
 	# NOTE: PU learning
+	_test_a = df_read_and_fillna(test_a_path, fillna)
 	pu_black_data = positive_unlabel_learning(clf, _test_a, pu_thres)
 	clear_mermory(_test_a)
 
@@ -167,10 +171,11 @@ def core(fillna, log_path, offline_validation, clf, _train_data, _test_a, _test_
 	#clear_mermory(_final_train)
 	clf = clf.fit(_final_feature, _final_label)
 	clear_mermory(_final_feature, _final_label)
-	#_test_b = df_read_and_fillna(test_path, fillna)
+	print("\n# >>>>Duration<<<< : {}min ".format(round((time.time()-start)/60,2)))
+	#_test_online = df_read_and_fillna(test_path, fillna)
 
 	if not part_fit:
-		prob = clf.predict_proba(_test_b.iloc[:,2:])
+		prob = clf.predict_proba(_test_online.iloc[:,2:])
 		save_score(prob[:,1], score_path)
 
 	if part_fit:
@@ -178,7 +183,8 @@ def core(fillna, log_path, offline_validation, clf, _train_data, _test_a, _test_
 		# NOTE:  PU test_b
 		#Feed test online
 		print("\n# Partical fit <test_b> to the dataset")
-		test_b_seg_1,  test_b_seg_2 = partical_fit(_test_b, partical_ratio, "date")
+		_test_online = df_read_and_fillna(test_path, fillna)
+		test_b_seg_1,  test_b_seg_2 = partical_fit(_test_online, partical_ratio, "date")
 
 		#Predict and save seg_1 score
 		prob_seg_1 = clf.predict_proba(test_b_seg_1.iloc[:,2:])
@@ -186,10 +192,10 @@ def core(fillna, log_path, offline_validation, clf, _train_data, _test_a, _test_
 		#score_seg_1_path = score_path + "score_seg_a.csv"
 		#score_seg_1.to_csv(score_seg_1_path) # delete index for testing
 		#print("\n# Parrical_score_1 saved in path {} !".format(score_seg_1_path))
-		clear_mermory(_test_b)
+		clear_mermory(_test_online)
 
 		#PU for test_b
-		test_b_seg_1_black = positive_unlabel_learning(clf, test_b_seg_1, 0.5) #pu threshold
+		test_b_seg_1_black = positive_unlabel_learning(clf, test_b_seg_1, 0.8) #pu threshold
 		clear_mermory(test_b_seg_1)
 		increment_train = file_merge(test_b_seg_1_black, _final_train, "date")
 		clear_mermory(test_b_seg_1_black, _final_train)
