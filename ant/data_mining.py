@@ -191,15 +191,5 @@ def main():
     # validation_black(clf, part_train, save_score = True)
     pu_b(pu_train, pu_test_b = True)
 
-    #if not debug:
-        """
-        log_parmas(clf_pua, params_path, score_path = score_path, roc_init = round(roc_init,6), roc_pu = round(roc_pu,6),
-                    roc_part = round(roc_part,6), pu_thresh_a = pu_thresh_a)
-        """
-        """
-        log_parmas(clf_pub, params_path, score_path = score_path, roc_init = round(roc_init,6), roc_pu = round(roc_pu,6),
-                    roc_part = round(roc_part,6), pu_thresh_b = pu_thresh_b,
-                    partial_rate = partial_rate)
-        """
 if __name__ == '__main__':
     main()
