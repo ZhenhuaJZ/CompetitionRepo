@@ -17,13 +17,13 @@ test_b_path = "data/test_b.csv"
 test_a_path = "data/test_a.csv"
 
 over_samp = True
-over_samp_ratio = 0.14
-pu_unlabel = 0.5
-pu_thresh_a = 0.60 #PU threshold for testa
+over_samp_ratio = 0.2
+pu_unlabel = 0.6
+pu_thresh_a = 0.70 #PU threshold for testa
 pu_test_b = True
 pu_thresh_b = 0.85 #PU threshold for testb
 seg_date = 20180215
-params = None #{ "gamma" : [0, 0.1], "subsample" : [0.7, 0.8] } # params = None
+params = { "gamma" : [0, 0.1] } # params = None "subsample" : [0.7, 0.8]
 
 
 def positive_unlabel_learning(clf, data_path, train, thresh, eval = True, save_score = True, prefix = "pu"):
@@ -172,7 +172,7 @@ def part_fit(clf, train, seg_date, pu_thresh_b, eval = True, save_score = True):
 
 def pu_a():
 
-    _clf = XGBClassifier(max_depth = 4, n_estimators = 480, subsample = 0.7, gamma = 0,
+    _clf = XGBClassifier(max_depth = 4, n_estimators = 480, subsample = 0.8, gamma = 0,
                     min_child_weight = 1, scale_pos_weight = 1,
                     colsample_bytree = 0.8, learning_rate = 0.06, n_jobs = -1)
 
