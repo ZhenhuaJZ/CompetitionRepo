@@ -7,6 +7,32 @@ import datetime, time
 import sys
 now = datetime.datetime.now()
 
+def grid_search_roc(clf, train, test, params, log_path = ""):
+	feature, label = split_train_label(train)
+	test_feature, test_label = split_train_label(test)
+	best_clf = clone(clf)
+	auc_prev = 0
+	for para in params:
+		for i in params[para]:
+			clf = clone(best_clf)
+			parameter = {para : i}
+			print("\n#"+"*"*20+" Current parameter:"+"*"*20)
+			print(parameter)
+			clf.set_params(**parameter)
+			clf.fit(feature,label)
+			score = clf.predict_proba(test_feature)[:,1]
+			print(score)
+			auc = offline_model_performance_2(test_label,score)
+			print("\n# AUC offline performance : {}".format(auc))
+			if auc > best_auc:
+				print("# Best paramter found")
+				best_clf = clone(clf)
+				best_auc = auc
+	if log_path != ""
+		log_parmas(best_clf, log_path)
+	print(best_clf)
+	return best_clf
+
 def segmentation_model(clf, data, test, feature_dic):
     # Segment data and test into segment a and b
     seg_a_train, seg_b_train = sample_segmentation(data,feature_dic)
