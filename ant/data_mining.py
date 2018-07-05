@@ -71,12 +71,12 @@ def positive_unlabel(clf, train, pu_thresh_a, eval = True, save_score = True):
     pu_black = positive_unlabel_learning(clf, test_a, pu_thresh_a)
     _train = file_merge(train, pu_black, "date")
     _feature, _label = split_train_label(_train)
-    clf.fit(_feature, _label)
     clear_mermory(_feature, _label, train, pu_black, test_a_path, test_a)
+    # clf.fit(_feature, _label)
     print("\n# >>>>Duration<<<< : {}min ".format(round((time.time()-start)/60,2)))
 
     if eval:
-
+        clf.fit(_feature, _label)
         print("\n# EVAL PU")
         validation_path = "data/_test_offline.csv"
         validation = pd.read_csv(validation_path)
