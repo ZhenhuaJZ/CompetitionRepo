@@ -10,7 +10,7 @@ now = datetime.datetime.now()
 score_path = "log/last_3_days/{}d_{}h_{}m/".format(now.day, now.hour, now.minute)
 params_path = "log/last_3_days/log_{}h.csv".format(now.hour)
 
-train_path = "data/train.csv"  #train.csv
+train_path = "data/train_leo.csv"  #train.csv
 unlabel_path = "data/unlabel.csv"
 validation_path = "data/validation.csv" #validation.csv
 test_b_path = "data/test_b.csv"
