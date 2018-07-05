@@ -14,8 +14,9 @@ train_path = "data/_train_data.csv"
 test_b_path = "data/test_b.csv"
 test_a_path = "data/test_a.csv"
 validation_path = "data/_test_offline.csv"
+unlabel_path = "data/unlabel.csv"
 
-
+pu_thresh_unlabel = 0.5
 pu_thresh_a = 0.85 #PU threshold for testa
 pu_thresh_b = 0.85 #PU threshold for testb
 seg_date = 20180215
@@ -23,6 +24,14 @@ seg_date = 20180215
 ## DEBUG:
 debug = False
 ################################################################################
+
+def pu_unlabel(clf, train, pu_thresh_unlabel):
+    unlabel = pd.read_csv(unlabel_path)
+    unlabel_black = positive_unlabel_learning(clf, unlabel, pu_thresh_unlabel)
+    _train = file_merge(train, unlabel_black, "date")
+    feature, label = split_train_label(_train)
+    clf.fit(feature, label)
+    return _train, clf
 
 def init_train(clf, eval = True, save_score = True, save_model = True):
     over_sampling = False
@@ -169,7 +178,10 @@ def pu_a():
                     colsample_bytree = 0.8, learning_rate = 0.06, n_jobs = -1)
 
     clf, train, roc_init = init_train(_clf)
-    pu_train, roc_pu = positive_unlabel(clf, train, pu_thresh_a)
+
+    unlabel_pu_train, clf = pu_unlabel(clf, train, pu_thresh_unlabel)
+
+    pu_train, roc_pu = positive_unlabel(clf, unlabel_pu_train, pu_thresh_a)
     # TODO: FINE TUNING CLF2
     pu_train = validation_black(_clf, pu_train)
     log_parmas(_clf, params_path, roc_init = round(roc_init,6),
