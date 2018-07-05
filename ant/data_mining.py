@@ -19,7 +19,7 @@ test_a_path = "data/test_a.csv"
 over_samp = True
 over_samp_ratio = 0.12
 pu_unlabel = 0.5
-pu_thresh_a = 0.88 #PU threshold for testa
+pu_thresh_a = 0.60 #PU threshold for testa
 pu_thresh_b = 0.85 #PU threshold for testb
 seg_date = 20180215
 ################################################################################
@@ -179,7 +179,7 @@ def pu_a():
                     min_child_weight = 1, scale_pos_weight = 1,
                     colsample_bytree = 0.8, learning_rate = 0.06, n_jobs = -1)
 
-    params = { "colsample_bytree" : [0.8, 0.7] }
+    #params = { "colsample_bytree" : [0.8, 0.7] }
     #params = params
     clf, train, roc_init = init_train(_clf, params = params)
 
