@@ -15,8 +15,8 @@ test_a_path = "data/test_a.csv"
 validation_path = "data/_test_offline.csv"
 
 
-pu_thresh_a = 0.85 #PU threshold for testa
-pu_thresh_b = 0.80 #PU threshold for testb
+pu_thresh_a = 0.75 #PU threshold for testa
+pu_thresh_b = 0.85 #PU threshold for testb
 seg_date = 20180215
 ################################################################################
 ## DEBUG:
@@ -186,7 +186,7 @@ def main():
     print("\n# Make dirs in {}".format(score_path))
 
     pu_train = pu_a()
-    pu_b(pu_train, pu_test_b = True, eval = True)
+    pu_b(pu_train, pu_test_b = True, eval = False)
 
 if __name__ == '__main__':
     main()
