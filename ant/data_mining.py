@@ -26,7 +26,7 @@ seg_date = 20180215
 params = None #{ "gamma" : [0, 0.1], "subsample" : [0.7, 0.8] } # params = None
 
 
-def positive_unlabel_learning(clf, data_path, train, thresh, eval = True, prefix = "pu"):
+def positive_unlabel_learning(clf, data_path, train, thresh, eval = True, save_score = True, prefix = "pu"):
 
     start = time.time()
     unlabel = pd.read_csv(data_path)
@@ -179,10 +179,10 @@ def pu_a():
     clf, train, roc_init = init_train(_clf, params = params)
 
     print("\n# START PU - UNLABEL , PU_thresh_unlabel = {}".format(pu_unlabel))
-    clf, train, roc_unlabel = positive_unlabel_learning(clf, unlabel_path, train, pu_unlabel)
+    clf, train, roc_unlabel = positive_unlabel_learning(clf, unlabel_path, train, pu_unlabel, prefix = "un_pu")
 
     print("\n# START PU - TESTA , PU_thresh_a = {}".format(pu_thresh_a))
-    _, train, roc_pua = positive_unlabel_learning(clf, test_a_path, train, pu_thresh_a)
+    _, train, roc_pua = positive_unlabel_learning(clf, test_a_path, train, pu_thresh_a, prefix = "pua")
 
     # TODO: Fine tunning
     _clf.set_params(n_estimators = 4, learning_rate = 0.06, subsample = 0.8)
