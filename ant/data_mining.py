@@ -167,7 +167,7 @@ def part_fit(clf, train, seg_date, pu_thresh_b, eval = True, save_score = True):
         roc = cv_fold(clf, _train, slice_interval)
         return roc
 
-    no_roc = "no eval"
+    no_roc = 0.0
     return no_roc
 
 def pu_a():
