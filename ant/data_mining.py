@@ -3,6 +3,7 @@ from xgboost import XGBClassifier
 from lib.data_processing import *
 from lib.model_performance import *
 from core_model import positive_unlabel_learning, partical_fit, cv_fold
+from sklearn.externals import joblib
 import time, sys, datetime
 now = datetime.datetime.now()
 
@@ -15,7 +16,7 @@ test_a_path = "data/test_a.csv"
 validation_path = "data/_test_offline.csv"
 
 
-pu_thresh_a = 0.5 #PU threshold for testa
+pu_thresh_a = 0.87 #PU threshold for testa
 pu_thresh_b = 0.85 #PU threshold for testb
 seg_date = 20180215
 ################################################################################
@@ -23,7 +24,7 @@ seg_date = 20180215
 debug = False
 ################################################################################
 
-def init_train(clf, eval = True, save_score = True):
+def init_train(clf, eval = True, save_score = True, save_model = True):
     over_sampling = False
 
     start = time.time()
@@ -33,9 +34,11 @@ def init_train(clf, eval = True, save_score = True):
     train = pd.read_csv(train_path)
     if over_sampling:
         train = over_sampling(train, 0.2)
-
     feature, label = split_train_label(train)
     clf.fit(feature, label)
+    if save_model:
+        joblib.dump(clf, score_path + "inti_model.pkl")
+        print("\n# Model dumped")
     clear_mermory(feature, label, train_path)
     print("\n# >>>>Duration<<<< : {}min ".format(round((time.time()-start)/60,2)))
 
@@ -60,7 +63,7 @@ def init_train(clf, eval = True, save_score = True):
 
     return clf, train, roc
 
-def positive_unlabel(clf, train, pu_thresh_a, eval = True, save_score = True):
+def positive_unlabel(clf, train, pu_thresh_a, eval = True, save_score = True, save_model = True):
     #PU
     start = time.time()
     print("\n# START PU - TESTA , PU_thresh_a = {}".format(pu_thresh_a))
@@ -69,6 +72,9 @@ def positive_unlabel(clf, train, pu_thresh_a, eval = True, save_score = True):
     _train = file_merge(train, pu_black, "date")
     _feature, _label = split_train_label(_train)
     clf.fit(_feature, _label)
+    if save_model:
+        joblib.dump(clf, score_path + "pu_model.pkl")
+        print("\n# Model dumped")
     clear_mermory(_feature, _label, train, pu_black, test_a_path, test_a)
     print("\n# >>>>Duration<<<< : {}min ".format(round((time.time()-start)/60,2)))
 
@@ -93,7 +99,7 @@ def positive_unlabel(clf, train, pu_thresh_a, eval = True, save_score = True):
 
     return _train, roc
 
-def validation_black(clf, train, save_score = True):
+def validation_black(clf, train, save_score = True, save_model = True):
     #Feed validation black label Back
     print("\n# Feed Validation Black Label Back")
     start = time.time()
@@ -104,6 +110,9 @@ def validation_black(clf, train, save_score = True):
     _train = file_merge(train, validation_black, "date")
     _feature, _label = split_train_label(_train)
     clf.fit(_feature, _label)
+    if save_model:
+        joblib.dump(clf, score_path + "val_model.pkl")
+        print("\n# Model dumped")
     print("\n# >>>>Duration<<<< : {}min ".format(round((time.time()-start)/60,2)))
 
     if save_score:
@@ -154,12 +163,13 @@ def part_fit(clf, train, seg_date, pu_thresh_b, eval = True, save_score = True):
         roc = cv_fold(clf, _train, slice_interval)
         return roc
 
-    return
+    no_roc = "no eval"
+    return no_roc
 
 def pu_a():
     _clf = XGBClassifier(max_depth = 4, n_estimators = 480, subsample = 0.8, gamma = 0.1,
                     min_child_weight = 1, scale_pos_weight = 1,
-                    colsample_bytree = 0.8, learning_rate = 0.06, n_jobs = -1)
+                    colsample_bytree = 0.8, learning_rate = 0.05, n_jobs = -1)
 
     clf, train, roc_init = init_train(_clf)
     pu_train, roc_pu = positive_unlabel(clf, train, pu_thresh_a)
@@ -170,13 +180,13 @@ def pu_a():
 
     return pu_train
 
-def pu_b(pu_train, pu_test_b = True, eval = True):
+def pu_b(pu_train, pu_test_b, eval):
     _clf = XGBClassifier(max_depth = 4, n_estimators = 480, subsample = 0.8, gamma = 0.1,
                     min_child_weight = 1, scale_pos_weight = 1,
                     colsample_bytree = 0.8, learning_rate = 0.06, n_jobs = -1)
 
     if pu_test_b:
-        roc_part = part_fit(_clf, pu_train, seg_date, pu_thresh_b, eval = eval)
+        roc_part = part_fit(_clf, pu_train, seg_date, pu_thresh_b, eval)
         log_parmas(_clf, params_path, roc_part = round(roc_part,6), pu_thresh_b = pu_thresh_b, seg_date = seg_date, score_path = score_path)
 
     return

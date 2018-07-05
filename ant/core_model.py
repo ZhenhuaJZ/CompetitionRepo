@@ -28,7 +28,7 @@ def grid_search_roc(clf, train, test, params, log_path = ""):
 				print("# Best paramter found")
 				best_clf = clone(clf)
 				best_auc = auc
-	if log_path != "":
+	if log_path != "" :
 		log_parmas(best_clf, log_path)
 	print(best_clf)
 	return best_clf
