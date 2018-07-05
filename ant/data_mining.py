@@ -212,6 +212,12 @@ def pu_b(train, pu_test_b, eval):
     return
 
 def main():
+
+    val = pd.read_csv(train_path)
+    _train_data, _test_offline =  test_train_split_by_date(val, 20171025, 20171105 )
+    _train_data.to_csv("train_val.csv", index = None)
+    sys.exit()
+
     os.makedirs(score_path)
     print("\n# Make dirs in {}".format(score_path))
 
