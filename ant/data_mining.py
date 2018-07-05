@@ -16,10 +16,10 @@ validation_path = "data/validation.csv"
 test_b_path = "data/test_b.csv"
 test_a_path = "data/test_a.csv"
 
-over_samp = True
-over_samp_ratio = 0.2
+over_samp = False
+over_samp_ratio = 0.1
 pu_unlabel = 0.5
-pu_thresh_a = 0.85 #PU threshold for testa
+pu_thresh_a = 0.80 #PU threshold for testa
 pu_thresh_b = 0.85 #PU threshold for testb
 seg_date = 20180215
 ################################################################################
@@ -69,10 +69,15 @@ def init_train(clf, eval = True, save_score = True, save_model = True):
     print("\n# Start Traing")
     print("\n# {}".format(clf))
     train = pd.read_csv(train_path)
-    print(len(train))
+
     if over_samp:
         train = over_sampling(train, over_samp_ratio)
-    print(len(train))
+
+    validation_path = "data/validation.csv"
+    validation = pd.read_csv(validation_path)
+
+    params = { "gamma" : [0,0.1]}
+    clf = grid_search_roc(clf, train, validation, params)
     feature, label = split_train_label(train)
     clf.fit(feature, label)
     if save_model:
@@ -183,14 +188,14 @@ def pu_a():
     _, train, roc_pua = positive_unlabel_learning(clf, test_a_path, train, pu_thresh_a)
 
     # TODO: Fine tunning
-    _clf.set_params(n_estimators = 5, learning_rate = 0.05)
+    _clf.set_params(n_estimators = 5, learning_rate = 0.08, subsample = 0.7)
 
     print(_clf)
 
     _train = validation_black(_clf, train)
 
     log_parmas(_clf, params_path, roc_init = round(roc_init,6),roc_unlabel = round(roc_unlabel,6),
-                roc_pua = round(roc_pua,6), pu_thresh_a = pu_thresh_a,  pu_unlabel = pu_unlabel, score_path = score_path)
+                roc_pua = round(roc_pua,6), pu_thresh_a = pu_thresh_a,  pu_unlabel = pu_unlabel, score_path = score_path, over_samp = over_samp, over_samp_ratio = over_samp_ratio)
 
     return _train
 
