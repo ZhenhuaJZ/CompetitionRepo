@@ -16,8 +16,8 @@ validation_path = "data/validation.csv"
 test_b_path = "data/test_b.csv"
 test_a_path = "data/test_a.csv"
 
-over_sampling = True
-under_samp_ratio = 0.2
+over_samp = True
+over_samp_ratio = 0.2
 pu_unlabel = 0.5
 pu_thresh_a = 0.85 #PU threshold for testa
 pu_thresh_b = 0.85 #PU threshold for testb
@@ -70,8 +70,8 @@ def init_train(clf, eval = True, save_score = True, save_model = True):
     print("\n# {}".format(clf))
     train = pd.read_csv(train_path)
     print(len(train))
-    if over_sampling:
-        train = over_sampling(train, under_samp_ratio)
+    if over_samp:
+        train = over_sampling(train, over_samp_ratio)
     print(len(train))
     feature, label = split_train_label(train)
     clf.fit(feature, label)
