@@ -23,7 +23,7 @@ partial_rate = 0.4
 debug = False
 ################################################################################
 
-def init_train(clf, eval = True, save_score = False):
+def init_train(clf, eval = True, save_score = True):
     over_sampling = False
 
     start = time.time()
@@ -61,7 +61,7 @@ def init_train(clf, eval = True, save_score = False):
 
     return clf, train, roc
 
-def positive_unlabel(clf, train, pu_thresh_a, eval = True, save_score = False):
+def positive_unlabel(clf, train, pu_thresh_a, eval = True, save_score = True):
     #PU
     start = time.time()
     print("\n# START PU - TESTA , PU_thresh_a = {}".format(pu_thresh_a))
@@ -155,22 +155,22 @@ def pu_a():
                     min_child_weight = 1, scale_pos_weight = 1,
                     colsample_bytree = 0.8, learning_rate = 0.08, n_jobs = -1)
 
-    clf, train, roc_init = init_train(_clf, save_score = True)
-    pu_train, roc_pu = positive_unlabel(clf, train, pu_thresh_a, save_score = True)
+    clf, train, roc_init = init_train(_clf)
+    pu_train, roc_pu = positive_unlabel(clf, train, pu_thresh_a)
     # TODO: FINE TUNING CLF2
-    pu_train = validation_black(_clf, pu_train, save_score = True)
+    pu_train = validation_black(_clf, pu_train)
     log_parmas(_clf, params_path, score_path = score_path, roc_init = round(roc_init,6),
                 roc_pu = round(roc_pu,6),pu_thresh_a = pu_thresh_a)
 
     return pu_train
 
 def pu_b(pu_train, pu_test_b = True):
-    _clf = XGBClassifier(max_depth = 4, n_estimators = 4, subsample = 0.8, gamma = 0.1,
+    _clf = XGBClassifier(max_depth = 4, n_estimators = 5, subsample = 0.8, gamma = 0.1,
                     min_child_weight = 1, scale_pos_weight = 1,
                     colsample_bytree = 0.8, learning_rate = 0.08, n_jobs = -1)
 
     if pu_test_b:
-        roc_part = part_fit(_clf, pu_train, partial_rate, pu_thresh_b, save_score = True)
+        roc_part = part_fit(_clf, pu_train, partial_rate, pu_thresh_b, eval = True)
         log_parmas(_clf, params_path, score_path = score_path, roc_part = round(roc_part,6),
                     pu_thresh_b = pu_thresh_b,  partial_rate = partial_rate)
 
