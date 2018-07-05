@@ -23,5 +23,10 @@ for dtype in ['float','int','object']:
     mean_usage_mb = mean_usage_b / 1024 ** 2
     print("Average memory usage for {} columns: {:03.2f} MB".format(dtype,mean_usage_mb))
 """
-from xgboost import XGBClassifier
-xgb = XGBClassifier(n_estimators = 1)
+di = {"a" : 1, "b" : 2, "c" :3}
+
+print(di)
+
+t = [(k,di[k]) for k in sorted(di.keys())]
+
+print(t[0][1])

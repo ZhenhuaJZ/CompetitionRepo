@@ -161,7 +161,7 @@ def pu_a():
 
     clf, train, roc_init = init_train(_clf, save_score = True)
     pu_train, roc_pu = positive_unlabel(clf, train, pu_thresh_a, save_score = True)
-    return pu_train, roc_init, roc_pu
+    return _clf, pu_train, roc_init, roc_pu
 
 def pu_b(pu_train, pu_test_b = True):
     _clf = XGBClassifier(max_depth = 4, n_estimators = 480, subsample = 0.8, gamma = 0.1,
@@ -170,6 +170,7 @@ def pu_b(pu_train, pu_test_b = True):
     if pu_test_b:
         pu_train, roc_part = part_fit(_clf, pu_train, partial_rate, pu_thresh_b, save_score = True)
     validation_black(_clf, pu_train, save_score = True)
+    return _clf
 
 def main():
     os.makedirs(score_path)
@@ -177,15 +178,18 @@ def main():
 
     # clf, train, roc_init = init_train(save_score = True)
     # pu_train, roc_pu = positive_unlabel(clf, train, pu_thresh_a, save_score = True)
-    pu_train, roc_init, roc_pu = pu_a()
+    clf_pua, pu_train, roc_init, roc_pu = pu_a()
 
     # part_train, roc_part = part_fit(clf, pu_train, partial_rate, pu_thresh_b, save_score = True)
     # validation_black(clf, part_train, save_score = True)
-    pu_b(pu_train, pu_test_b = True)
+    clf_pub = pu_b(pu_train, pu_test_b = True)
 
     if not debug:
-        log_parmas(clf, params_path, score_path = score_path, roc_init = round(roc_init,6), roc_pu = round(roc_pu,6),
-                    roc_part = round(roc_part,6), pu_thresh_a = pu_thresh_a, pu_thresh_b = pu_thresh_b,
+        log_parmas(clf_pua, params_path, score_path = score_path, roc_init = round(roc_init,6), roc_pu = round(roc_pu,6),
+                    roc_part = round(roc_part,6), pu_thresh_a = pu_thresh_a)
+
+        log_parmas(clf_pub, params_path, score_path = score_path, roc_init = round(roc_init,6), roc_pu = round(roc_pu,6),
+                    roc_part = round(roc_part,6), pu_thresh_b = pu_thresh_b,
                     partial_rate = partial_rate)
 
 if __name__ == '__main__':
