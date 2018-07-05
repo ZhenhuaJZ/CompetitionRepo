@@ -57,8 +57,8 @@ def partical_fit(data, start_y_m_d, sort_by = ""):
     if sort_by != "":
         data = data.sort_values(by = str(sort_by))
         print("\n# Sort data in <{}> order".format(sort_by))
-    data_seg_1 = data[(data["date"] >= start_y_m_d)]
-    data_seg_2 = data[(data["date"] < start_y_m_d)]
+    data_seg_1 = data[(data["date"] < start_y_m_d)]
+    data_seg_2 = data[(data["date"] >= start_y_m_d)]
     #partical_loc = int(len(data) * feed_ratio)
     #data_seg_1 = data[:partical_loc]
     #data_seg_2 = data[partical_loc:]

@@ -165,7 +165,7 @@ def pu_a():
     pu_train, roc_pu = positive_unlabel(clf, train, pu_thresh_a)
     # TODO: FINE TUNING CLF2
     pu_train = validation_black(_clf, pu_train)
-    log_parmas(_clf, params_path, score_path = score_path, roc_init = round(roc_init,6),
+    log_parmas(_clf, params_path, roc_init = round(roc_init,6),
                 roc_pu = round(roc_pu,6),pu_thresh_a = pu_thresh_a)
 
     return pu_train
@@ -177,8 +177,7 @@ def pu_b(pu_train, pu_test_b = True, eval = True):
 
     if pu_test_b:
         roc_part = part_fit(_clf, pu_train, seg_date, pu_thresh_b, eval = eval)
-        log_parmas(_clf, params_path, score_path = score_path,
-                    roc_part = round(roc_part,6), pu_thresh_b = pu_thresh_b, seg_date = seg_date)
+        log_parmas(_clf, params_path, roc_part = round(roc_part,6), pu_thresh_b = pu_thresh_b, seg_date = seg_date)
 
     return
 
