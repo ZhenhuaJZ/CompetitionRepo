@@ -145,8 +145,7 @@ def part_fit(clf, train, seg_date, pu_thresh_b, eval = True, save_score = True):
 
     if eval:
         #CV -5 Folds seg by date
-        _day1 = []
-        _day2 = []
+        _day = []
         interval = int(len(_train["date"])/5)
         for i in range(6):
             _day.append(_train["date"].iloc[interval*i])
