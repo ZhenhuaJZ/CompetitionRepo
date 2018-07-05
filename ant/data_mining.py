@@ -23,7 +23,7 @@ pu_thresh_a = 0.50 #PU threshold for testa
 pu_test_b = False
 pu_thresh_b = 0.85 #PU threshold for testb
 seg_date = 20180215
-params = { "n_estimators" : [3,4], "learning_rate" : [0.07, 0.06]} # params = None "subsample" : [0.7, 0.8]
+params = { "n_estimators" : [450,480], "learning_rate" : [0.07, 0.06]} # params = None "subsample" : [0.7, 0.8]
 
 
 def positive_unlabel_learning(clf, data_path, train, thresh, eval = True, save_score = True, prefix = "pu"):
@@ -172,7 +172,7 @@ def part_fit(clf, train, seg_date, pu_thresh_b, eval = True, save_score = True):
 
 def pu_a():
 
-    _clf = XGBClassifier(max_depth = 4, n_estimators = 4, subsample = 0.8, gamma = 0,
+    _clf = XGBClassifier(max_depth = 4, n_estimators = 480, subsample = 0.8, gamma = 0,
                     min_child_weight = 1, scale_pos_weight = 1,
                     colsample_bytree = 0.8, learning_rate = 0.07, n_jobs = -1)
 
@@ -197,7 +197,7 @@ def pu_a():
     return _train
 
 def pu_b(train, pu_test_b, eval):
-    _clf = XGBClassifier(max_depth = 4, n_estimators = 450, subsample = 0.8, gamma = 0,
+    _clf = XGBClassifier(max_depth = 4, n_estimators = 480, subsample = 0.8, gamma = 0,
                     min_child_weight = 1, scale_pos_weight = 1,
                     colsample_bytree = 0.8, learning_rate = 0.06, n_jobs = -1)
 
