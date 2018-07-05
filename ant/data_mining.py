@@ -20,12 +20,10 @@ over_samp = True
 over_samp_ratio = 0.14
 pu_unlabel = 0.5
 pu_thresh_a = 0.60 #PU threshold for testa
+pu_test_b = True
 pu_thresh_b = 0.85 #PU threshold for testb
 seg_date = 20180215
-################################################################################
-## DEBUG:
-debug = False
-################################################################################
+params = None #{ "gamma" : [0, 0.1], "subsample" : [0.7, 0.8] } # params = None
 
 
 def positive_unlabel_learning(clf, data_path, train, thresh, eval = True, prefix = "pu"):
@@ -50,7 +48,7 @@ def positive_unlabel_learning(clf, data_path, train, thresh, eval = True, prefix
     if eval:
 
         print("\n# EVAL PU")
-        validation_path = "data/validation.csv"
+
         validation = pd.read_csv(validation_path)
         val_feature, val_label = split_train_label(validation)
         val_probs = clf.predict_proba(val_feature)
@@ -111,7 +109,6 @@ def validation_black(clf, train, save_score = True, save_model = True):
     #Feed validation black label Back
     print("\n# Feed Validation Black Label Back")
     start = time.time()
-    validation_path = "data/validation.csv"
     validation = pd.read_csv(validation_path)
     validation_black = validation.loc[validation["label"] == 1]
     print("\n# Found <{}> black instances".format(len(validation_black)))
@@ -175,12 +172,10 @@ def part_fit(clf, train, seg_date, pu_thresh_b, eval = True, save_score = True):
 
 def pu_a():
 
-    _clf = XGBClassifier(max_depth = 4, n_estimators = 480, subsample = 0.7, gamma = 0,
+    _clf = XGBClassifier(max_depth = 4, n_estimators = 4, subsample = 0.7, gamma = 0,
                     min_child_weight = 1, scale_pos_weight = 1,
                     colsample_bytree = 0.8, learning_rate = 0.06, n_jobs = -1)
 
-    params = { "gamma" : [0, 0.1], "subsample" : [0.7, 0.8] }
-    #params = params
     clf, train, roc_init = init_train(_clf, params = params)
 
     print("\n# START PU - UNLABEL , PU_thresh_unlabel = {}".format(pu_unlabel))
@@ -190,7 +185,7 @@ def pu_a():
     _, train, roc_pua = positive_unlabel_learning(clf, test_a_path, train, pu_thresh_a)
 
     # TODO: Fine tunning
-    _clf.set_params(n_estimators = 480, learning_rate = 0.06, subsample = 0.8)
+    _clf.set_params(n_estimators = 4, learning_rate = 0.06, subsample = 0.8)
 
     print(_clf)
 
@@ -202,7 +197,7 @@ def pu_a():
     return _train
 
 def pu_b(train, pu_test_b, eval):
-    _clf = XGBClassifier(max_depth = 4, n_estimators = 450, subsample = 0.8, gamma = 0.1,
+    _clf = XGBClassifier(max_depth = 4, n_estimators = 4, subsample = 0.8, gamma = 0.1,
                     min_child_weight = 1, scale_pos_weight = 1,
                     colsample_bytree = 0.8, learning_rate = 0.06, n_jobs = -1)
 
@@ -218,7 +213,7 @@ def main():
     print("\n# Make dirs in {}".format(score_path))
 
     train = pu_a()
-    pu_b(train, pu_test_b = False, eval = False)
+    pu_b(train, pu_test_b, eval = False)
 
 if __name__ == '__main__':
     main()
