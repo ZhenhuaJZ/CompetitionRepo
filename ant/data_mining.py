@@ -16,7 +16,7 @@ test_a_path = "data/test_a.csv"
 validation_path = "data/_test_offline.csv"
 
 
-pu_thresh_a = 0.87 #PU threshold for testa
+pu_thresh_a = 0.95 #PU threshold for testa
 pu_thresh_b = 0.85 #PU threshold for testb
 seg_date = 20180215
 ################################################################################
