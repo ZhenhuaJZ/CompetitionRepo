@@ -53,19 +53,19 @@ def positive_unlabel_learning(classifier, unlabel_data, threshold):
 	return black_unlabel_data
 
 def partical_fit(data, start_y_m_d, sort_by = ""):
-	print("\n# Total length :", len(data))
-	if sort_by != "":
-		data = data.sort_values(by = str(sort_by))
-		print("\n# Sort data in <{}> order".format(sort_by))
+    print("\n# Total length :", len(data))
+    if sort_by != "":
+        data = data.sort_values(by = str(sort_by))
+        print("\n# Sort data in <{}> order".format(sort_by))
     data_seg_1 = data[(data["date"] >= start_y_m_d)
     data_seg_2 = data[(data["date"] < start_y_m_d)
-	#partical_loc = int(len(data) * feed_ratio)
-	#data_seg_1 = data[:partical_loc]
-	#data_seg_2 = data[partical_loc:]
-	print("\n# length of data_seg_1 :", len(data_seg_1))
-	print("# length of data_seg_2 :", len(data_seg_2))
-	clear_mermory(data)
-	return data_seg_1, data_seg_2
+    #partical_loc = int(len(data) * feed_ratio)
+    #data_seg_1 = data[:partical_loc]
+    #data_seg_2 = data[partical_loc:]
+    print("\n# length of data_seg_1 :", len(data_seg_1))
+    print("# length of data_seg_2 :", len(data_seg_2))
+    clear_mermory(data)
+    return data_seg_1, data_seg_2
 
 def cv_fold(clf, train, slice_interval):
 	roc_list = []
