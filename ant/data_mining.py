@@ -181,7 +181,7 @@ def pu_a():
 
     #params = { "colsample_bytree" : [0.8, 0.7] }
     #params = params
-    clf, train, roc_init = init_train(_clf, params = params)
+    clf, train, roc_init = init_train(_clf)
 
     print("\n# START PU - UNLABEL , PU_thresh_unlabel = {}".format(pu_unlabel))
     clf, train, roc_unlabel = positive_unlabel_learning(clf, unlabel_path, train, pu_unlabel)
