@@ -139,7 +139,7 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
     if cv:
         cv_clf = clf
         print("\n# 5-Fold CV (Evaluation Classifier)")
-        roc_1_mean, roc_2_mean = cv_fold(cv_clf, pu_train_data, fold_time_split, params_path)
+        roc_1_mean, roc_2_mean = cv_fold(cv_clf, pu_train_data, fold_time_split)
 
     offline_probs = clf.predict_proba(_test_offline_feature)
     #evl pu model

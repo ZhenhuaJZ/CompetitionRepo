@@ -2,7 +2,7 @@ import pandas as pd
 from xgboost import XGBClassifier
 from lib.data_processing import *
 from lib.model_performance import *
-from core_model import positive_unlabel_learning, partical_fit
+from core_model import positive_unlabel_learning, partical_fit, cv_fold
 import time, sys, datetime
 now = datetime.datetime.now()
 
