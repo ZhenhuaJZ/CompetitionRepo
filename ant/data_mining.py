@@ -148,6 +148,7 @@ def part_fit(clf, train, seg_date, pu_thresh_b, eval = True, save_score = True):
         #CV -5 Folds seg by date
         inter = []
         for i in range(0,5,1):
+            print(i)
             interval = (int(len(_train["date"])/5))
             inter.append(_train["date"].iloc[interval*i])
         print(inter)
