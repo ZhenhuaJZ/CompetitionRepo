@@ -62,7 +62,7 @@ def positive_unlabel_learning(clf, data_path, train, thresh, eval = True, prefix
     no_roc = "n/a"
     return clf, _train, no_roc
 
-def init_train(clf, eval = True, save_score = True, save_model = True):
+def init_train(clf, eval = True, save_score = True, save_model = True, params = {}):
 
     start = time.time()
     #Train
@@ -73,11 +73,11 @@ def init_train(clf, eval = True, save_score = True, save_model = True):
     if over_samp:
         train = over_sampling(train, over_samp_ratio)
 
-    validation_path = "data/validation.csv"
-    validation = pd.read_csv(validation_path)
+    if len(params):
+        validation_path = "data/validation.csv"
+        validation = pd.read_csv(validation_path)
+        clf = grid_search_roc(clf, train, validation, params)
 
-    params = { "gamma" : [0, 0.2,0.3]}
-    clf = grid_search_roc(clf, train, validation, params)
     feature, label = split_train_label(train)
     clf.fit(feature, label)
     if save_model:
@@ -179,7 +179,8 @@ def pu_a():
                     min_child_weight = 1, scale_pos_weight = 1,
                     colsample_bytree = 0.8, learning_rate = 0.06, n_jobs = -1)
 
-    clf, train, roc_init = init_train(_clf)
+    params = { "gamma" : [0, 0.2,0.3]}
+    clf, train, roc_init = init_train(_clf, params)
 
     print("\n# START PU - UNLABEL , PU_thresh_unlabel = {}".format(pu_unlabel))
     clf, train, roc_unlabel = positive_unlabel_learning(clf, unlabel_path, train, pu_unlabel)

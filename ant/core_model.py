@@ -3,6 +3,7 @@ from sklearn.pipeline import Pipeline, make_pipeline
 from sklearn.preprocessing import StandardScaler, Normalizer, MinMaxScaler
 from lib.data_processing import *
 from lib.model_performance import *
+from sklearn.base import clone
 import datetime, time
 import sys
 now = datetime.datetime.now()
