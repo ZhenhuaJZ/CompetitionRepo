@@ -180,8 +180,10 @@ def pu_a():
     _, train, roc_pua = positive_unlabel_learning(clf, test_a_path, train, pu_thresh_a)
 
     # TODO: Fine tunning
-    _clf.set_params(n_estimators = 400, learning_rate = 0.05)
+    _clf.set_params(n_estimators = 5, learning_rate = 0.05)
 
+    print(_clf)
+    
     _train = validation_black(_clf, train)
 
     log_parmas(_clf, params_path, roc_init = round(roc_init,6),roc_unlabel = round(roc_unlabel,6),
