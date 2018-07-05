@@ -15,7 +15,7 @@ test_a_path = "data/test_a.csv"
 validation_path = "data/_test_offline.csv"
 
 
-pu_thresh_a = 0.8 #PU threshold for testa
+pu_thresh_a = 0.80 #PU threshold for testa
 pu_thresh_b = 0.80 #PU threshold for testb
 partial_rate = 0.4
 ################################################################################
@@ -29,7 +29,7 @@ def init_train(eval = True, save_score = False):
     start = time.time()
     clf = XGBClassifier(max_depth = 4, n_estimators = 480, subsample = 0.8, gamma = 0.1,
                     min_child_weight = 1, scale_pos_weight = 1,
-                    colsample_bytree = 0.8, learning_rate = 0.06, n_jobs = -1)
+                    colsample_bytree = 0.8, learning_rate = 0.08, n_jobs = -1)
     #Train
     print("\n# Start Traing")
     print("\n# {}".format(clf))
