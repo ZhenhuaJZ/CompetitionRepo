@@ -5,6 +5,7 @@ from lib.model_performance import *
 from core_model import positive_unlabel_learning, partical_fit, cv_fold
 from sklearn.externals import joblib
 import time, sys, datetime
+from copy import copy
 now = datetime.datetime.now()
 
 score_path = "log/last_3_days/{}d_{}h_{}m/".format(now.day, now.hour, now.minute)
@@ -17,7 +18,7 @@ validation_path = "data/_test_offline.csv"
 filename = "5d_17h_9m"
 
 
-pu_thresh_a_range = [0.93, 0.92, 0.91, 0.9, 0.89, 0.88, 0.87]
+pu_thresh_a_range = [0.92, 0.91, 0.9, 0.89, 0.88, 0.87]
 
 def load_model():
 
@@ -27,9 +28,9 @@ def load_model():
 
     clf = joblib.load(model_path)
     for pu_thresh_a in pu_thresh_a_range:
-
+        _test_a = copy(test_a)
         print("\n# Tuning {}".format(pu_thresh_a) )
-        pu_black = positive_unlabel_learning(clf, test_a, pu_thresh_a)
+        pu_black = positive_unlabel_learning(clf, _test_a, pu_thresh_a)
         _train = file_merge(train, pu_black, "date")
         _feature, _label = split_train_label(_train)
         #to do fine tunning
