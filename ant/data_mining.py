@@ -203,7 +203,7 @@ def pu_b(train, pu_test_b, eval):
 def main():
     val = pd.read_csv(train_path)
     train_data, _test_offline =  test_train_split_by_date(val, 20171025, 20171105)
-    _test_offline.to_csv("data/validation.csv", header = None)
+    _test_offline.to_csv("data/validation.csv", index = None)
 
     sys.exit()
     os.makedirs(score_path)
