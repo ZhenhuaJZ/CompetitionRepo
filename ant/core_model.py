@@ -111,12 +111,14 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
     # ##########################Edit data#######################################
     _train_data = pd.read_csv(train_path)
     #change -1 label to 1
-    _train_data = _train_data.replace({"label" : -1}, value = 1)
+    _train_data.loc[_train_data["label"] == -1] = 1 #change -1 label to 1
+    #_train_data = _train_data.replace({"label" : -1}, value = 1)
     #Split train and offine test
     _train_data, _test_offline =  test_train_split_by_date(_train_data, offline_validation[0], offline_validation[1], params_path)
-    #_train_data.to_csv("_train_data.csv", index = None)
-    #_test_offline.to_csv("_test_offline.csv", index = None)
-    #sys.exit()
+
+    _train_data.to_csv("_train_data_adding_1.csv", index = None)
+    _test_offline.to_csv("_test_offline_adding_1.csv", index = None)
+    sys.exit()
     #under_sampling
     if under_samp:
         print("\n# Under_sampling")
