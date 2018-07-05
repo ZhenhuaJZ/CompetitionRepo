@@ -165,15 +165,15 @@ def pu_a():
 
     return pu_train
 
-def pu_b(pu_train, pu_test_b = True):
+def pu_b(pu_train, pu_test_b = True, eval = True):
     _clf = XGBClassifier(max_depth = 4, n_estimators = 5, subsample = 0.8, gamma = 0.1,
                     min_child_weight = 1, scale_pos_weight = 1,
                     colsample_bytree = 0.8, learning_rate = 0.08, n_jobs = -1)
 
     if pu_test_b:
-        roc_part = part_fit(_clf, pu_train, partial_rate, pu_thresh_b, eval = True)
+        roc_part = part_fit(_clf, pu_train, partial_rate, pu_thresh_b, eval = eval)
         log_parmas(_clf, params_path, score_path = score_path, roc_part = round(roc_part,6),
-                    pu_thresh_b = pu_thresh_b,  partial_rate = partial_rate)
+                pu_thresh_b = pu_thresh_b, partial_rate = partial_rate)
 
     return
 
@@ -182,7 +182,7 @@ def main():
     print("\n# Make dirs in {}".format(score_path))
 
     pu_train = pu_a()
-    pu_b(pu_train, pu_test_b = True)
+    pu_b(pu_train, pu_test_b = True, eval = True)
 
 if __name__ == '__main__':
     main()
