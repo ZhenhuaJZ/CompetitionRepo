@@ -172,8 +172,8 @@ def pu_b(pu_train, pu_test_b = True, eval = True):
 
     if pu_test_b:
         roc_part = part_fit(_clf, pu_train, partial_rate, pu_thresh_b, eval = eval)
-        log_parmas(_clf, params_path, score_path = score_path, roc_part = round(roc_part,6),
-                pu_thresh_b = pu_thresh_b, partial_rate = partial_rate)
+        log_parmas(_clf, params_path, score_path = score_path,
+                    roc_part = round(roc_part,6), pu_thresh_b = pu_thresh_b, partial_rate = partial_rate)
 
     return
 
