@@ -63,7 +63,7 @@ def init_train(clf, eval = True, save_score = True, save_model = True):
 
     return clf, train, roc
 
-def positive_unlabel(clf, train, pu_thresh_a, eval = True, save_score = True, save_model = True):
+def positive_unlabel(clf, train, pu_thresh_a, eval = True, save_score = True):
     #PU
     start = time.time()
     print("\n# START PU - TESTA , PU_thresh_a = {}".format(pu_thresh_a))
@@ -72,9 +72,6 @@ def positive_unlabel(clf, train, pu_thresh_a, eval = True, save_score = True, sa
     _train = file_merge(train, pu_black, "date")
     _feature, _label = split_train_label(_train)
     clf.fit(_feature, _label)
-    if save_model:
-        joblib.dump(clf, score_path + "pu_model.pkl")
-        print("\n# Model dumped")
     clear_mermory(_feature, _label, train, pu_black, test_a_path, test_a)
     print("\n# >>>>Duration<<<< : {}min ".format(round((time.time()-start)/60,2)))
 
