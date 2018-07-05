@@ -16,7 +16,7 @@ test_a_path = "data/test_a.csv"
 validation_path = "data/_test_offline.csv"
 
 
-pu_thresh_a = 0.7 #PU threshold for testa
+pu_thresh_a = 0.85 #PU threshold for testa
 pu_thresh_b = 0.85 #PU threshold for testb
 seg_date = 20180215
 ################################################################################
@@ -38,6 +38,7 @@ def init_train(clf, eval = True, save_score = True, save_model = True):
     clf.fit(feature, label)
     if save_model:
         joblib.dump(clf, score_path + "inti_model.pkl")
+        print("\n# Model dumped")
     clear_mermory(feature, label, train_path)
     print("\n# >>>>Duration<<<< : {}min ".format(round((time.time()-start)/60,2)))
 
@@ -73,6 +74,7 @@ def positive_unlabel(clf, train, pu_thresh_a, eval = True, save_score = True, sa
     clf.fit(_feature, _label)
     if save_model:
         joblib.dump(clf, score_path + "pu_model.pkl")
+        print("\n# Model dumped")
     clear_mermory(_feature, _label, train, pu_black, test_a_path, test_a)
     print("\n# >>>>Duration<<<< : {}min ".format(round((time.time()-start)/60,2)))
 
@@ -110,6 +112,7 @@ def validation_black(clf, train, save_score = True, save_model = True):
     clf.fit(_feature, _label)
     if save_model:
         joblib.dump(clf, score_path + "val_model.pkl")
+        print("\n# Model dumped")
     print("\n# >>>>Duration<<<< : {}min ".format(round((time.time()-start)/60,2)))
 
     if save_score:
