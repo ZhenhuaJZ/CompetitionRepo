@@ -6,6 +6,7 @@ from lib.model_performance import *
 from sklearn.base import clone
 import datetime, time
 import sys
+from copy import copy
 now = datetime.datetime.now()
 
 def grid_search_roc(clf, train, test, params, log_path = ""):
@@ -13,22 +14,25 @@ def grid_search_roc(clf, train, test, params, log_path = ""):
 	test_feature, test_label = split_train_label(test)
 	best_clf = clone(clf)
 	best_auc = 0
+	best_param = {}
+	start = time.time()
 	for para in params:
 		for i in params[para]:
 			clf = clone(best_clf)
 			parameter = {para : i}
-			print("\n#"+"*"*20+" Current parameter:"+"*"*20)
-			print(parameter)
+			print("\n#"+"*"*20+" Current parameter: {}".format(parameter)+" "+"*"*20)
+			print("\n# Current best parameter ", best_param)
 			clf.set_params(**parameter)
 			clf.fit(feature,label)
 			score = clf.predict_proba(test_feature)[:,1]
-			print(score)
 			auc = offline_model_performance_2(test_label,score)
 			print("\n# AUC offline performance : {}".format(auc))
 			if auc > best_auc:
 				print("# Best paramter found")
 				best_clf = clone(clf)
 				best_auc = auc
+				best_param["{}".format(para)] = i
+			print("\n# >>>>Duration<<<< : {}min ".format(round((time.time()-start)/60,2)))
 	if log_path != "" :
 		log_parmas(best_clf, log_path)
 	print(best_clf)
