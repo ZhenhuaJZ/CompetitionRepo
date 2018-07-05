@@ -175,12 +175,13 @@ def part_fit(clf, train, seg_date, pu_thresh_b, eval = True, save_score = True):
 
 def pu_a():
 
-    _clf = XGBClassifier(max_depth = 4, n_estimators = 480, subsample = 0.8, gamma = 0.1,
+    _clf = XGBClassifier(max_depth = 4, n_estimators = 4, subsample = 0.8, gamma = 0.1,
                     min_child_weight = 1, scale_pos_weight = 1,
                     colsample_bytree = 0.8, learning_rate = 0.06, n_jobs = -1)
 
-    params = { "gamma" : [0, 0.1, 0.2], "subsample" : [0.8, 0.7], "colsample_bytree" : [0.8, 0.7] }
-    clf, train, roc_init = init_train(_clf, params = params)
+    #params = { "gamma" : [0, 0.1, 0.2], "subsample" : [0.8, 0.7], "colsample_bytree" : [0.8, 0.7] }
+    #params = params
+    clf, train, roc_init = init_train(_clf)
 
     print("\n# START PU - UNLABEL , PU_thresh_unlabel = {}".format(pu_unlabel))
     clf, train, roc_unlabel = positive_unlabel_learning(clf, unlabel_path, train, pu_unlabel)
@@ -189,7 +190,7 @@ def pu_a():
     _, train, roc_pua = positive_unlabel_learning(clf, test_a_path, train, pu_thresh_a)
 
     # TODO: Fine tunning
-    _clf.set_params(n_estimators = 450, learning_rate = 0.09, subsample = 0.7)
+    _clf.set_params(n_estimators = 4, learning_rate = 0.09, subsample = 0.7)
 
     print(_clf)
 
