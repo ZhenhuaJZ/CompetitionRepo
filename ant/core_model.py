@@ -65,15 +65,15 @@ def partical_fit(data, feed_ratio, sort_by = ""):
 	clear_mermory(data)
 	return data_seg_1, data_seg_2
 
-def cv_fold(clf, train, fold_time_split, params_path):
+def cv_fold(clf, train, slice_interval):
 	roc_list = []
-	for i, fold in enumerate(fold_time_split):
+	for i, fold in enumerate(slice_interval):
 		#CV in 5 fold
 		start = time.time()
 		print("\n"+"##"*40)
 		print("\n# Fold {} from {} - {}".format(i, fold[0], fold[1]))
 		print("\n"+"##"*40)
-		train_data, test_offline =  test_train_split_by_date(train, offline_validation[0], offline_validation[1])
+		train_data, test_offline =  test_train_split_by_date(train, fold[0], fold[1])
 		_feature_train, _label_train = split_train_label(train_data)
 		_feature_val, _label_val = split_train_label(test_offline)
 		_clf = clf.fit(_feature_train, _label_train)

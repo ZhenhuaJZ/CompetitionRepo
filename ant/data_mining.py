@@ -145,12 +145,10 @@ def part_fit(clf, train, partial_rate, pu_thresh_b, eval = True, save_score = Tr
         clear_mermory(probs, score_seg_2, score)
 
     if eval:
+        #CV -5 Folds
+        roc = cv_fold(clf, _train)
 
-        cv_fold(clf, _train_data, fold_time_split, params_path)
-        print("TO DO CV5")
-        # TODO:  CV5
-
-    return _train
+    return _train, roc
 
 def pu_a():
     _clf = XGBClassifier(max_depth = 4, n_estimators = 4, subsample = 0.8, gamma = 0.1,
@@ -172,9 +170,9 @@ def pu_b(pu_train, pu_test_b = True):
                     colsample_bytree = 0.8, learning_rate = 0.08, n_jobs = -1)
 
     if pu_test_b:
-        part_fit(_clf, pu_train, partial_rate, pu_thresh_b, save_score = True)
-        log_parmas(_clf, params_path, score_path = score_path, pu_thresh_b = pu_thresh_b,
-                    partial_rate = partial_rate)
+        roc_part = part_fit(_clf, pu_train, partial_rate, pu_thresh_b, save_score = True)
+        log_parmas(_clf, params_path, score_path = score_path, roc_part = round(roc_part,6),
+                    pu_thresh_b = pu_thresh_b,  partial_rate = partial_rate)
 
     return
 
