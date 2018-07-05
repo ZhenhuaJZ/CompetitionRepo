@@ -146,7 +146,8 @@ def part_fit(clf, train, partial_rate, pu_thresh_b, eval = True, save_score = Tr
 
     if eval:
         #CV -5 Folds
-        roc = cv_fold(clf, _train)
+        slice_interval = [[20170905, 20170916], [20170917, 20170925], [20170926, 20171005],[20171006,20171015],[20171015,20171025]]
+        roc = cv_fold(clf, _train, slice_interval)
 
     return _train, roc
 
