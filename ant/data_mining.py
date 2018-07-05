@@ -155,7 +155,7 @@ def validation_black(clf, train, save_score = True):
     return
 
 def pu_a():
-    _clf = XGBClassifier(max_depth = 4, n_estimators = 480, subsample = 0.8, gamma = 0.1,
+    _clf = XGBClassifier(max_depth = 4, n_estimators = 4, subsample = 0.8, gamma = 0.1,
                     min_child_weight = 1, scale_pos_weight = 1,
                     colsample_bytree = 0.8, learning_rate = 0.08, n_jobs = -1)
 
@@ -164,7 +164,7 @@ def pu_a():
     return _clf, pu_train, roc_init, roc_pu
 
 def pu_b(pu_train, pu_test_b = True):
-    _clf = XGBClassifier(max_depth = 4, n_estimators = 480, subsample = 0.8, gamma = 0.1,
+    _clf = XGBClassifier(max_depth = 4, n_estimators = 4, subsample = 0.8, gamma = 0.1,
                     min_child_weight = 1, scale_pos_weight = 1,
                     colsample_bytree = 0.8, learning_rate = 0.08, n_jobs = -1)
     if pu_test_b:
