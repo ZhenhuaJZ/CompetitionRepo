@@ -182,7 +182,7 @@ def main():
     print("\n# Make dirs in {}".format(score_path))
 
     pu_train = pu_a()
-    pu_b(pu_train, pu_test_b = True, eval = False)
+    pu_b(pu_train, pu_test_b = False, eval = False)
 
 if __name__ == '__main__':
     main()
