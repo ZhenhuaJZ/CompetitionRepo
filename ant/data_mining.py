@@ -62,7 +62,7 @@ def positive_unlabel_learning(clf, data_path, train, thresh, eval = True, prefix
     no_roc = "n/a"
     return clf, _train, no_roc
 
-def init_train(clf, eval = True, save_score = True, save_model = True, params = {}):
+def init_train(clf, eval = True, save_score = True, save_model = True, params = None):
 
     start = time.time()
     #Train
@@ -73,7 +73,7 @@ def init_train(clf, eval = True, save_score = True, save_model = True, params = 
     if over_samp:
         train = over_sampling(train, over_samp_ratio)
 
-    if len(params):
+    if params != None:
         validation_path = "data/validation.csv"
         validation = pd.read_csv(validation_path)
         clf = grid_search_roc(clf, train, validation, params)
