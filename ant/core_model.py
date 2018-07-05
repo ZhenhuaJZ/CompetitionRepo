@@ -65,30 +65,30 @@ def partical_fit(data, feed_ratio, sort_by = ""):
 	clear_mermory(data)
 	return data_seg_1, data_seg_2
 
-def cv_fold(clf, _train_data, fold_time_split, params_path):
+def cv_fold(clf, train, fold_time_split, params_path):
 	roc_list = []
-	for i, offline_validation in enumerate(fold_time_split):
+	for i, fold in enumerate(fold_time_split):
 		#CV in 5 fold
 		start = time.time()
 		print("\n"+"##"*40)
-		print("\n# Fold {} from {} - {}".format(i, offline_validation[0], offline_validation[1]))
+		print("\n# Fold {} from {} - {}".format(i, fold[0], fold[1]))
 		print("\n"+"##"*40)
-		train_data, test_offline =  test_train_split_by_date(_train_data, offline_validation[0], offline_validation[1], params_path)
+		train_data, test_offline =  test_train_split_by_date(train, offline_validation[0], offline_validation[1])
 		_feature_train, _label_train = split_train_label(train_data)
 		_feature_val, _label_val = split_train_label(test_offline)
 		_clf = clf.fit(_feature_train, _label_train)
 		probs = _clf.predict_proba(_feature_val)
-		roc = offline_model_performance(_label_val, probs[:,1], params_path = params_path, fold = i)
+		roc = offline_model_performance(_label_val, probs[:,1])
 		roc_list.append(roc)
 		print("\n# >>>>Duration<<<< : {}min ".format(round((time.time()-start)/60,2)))
 	#eval performace
-	roc_1 = np.array(roc_1_list)
-	roc_1_mean = np.mean(roc_1, axis = 0)
-	roc_1_std = np.std(roc_2, axis = 0)
+	roc = np.array(roc_list)
+	roc_mean = np.mean(roc, axis = 0)
+	roc_std = np.std(roc, axis = 0)
 	print("##"*40)
-	print("\n# ROC_1(JL) :{} (+/- {:2f})".format(roc_1_mean, roc_1_std*2))
+	print("\n# ROC_1(JL) :{} (+/- {:2f})".format(roc_mean, roc_std*2))
 	print("##"*40)
-	return roc_1_mean
+	return roc_mean
 
 def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_a_path, pu_thres, cv = False, fold_time_split = None, under_samp = False, part_fit = True, partical_ratio = 0.5):
 
@@ -102,7 +102,7 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
     _train_data.loc[_train_data["label"] == -1] = 1 #change -1 label to 1
     #_train_data = _train_data.replace({"label" : -1}, value = 1)
     #Split train and offine test
-    _train_data, _test_offline =  test_train_split_by_date(_train_data, offline_validation[0], offline_validation[1], params_path)
+    _train_data, _test_offline =  test_train_split_by_date(_train_data, offline_validation[0], offline_validation[1])
 
     _train_data.to_csv("_train_data_adding_1.csv", index = None)
     _test_offline.to_csv("_test_offline_adding_1.csv", index = None)
@@ -143,8 +143,8 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
 
     offline_probs = clf.predict_proba(_test_offline_feature)
     #evl pu model
-    offline_score_1 = offline_model_performance(_test_offline_labels, offline_probs[:,1], params_path = params_path)
-    offline_score_2 = offline_model_performance_2(_test_offline_labels, offline_probs[:,1], params_path = params_path)
+    offline_score_1 = offline_model_performance(_test_offline_labels, offline_probs[:,1])
+    #offline_score_2 = offline_model_performance_2(_test_offline_labels, offline_probs[:,1])
     clear_mermory(_test_offline_feature, _test_offline_labels, offline_probs)
 
     ############################Feed val black back#############################
