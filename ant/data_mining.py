@@ -146,6 +146,7 @@ def part_fit(clf, train, partial_rate, pu_thresh_b, eval = True, save_score = Tr
 
     if eval:
 
+        cv_fold(clf, _train_data, fold_time_split, params_path)
         print("TO DO CV5")
         # TODO:  CV5
 
@@ -177,16 +178,17 @@ def pu_b(pu_train, pu_test_b = True):
 
     return
 
-
 def main():
     os.makedirs(score_path)
     print("\n# Make dirs in {}".format(score_path))
-    # clf, train, roc_init = init_train(save_score = True)
-    # pu_train, roc_pu = positive_unlabel(clf, train, pu_thresh_a, save_score = True)
+
     pu_train = pu_a()
-    # part_train, roc_part = part_fit(clf, pu_train, partial_rate, pu_thresh_b, save_score = True)
-    # validation_black(clf, part_train, save_score = True)
     pu_b(pu_train, pu_test_b = True)
 
 if __name__ == '__main__':
     main()
+
+# clf, train, roc_init = init_train(save_score = True)
+# pu_train, roc_pu = positive_unlabel(clf, train, pu_thresh_a, save_score = True)
+# part_train, roc_part = part_fit(clf, pu_train, partial_rate, pu_thresh_b, save_score = True)
+# validation_black(clf, part_train, save_score = True)

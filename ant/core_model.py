@@ -84,23 +84,16 @@ def cv_fold(clf, _train_data, fold_time_split, params_path):
 		offline_probs = _clf.predict_proba(test_offline_feature)
 		clear_mermory(test_offline, _clf)
 		cv_offline_score_1 = offline_model_performance(test_offline_labels, offline_probs[:,1], params_path = params_path, fold = i)
-		cv_offline_score_2 = offline_model_performance_2(test_offline_labels, offline_probs[:,1], params_path = params_path, fold = i)
 		roc_1_list.append(cv_offline_score_1)
-		roc_2_list.append(cv_offline_score_2)
 		print("\n# >>>>Duration<<<< : {}min ".format(round((time.time()-start)/60,2)))
 	#eval performace
-	#clear_mermory(_train_data)
 	roc_1 = np.array(roc_1_list)
-	roc_2 = np.array(roc_2_list)
 	roc_1_mean = np.mean(roc_1, axis = 0)
-	roc_2_mean = np.mean(roc_2, axis = 0)
 	roc_1_std = np.std(roc_2, axis = 0)
-	roc_2_std = np.std(roc_1, axis = 0)
 	print("##"*40)
 	print("\n# ROC_1(JL) :{} (+/- {:2f})".format(roc_1_mean, roc_1_std*2))
-	#print("\n# ROC_2 :{} (+/- {:2f})".format(roc_2_mean, roc_2_std*2))
 	print("##"*40)
-	return roc_1_mean, roc_2_mean
+	return roc_1_mean
 
 def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_a_path, pu_thres, cv = False, fold_time_split = None, under_samp = False, part_fit = True, partical_ratio = 0.5):
 
