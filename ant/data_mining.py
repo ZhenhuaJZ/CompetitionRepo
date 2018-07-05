@@ -10,9 +10,9 @@ now = datetime.datetime.now()
 score_path = "log/last_3_days/{}d_{}h_{}m/".format(now.day, now.hour, now.minute)
 params_path = "log/last_3_days/log_{}h.csv".format(now.hour)
 
-train_path = "data/train_leo.csv"  #train.csv
+train_path = "data/train_1.csv"  #train.csv
 unlabel_path = "data/unlabel.csv"
-validation_path = "data/validation.csv" #validation.csv
+validation_path = "data/validation_1.csv" #validation.csv
 test_b_path = "data/test_b.csv"
 test_a_path = "data/test_a.csv"
 
@@ -208,11 +208,6 @@ def pu_b(train, pu_test_b, eval):
     return
 
 def main():
-
-    data_up = pd.read_csv(train_path)
-    _train_data, _test_offline =  test_train_split_by_date(data_up, 20171025, 20171105)
-    _train_data.to_csv("data/train_1.csv", index = None)
-    _test_offline.to_csv("data/validation_1.csv", index = None)
     os.makedirs(score_path)
     print("\n# Make dirs in {}".format(score_path))
 
