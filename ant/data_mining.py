@@ -16,7 +16,7 @@ test_a_path = "data/test_a.csv"
 validation_path = "data/_test_offline.csv"
 
 
-pu_thresh_a = 0.95 #PU threshold for testa
+pu_thresh_a = 0.85 #PU threshold for testa
 pu_thresh_b = 0.85 #PU threshold for testb
 seg_date = 20180215
 ################################################################################
@@ -166,7 +166,7 @@ def part_fit(clf, train, seg_date, pu_thresh_b, eval = True, save_score = True):
 def pu_a():
     _clf = XGBClassifier(max_depth = 4, n_estimators = 480, subsample = 0.8, gamma = 0.1,
                     min_child_weight = 1, scale_pos_weight = 1,
-                    colsample_bytree = 0.9, learning_rate = 0.06, n_jobs = -1)
+                    colsample_bytree = 0.8, learning_rate = 0.06, n_jobs = -1)
 
     clf, train, roc_init = init_train(_clf)
     pu_train, roc_pu = positive_unlabel(clf, train, pu_thresh_a)
