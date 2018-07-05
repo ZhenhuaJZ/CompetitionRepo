@@ -10,20 +10,20 @@ now = datetime.datetime.now()
 score_path = "log/last_3_days/{}d_{}h_{}m/".format(now.day, now.hour, now.minute)
 params_path = "log/last_3_days/log_{}h.csv".format(now.hour)
 
-train_path = "data/train.csv"
+train_path = "data/train_1.csv"  #train.csv
 unlabel_path = "data/unlabel.csv"
-validation_path = "data/validation.csv"
+validation_path = "data/validation_1.csv" #validation.csv
 test_b_path = "data/test_b.csv"
 test_a_path = "data/test_a.csv"
 
 over_samp = True
-over_samp_ratio = 0.35
+over_samp_ratio = 0.1
 pu_unlabel = 0.5
-pu_thresh_a = 0.60 #PU threshold for testa
-pu_test_b = True
+pu_thresh_a = 0.50 #PU threshold for testa
+pu_test_b = False
 pu_thresh_b = 0.85 #PU threshold for testb
 seg_date = 20180215
-params = { "gamma" : [0, 0.1],  "min_child_weight" : [1, 2], "n_estimators" : [450,480]} # params = None "subsample" : [0.7, 0.8]
+params = { "n_estimators" : [3,4], "learning_rate" : [0.07, 0.06]} # params = None "subsample" : [0.7, 0.8]
 
 
 def positive_unlabel_learning(clf, data_path, train, thresh, eval = True, save_score = True, prefix = "pu"):
@@ -172,27 +172,27 @@ def part_fit(clf, train, seg_date, pu_thresh_b, eval = True, save_score = True):
 
 def pu_a():
 
-    _clf = XGBClassifier(max_depth = 4, n_estimators = 480, subsample = 0.8, gamma = 0,
+    _clf = XGBClassifier(max_depth = 4, n_estimators = 4, subsample = 0.8, gamma = 0,
                     min_child_weight = 1, scale_pos_weight = 1,
-                    colsample_bytree = 0.8, learning_rate = 0.06, n_jobs = -1)
+                    colsample_bytree = 0.8, learning_rate = 0.07, n_jobs = -1)
 
     clf, train, roc_init = init_train(_clf, params = params)
 
-    print("\n# START PU - UNLABEL , PU_thresh_unlabel = {}".format(pu_unlabel))
-    clf, train, roc_unlabel = positive_unlabel_learning(clf, unlabel_path, train, pu_unlabel, prefix = "un_pu")
+    #print("\n# START PU - UNLABEL , PU_thresh_unlabel = {}".format(pu_unlabel))
+    #clf, train, roc_unlabel = positive_unlabel_learning(clf, unlabel_path, train, pu_unlabel, prefix = "un_pu")
 
     print("\n# START PU - TESTA , PU_thresh_a = {}".format(pu_thresh_a))
     _, train, roc_pua = positive_unlabel_learning(clf, test_a_path, train, pu_thresh_a, prefix = "pua")
 
     # TODO: Fine tunning
-    _clf.set_params(n_estimators = 480, learning_rate = 0.06, subsample = 0.8)
+    #_clf.set_params(n_estimators = 4, learning_rate = 0.07, subsample = 0.8)
 
     print(_clf)
 
     _train = validation_black(_clf, train)
 
-    log_parmas(_clf, params_path, roc_init = round(roc_init,6),roc_unlabel = round(roc_unlabel,6),
-                roc_pua = round(roc_pua,6), pu_thresh_a = pu_thresh_a,  pu_unlabel = pu_unlabel, score_path = score_path, over_samp = over_samp, over_samp_ratio = over_samp_ratio)
+    log_parmas(_clf, params_path, roc_init = round(roc_init,6),#roc_unlabel = round(roc_unlabel,6), pu_unlabel = pu_unlabel,
+                roc_pua = round(roc_pua,6), pu_thresh_a = pu_thresh_a, score_path = score_path, over_samp = over_samp, over_samp_ratio = over_samp_ratio)
 
     return _train
 
@@ -209,6 +209,10 @@ def pu_b(train, pu_test_b, eval):
 
 def main():
 
+    data_up = pd.read_csv(train_path)
+    _train_data, _test_offline =  test_train_split_by_date(data_up, 20171025, 20171105)
+    _train_data.to_csv("data/train_1.csv", index = None)
+    _test_offline.to_csv("data/validation_1.csv", index = None)
     os.makedirs(score_path)
     print("\n# Make dirs in {}".format(score_path))
 
