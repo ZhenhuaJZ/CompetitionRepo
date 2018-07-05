@@ -17,7 +17,7 @@ validation_path = "data/_test_offline.csv"
 
 pu_thresh_a = 0.80 #PU threshold for testa
 pu_thresh_b = 0.80 #PU threshold for testb
-seg_date = 20180215
+seg_date = 20180210
 ################################################################################
 ## DEBUG:
 debug = False
@@ -129,6 +129,7 @@ def part_fit(clf, train, seg_date, pu_thresh_b, eval = True, save_score = True):
     score_seg_1 = pd.DataFrame(test_b_seg_1["id"]).assign(score = probs[:,1])
     test_b_seg_1_black = positive_unlabel_learning(clf, test_b_seg_1, pu_thresh_b) #pu threshold
     _train = file_merge(train, test_b_seg_1_black, "date")
+    print(_train)
     _feature, _label = split_train_label(_train)
     clf.fit(_feature, _label)
     print("\n# >>>>Duration<<<< : {}min ".format(round((time.time()-start)/60,2)))
@@ -145,7 +146,7 @@ def part_fit(clf, train, seg_date, pu_thresh_b, eval = True, save_score = True):
 
     if eval:
         #CV -5 Folds seg by date
-        slice_interval = [[20170905, 20170925], [20171005, 20171025], [20171005, 20171015],[20171016,20171031],[20180105, seg_date]]
+        slice_interval = [[20170905, 20170920], [20170921, 20171005], [20171005, 20171015],[20171016,20171031],[20171101, seg_date]]
         roc = cv_fold(clf, _train, slice_interval)
         return roc
 
