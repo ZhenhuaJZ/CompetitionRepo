@@ -16,14 +16,14 @@ validation_path = "data/validation_1.csv" #validation.csv
 test_b_path = "data/test_b.csv"
 test_a_path = "data/test_a.csv"
 
-over_samp = True
-over_samp_ratio = 0.02
+over_samp = False
+over_samp_ratio = 0.01
 pu_unlabel = 0.5
 pu_thresh_a = 0.50 #PU threshold for testa
 pu_test_b = False
 pu_thresh_b = 0.85 #PU threshold for testb
 seg_date = 20180215
-params = { "n_estimators" : [450,480], "learning_rate" : [0.07, 0.06]} # params = None "subsample" : [0.7, 0.8]
+params = { "n_estimators" : [485,490], "learning_rate" : [0.07, 0.08]} # params = None "subsample" : [0.7, 0.8]
 
 
 def positive_unlabel_learning(clf, data_path, train, thresh, eval = True, save_score = True, prefix = "pu"):
