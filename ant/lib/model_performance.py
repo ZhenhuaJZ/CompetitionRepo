@@ -7,6 +7,7 @@ import datetime
 import numpy as np
 import bisect
 import re, csv
+import collections
 
 now = datetime.datetime.now()
 
@@ -184,9 +185,10 @@ def log_parmas(clf, save_path, score_path, **kwargs):
     header.append("score_path")
     parmas.append(score_path)
 
-    for key in kwargs:
-        header.append(key)
-        parmas.append(kwargs[key])
+    log_v = [(k,kwargs[k]) for k in sorted(kwargs.keys())]
+    for l in log_v:
+        header.append(l[0][0])
+        parmas.append(l[0][1])
 
     f.writerow(log)
     f.writerow(header)
