@@ -129,7 +129,7 @@ def part_fit(clf, train, seg_date, pu_thresh_b, eval = True, save_score = True):
     score_seg_1 = pd.DataFrame(test_b_seg_1["id"]).assign(score = probs[:,1])
     test_b_seg_1_black = positive_unlabel_learning(clf, test_b_seg_1, pu_thresh_b) #pu threshold
     _train = file_merge(train, test_b_seg_1_black, "date")
-    print(_train)
+    print(_train["date"])
     _feature, _label = split_train_label(_train)
     clf.fit(_feature, _label)
     print("\n# >>>>Duration<<<< : {}min ".format(round((time.time()-start)/60,2)))
