@@ -181,37 +181,3 @@ def log_parmas(clf, save_path, score_path, **kwargs):
     f.writerow(header)
     f.writerow(parmas)
     f.writerow([])
-
-    #add header
-
-    #header.append("Validation set")
-    #header.append("ROC_1")
-    #header.append("ROC_2")
-    #header.append("5folds_ROC_1")
-    #header.append("5folds_ROC_2")
-
-    """
-    header.append("Score")
-    header.append("mode")
-    header.append("file name")
-    header.append("PU(threshold)")
-    header.append("fillna")
-    header.append("under_sampling")
-    header.append("Feed val black back")
-    """
-    #add content
-
-    #parmas.append(valset)
-    #parmas.append(roc_1)
-    #parmas.append(roc_2)
-    #parmas.append(cv_roc_1_mean)
-    #parmas.append(cv_roc_2_mean)
-    """
-    parmas.append('')
-    parmas.append(mode)
-    parmas.append(filename)
-    parmas.append(pu_thres)
-    parmas.append(fillna)
-    parmas.append(under_samp)
-    parmas.append(Feed_val_back)
-    """
