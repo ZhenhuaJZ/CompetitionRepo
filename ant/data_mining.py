@@ -180,7 +180,7 @@ def pu_a():
                     colsample_bytree = 0.8, learning_rate = 0.06, n_jobs = -1)
 
     params = { "gamma" : [0, 0.2,0.3]}
-    clf, train, roc_init = init_train(_clf, params)
+    clf, train, roc_init = init_train(_clf, params = params)
 
     print("\n# START PU - UNLABEL , PU_thresh_unlabel = {}".format(pu_unlabel))
     clf, train, roc_unlabel = positive_unlabel_learning(clf, unlabel_path, train, pu_unlabel)
