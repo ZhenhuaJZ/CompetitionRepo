@@ -24,6 +24,7 @@ debug = False
 ################################################################################
 
 def init_train(eval = True, save_score = False):
+    over_sampling = False
 
     start = time.time()
     clf = XGBClassifier(max_depth = 4, n_estimators = 480, subsample = 0.8, gamma = 0.1,
@@ -33,6 +34,9 @@ def init_train(eval = True, save_score = False):
     print("\n# Start Traing")
     print("\n# {}".format(clf))
     train = pd.read_csv(train_path)
+    if over_sampling:
+        train = over_sampling(train, 0.2)
+
     feature, label = split_train_label(train)
     clf.fit(feature, label)
     clear_mermory(feature, label, train_path)
@@ -150,7 +154,6 @@ def validation_black(clf, train, save_score = True):
         _score_path = score_path  + "val_score_{}d_{}h_{}m.csv".format(now.day, now.hour, now.minute)
         score.to_csv(_score_path, index = None, float_format = "%.9f")
         print("\n# Score saved in {}".format(_score_path))
-
     return
 
 def pu_a():
@@ -163,7 +166,6 @@ def pu_b(clf, pu_train):
     validation_black(clf, part_train, save_score = True)
 
 def main():
-
     os.makedirs(score_path)
     print("\n# Make dirs in {}".format(score_path))
 
@@ -178,7 +180,7 @@ def main():
     if not debug:
         log_parmas(clf, params_path, score_path = score_path, roc_init = round(roc_init,6), roc_pu = round(roc_pu,6),
                     roc_part = round(roc_part,6), pu_thresh_a = pu_thresh_a, pu_thresh_b = pu_thresh_b,
-                    partial_rate = partial_rate )
+                    partial_rate = partial_rate)
 
 if __name__ == '__main__':
     main()
