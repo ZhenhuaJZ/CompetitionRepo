@@ -2,7 +2,7 @@ import pandas as pd
 from xgboost import XGBClassifier
 from lib.data_processing import *
 from lib.model_performance import *
-from core_model import pu_labeling, partical_fit, cv_fold
+from core_model import pu_labeling, partical_fit, cv_fold, grid_search_roc
 from sklearn.externals import joblib
 import time, sys, datetime
 now = datetime.datetime.now()
