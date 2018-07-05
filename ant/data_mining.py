@@ -76,7 +76,7 @@ def init_train(clf, eval = True, save_score = True, save_model = True, params = 
     if params != None:
         validation_path = "data/validation.csv"
         validation = pd.read_csv(validation_path)
-        clf = grid_search_roc(clf, train, validation, params)
+        clf = grid_search_roc(clf, train, validation, params, log_path = params_path)
 
     feature, label = split_train_label(train)
     clf.fit(feature, label)
@@ -180,7 +180,7 @@ def pu_a():
                     colsample_bytree = 0.8, learning_rate = 0.06, n_jobs = -1)
 
     params = { "n_estimators" : [1, 5, 20]}
-    clf, train, roc_init = init_train(_clf, params = params, log_path = params_path)
+    clf, train, roc_init = init_train(_clf, params = params)
 
     print("\n# START PU - UNLABEL , PU_thresh_unlabel = {}".format(pu_unlabel))
     clf, train, roc_unlabel = positive_unlabel_learning(clf, unlabel_path, train, pu_unlabel)
