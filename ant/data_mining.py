@@ -17,7 +17,7 @@ validation_path = "data/_test_offline.csv"
 
 pu_thresh_a = 0.80 #PU threshold for testa
 pu_thresh_b = 0.80 #PU threshold for testb
-partial_rate = 0.4
+seg_date = 20180215
 ################################################################################
 ## DEBUG:
 debug = False
@@ -116,12 +116,13 @@ def validation_black(clf, train, save_score = True):
         print("\n# Score saved in {}".format(_score_path))
     return  _train
 
-def part_fit(clf, train, partial_rate, pu_thresh_b, eval = True, save_score = True):
+def part_fit(clf, train, seg_date, pu_thresh_b, eval = True, save_score = True):
     #Partical_Fit
     start = time.time()
-    print("\n# PART FIT TESTB, PU_thresh_b = {}, Partial_Rate = {}".format(pu_thresh_b, partial_rate))
+    print("\n# PART FIT TESTB, PU_thresh_b = {}, Seg_Date = {}".format(pu_thresh_b, seg_date))
+    print("\n# {}".format(clf))
     test_b = pd.read_csv(test_b_path)
-    test_b_seg_1, test_b_seg_2 = partical_fit(test_b, partial_rate, "date")
+    test_b_seg_1, test_b_seg_2 = partical_fit(test_b, seg_date, "date")
     _feature, _label = split_train_label(train)
     clf.fit(_feature, _label)
     probs = clf.predict_proba(test_b_seg_1.iloc[:,2:])
@@ -143,8 +144,8 @@ def part_fit(clf, train, partial_rate, pu_thresh_b, eval = True, save_score = Tr
         clear_mermory(probs, score_seg_2, score)
 
     if eval:
-        #CV -5 Folds
-        slice_interval = [[20170905, 20170916], [20170917, 20170925], [20170926, 20171005],[20171006,20171015],[20171015,20171025]]
+        #CV -5 Folds seg by date
+        slice_interval = [[20170905, 20170925], [20171005, 20171025], [20171005, 20171015],[20171016,20171031],[20180105, seg_date]]
         roc = cv_fold(clf, _train, slice_interval)
         return roc
 
@@ -170,9 +171,9 @@ def pu_b(pu_train, pu_test_b = True, eval = True):
                     colsample_bytree = 0.8, learning_rate = 0.06, n_jobs = -1)
 
     if pu_test_b:
-        roc_part = part_fit(_clf, pu_train, partial_rate, pu_thresh_b, eval = eval)
+        roc_part = part_fit(_clf, pu_train, seg_date, pu_thresh_b, eval = eval)
         log_parmas(_clf, params_path, score_path = score_path,
-                    roc_part = round(roc_part,6), pu_thresh_b = pu_thresh_b, partial_rate = partial_rate)
+                    roc_part = round(roc_part,6), pu_thresh_b = pu_thresh_b, seg_date = seg_date)
 
     return
 
@@ -188,5 +189,5 @@ if __name__ == '__main__':
 
 # clf, train, roc_init = init_train(save_score = True)
 # pu_train, roc_pu = positive_unlabel(clf, train, pu_thresh_a, save_score = True)
-# part_train, roc_part = part_fit(clf, pu_train, partial_rate, pu_thresh_b, save_score = True)
+# part_train, roc_part = part_fit(clf, pu_train, seg_date, pu_thresh_b, save_score = True)
 # validation_black(clf, part_train, save_score = True)
