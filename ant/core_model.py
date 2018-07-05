@@ -61,22 +61,21 @@ def segmentation_model(clf, data, test, feature_dic):
 
     return final_score
 
-def positive_unlabel_learning(classifier, unlabel_data, threshold):
+def pu_labeling(classifier, unlabel, threshold):
 
-	score = classifier.predict_proba(unlabel_data.iloc[:,2:])
-	score = pd.Series(score[:,1], index = unlabel_data["f1"].index)
+	score = classifier.predict_proba(unlabel.iloc[:,2:])
+	score = pd.Series(score[:,1], index = unlabel["f1"].index)
 
 	score.loc[score >= threshold] = 1
 	score.loc[score < threshold] = 0
-	score.to_csv("checkscore.csv")
-	unlabel_data.insert(1, "label", score)
+	unlabel.insert(1, "label", score)
 
-	black_unlabel_data = unlabel_data.loc[unlabel_data["label"] == 1]
-	n_black = len(unlabel_data[unlabel_data.label == 1])
-	n_white = len(unlabel_data[unlabel_data.label == 0])
+	black = unlabel.loc[unlabel["label"] == 1]
+	n_black = len(unlabel[unlabel.label == 1])
+	n_white = len(unlabel[unlabel.label == 0])
 	print("\n# After PU found <{}> potential black instances, and <{}> potential white instances".format(n_black, n_white))
 	clear_mermory(classifier)
-	return black_unlabel_data
+	return black
 
 def partical_fit(data, start_y_m_d, sort_by = ""):
     print("\n# Total length :", len(data))

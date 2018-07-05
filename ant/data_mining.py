@@ -2,7 +2,7 @@ import pandas as pd
 from xgboost import XGBClassifier
 from lib.data_processing import *
 from lib.model_performance import *
-from core_model import positive_unlabel_learning, partical_fit, cv_fold
+from core_model import pu_labeling, partical_fit, cv_fold
 from sklearn.externals import joblib
 import time, sys, datetime
 now = datetime.datetime.now()
@@ -16,7 +16,7 @@ test_a_path = "data/test_a.csv"
 validation_path = "data/_test_offline.csv"
 unlabel_path = "data/unlabel.csv"
 
-pu_thresh_unlabel = 0.5
+pu_unlabel = 0.5
 pu_thresh_a = 0.85 #PU threshold for testa
 pu_thresh_b = 0.85 #PU threshold for testb
 seg_date = 20180215
@@ -25,13 +25,40 @@ seg_date = 20180215
 debug = False
 ################################################################################
 
-def pu_unlabel(clf, train, pu_thresh_unlabel):
-    unlabel = pd.read_csv(unlabel_path)
-    unlabel_black = positive_unlabel_learning(clf, unlabel, pu_thresh_unlabel)
-    _train = file_merge(train, unlabel_black, "date")
+
+def positive_unlabel_learning(clf, data_path, train, thresh, eval = True, prefix = "pu"):
+
+    start = time.time()
+    unlabel = pd.read_csv(data_path)
+    black = pu_labeling(clf, unlabel, thresh)
+    _train = file_merge(train, black, "date")
     feature, label = split_train_label(_train)
     clf.fit(feature, label)
-    return _train, clf
+    print("\n# >>>>Duration<<<< : {}min ".format(round((time.time()-start)/60,2)))
+
+    if save_score:
+
+        test_b = pd.read_csv(test_b_path)
+        probs = clf.predict_proba(test_b.iloc[:,2:])
+        score = pd.DataFrame(test_b["id"]).assign(score = probs[:,1])
+        _score_path = score_path  + "{}_score_{}d_{}h_{}m.csv".format(prefix, now.day, now.hour, now.minute)
+        score.to_csv(_score_path, index = None, float_format = "%.9f")
+        print("\n# Score saved in {}".format(_score_path))
+
+    if eval:
+
+        print("\n# EVAL PU")
+        validation_path = "data/_test_offline.csv"
+        validation = pd.read_csv(validation_path)
+        val_feature, val_label = split_train_label(validation)
+        val_probs = clf.predict_proba(val_feature)
+        roc = offline_model_performance(val_label, val_probs[:,1])
+        clear_mermory(val_feature, val_label, validation, validation_path, val_probs)
+
+        return clf, _train, roc
+
+    no_roc = "n/a"
+    return clf, _train, no_roc
 
 def init_train(clf, eval = True, save_score = True, save_model = True):
     over_sampling = False
@@ -72,39 +99,6 @@ def init_train(clf, eval = True, save_score = True, save_model = True):
 
     return clf, train, roc
 
-def positive_unlabel(clf, train, pu_thresh_a, eval = True, save_score = True):
-    #PU
-    start = time.time()
-    print("\n# START PU - TESTA , PU_thresh_a = {}".format(pu_thresh_a))
-    test_a = pd.read_csv(test_a_path)
-    pu_black = positive_unlabel_learning(clf, test_a, pu_thresh_a)
-    _train = file_merge(train, pu_black, "date")
-    _feature, _label = split_train_label(_train)
-    clear_mermory(_feature, _label, train, pu_black, test_a_path, test_a)
-    # clf.fit(_feature, _label)
-    print("\n# >>>>Duration<<<< : {}min ".format(round((time.time()-start)/60,2)))
-
-    if eval:
-        clf.fit(_feature, _label)
-        print("\n# EVAL PU")
-        validation_path = "data/_test_offline.csv"
-        validation = pd.read_csv(validation_path)
-        val_feature, val_label = split_train_label(validation)
-        val_probs = clf.predict_proba(val_feature)
-        roc = offline_model_performance(val_label, val_probs[:,1])
-        clear_mermory(val_feature, val_label, validation, validation_path, val_probs)
-
-    if save_score:
-
-        test_b = pd.read_csv(test_b_path)
-        probs = clf.predict_proba(test_b.iloc[:,2:])
-        score = pd.DataFrame(test_b["id"]).assign(score = probs[:,1])
-        _score_path = score_path  + "pu_score_{}d_{}h_{}m.csv".format(now.day, now.hour, now.minute)
-        score.to_csv(_score_path, index = None, float_format = "%.9f")
-        print("\n# Score saved in {}".format(_score_path))
-
-    return _train, roc
-
 def validation_black(clf, train, save_score = True, save_model = True):
     #Feed validation black label Back
     print("\n# Feed Validation Black Label Back")
@@ -142,7 +136,7 @@ def part_fit(clf, train, seg_date, pu_thresh_b, eval = True, save_score = True):
     clf.fit(_feature, _label)
     probs = clf.predict_proba(test_b_seg_1.iloc[:,2:])
     score_seg_1 = pd.DataFrame(test_b_seg_1["id"]).assign(score = probs[:,1])
-    test_b_seg_1_black = positive_unlabel_learning(clf, test_b_seg_1, pu_thresh_b) #pu threshold
+    test_b_seg_1_black = pu_labeling(clf, test_b_seg_1, pu_thresh_b) #pu threshold
     _train = file_merge(train, test_b_seg_1_black, "date")
     _feature, _label = split_train_label(_train)
     clf.fit(_feature, _label)
@@ -173,29 +167,36 @@ def part_fit(clf, train, seg_date, pu_thresh_b, eval = True, save_score = True):
     return no_roc
 
 def pu_a():
+
     _clf = XGBClassifier(max_depth = 4, n_estimators = 480, subsample = 0.8, gamma = 0.1,
                     min_child_weight = 1, scale_pos_weight = 1,
                     colsample_bytree = 0.8, learning_rate = 0.06, n_jobs = -1)
 
     clf, train, roc_init = init_train(_clf)
 
-    unlabel_pu_train, clf = pu_unlabel(clf, train, pu_thresh_unlabel)
+    print("\n# START PU - UNLABEL , PU_thresh_unlabel = {}".format(pu_unlabel))
+    clf, train, roc_unlabel = positive_unlabel_learning(clf, unlabel_path, train, pu_unlabel)
 
-    pu_train, roc_pu = positive_unlabel(clf, unlabel_pu_train, pu_thresh_a)
-    # TODO: FINE TUNING CLF2
-    pu_train = validation_black(_clf, pu_train)
-    log_parmas(_clf, params_path, roc_init = round(roc_init,6),
-                roc_pu = round(roc_pu,6),pu_thresh_a = pu_thresh_a, score_path = score_path)
+    print("\n# START PU - TESTA , PU_thresh_a = {}".format(pu_thresh_a))
+    _, train, roc_pua = positive_unlabel_learning(clf, test_a_path, train, pu_thresh_a)
 
-    return pu_train
+    # TODO: Fine tunning
+    _clf.set_params(n_estimators = 400, learning_rate = 0.05)
 
-def pu_b(pu_train, pu_test_b, eval):
+    _train = validation_black(_clf, train)
+
+    log_parmas(_clf, params_path, roc_init = round(roc_init,6),roc_unlabel = round(roc_unlabel,6),
+                roc_pua = round(roc_pua,6), pu_thresh_a = pu_thresh_a,  pu_unlabel = pu_unlabel, score_path = score_path)
+
+    return _train
+
+def pu_b(train, pu_test_b, eval):
     _clf = XGBClassifier(max_depth = 4, n_estimators = 480, subsample = 0.8, gamma = 0.1,
                     min_child_weight = 1, scale_pos_weight = 1,
                     colsample_bytree = 0.8, learning_rate = 0.06, n_jobs = -1)
 
     if pu_test_b:
-        roc_part = part_fit(_clf, pu_train, seg_date, pu_thresh_b, eval)
+        roc_part = part_fit(_clf, train, seg_date, pu_thresh_b, eval)
         log_parmas(_clf, params_path, roc_part = round(roc_part,6), pu_thresh_b = pu_thresh_b, seg_date = seg_date, score_path = score_path)
 
     return
@@ -204,13 +205,8 @@ def main():
     os.makedirs(score_path)
     print("\n# Make dirs in {}".format(score_path))
 
-    pu_train = pu_a()
-    pu_b(pu_train, pu_test_b = False, eval = False)
+    train = pu_a()
+    pu_b(train, pu_test_b = False, eval = False)
 
 if __name__ == '__main__':
     main()
-
-# clf, train, roc_init = init_train(save_score = True)
-# pu_train, roc_pu = positive_unlabel(clf, train, pu_thresh_a, save_score = True)
-# part_train, roc_part = part_fit(clf, pu_train, seg_date, pu_thresh_b, save_score = True)
-# validation_black(clf, part_train, save_score = True)
