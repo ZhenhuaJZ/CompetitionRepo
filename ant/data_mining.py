@@ -24,7 +24,7 @@ seg_date = 20180215
 debug = False
 ################################################################################
 
-def init_train(clf, eval = True, save_score = True):
+def init_train(clf, eval = True, save_score = True, save_model = True):
     over_sampling = False
 
     start = time.time()
@@ -34,10 +34,10 @@ def init_train(clf, eval = True, save_score = True):
     train = pd.read_csv(train_path)
     if over_sampling:
         train = over_sampling(train, 0.2)
-
     feature, label = split_train_label(train)
     clf.fit(feature, label)
-    joblib.dump(clf, score_path + "inti_model.pkl".format(i+1))
+    if save_model:
+        joblib.dump(clf, score_path + "inti_model.pkl")
     clear_mermory(feature, label, train_path)
     print("\n# >>>>Duration<<<< : {}min ".format(round((time.time()-start)/60,2)))
 
@@ -62,7 +62,7 @@ def init_train(clf, eval = True, save_score = True):
 
     return clf, train, roc
 
-def positive_unlabel(clf, train, pu_thresh_a, eval = True, save_score = True):
+def positive_unlabel(clf, train, pu_thresh_a, eval = True, save_score = True, save_model = True):
     #PU
     start = time.time()
     print("\n# START PU - TESTA , PU_thresh_a = {}".format(pu_thresh_a))
@@ -71,6 +71,8 @@ def positive_unlabel(clf, train, pu_thresh_a, eval = True, save_score = True):
     _train = file_merge(train, pu_black, "date")
     _feature, _label = split_train_label(_train)
     clf.fit(_feature, _label)
+    if save_model:
+        joblib.dump(clf, score_path + "pu_model.pkl")
     clear_mermory(_feature, _label, train, pu_black, test_a_path, test_a)
     print("\n# >>>>Duration<<<< : {}min ".format(round((time.time()-start)/60,2)))
 
@@ -95,7 +97,7 @@ def positive_unlabel(clf, train, pu_thresh_a, eval = True, save_score = True):
 
     return _train, roc
 
-def validation_black(clf, train, save_score = True):
+def validation_black(clf, train, save_score = True, save_model = True):
     #Feed validation black label Back
     print("\n# Feed Validation Black Label Back")
     start = time.time()
@@ -106,6 +108,8 @@ def validation_black(clf, train, save_score = True):
     _train = file_merge(train, validation_black, "date")
     _feature, _label = split_train_label(_train)
     clf.fit(_feature, _label)
+    if save_model:
+        joblib.dump(clf, score_path + "val_model.pkl")
     print("\n# >>>>Duration<<<< : {}min ".format(round((time.time()-start)/60,2)))
 
     if save_score:
