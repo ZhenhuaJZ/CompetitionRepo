@@ -81,7 +81,7 @@ def init_train(clf, eval = True, save_score = True, save_model = True):
     if eval:
 
         print("\n# EVAL INIT CLASSIFIER")
-        validation_path = "data/_test_offline.csv"
+        validation_path = "data/validation.csv"
         validation = pd.read_csv(validation_path)
         val_feature, val_label = split_train_label(validation)
         val_probs = clf.predict_proba(val_feature)
