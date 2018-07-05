@@ -180,7 +180,7 @@ def pu_a():
                     colsample_bytree = 0.8, learning_rate = 0.06, n_jobs = -1)
 
     params = { "gamma" : [0, 0.2,0.3]}
-    clf, train, roc_init = init_train(_clf, params = params)
+    clf, train, roc_init = init_train(_clf, params = params, log_path = params_path)
 
     print("\n# START PU - UNLABEL , PU_thresh_unlabel = {}".format(pu_unlabel))
     clf, train, roc_unlabel = positive_unlabel_learning(clf, unlabel_path, train, pu_unlabel)
@@ -212,11 +212,6 @@ def pu_b(train, pu_test_b, eval):
     return
 
 def main():
-
-    val = pd.read_csv(train_path)
-    _train_data, _test_offline =  test_train_split_by_date(val, 20171025, 20171105 )
-    _train_data.to_csv("train_val.csv", index = None)
-    sys.exit()
 
     os.makedirs(score_path)
     print("\n# Make dirs in {}".format(score_path))
