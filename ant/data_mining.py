@@ -150,6 +150,7 @@ def part_fit(clf, train, seg_date, pu_thresh_b, eval = True, save_score = True):
         for i in range(0,5,1):
             interval = (int(len(_train["date"])/5))
             inter.append(_train["date"].iloc[interval*i])
+        print(inter)
         #slice_interval = [[d_1[0], d_1[1]], [d_1[1]+1, slice_inter[2]], [d_1[2], 20171015],[d_1[3],20171031],[d_1[4]]]
         #slice_interval = [[20170905, 20170920], [20170921, 20171005], [20171005, 20171015],[20171016,20171031],[20171101, seg_date]]
         roc = cv_fold(clf, _train, slice_interval)
