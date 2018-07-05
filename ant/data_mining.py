@@ -3,6 +3,7 @@ from xgboost import XGBClassifier
 from lib.data_processing import *
 from lib.model_performance import *
 from core_model import positive_unlabel_learning, partical_fit, cv_fold
+from sklearn.externals import joblib
 import time, sys, datetime
 now = datetime.datetime.now()
 
@@ -36,6 +37,7 @@ def init_train(clf, eval = True, save_score = True):
 
     feature, label = split_train_label(train)
     clf.fit(feature, label)
+    joblib.dump(clf, score_path + "inti_model.pkl".format(i+1))
     clear_mermory(feature, label, train_path)
     print("\n# >>>>Duration<<<< : {}min ".format(round((time.time()-start)/60,2)))
 
