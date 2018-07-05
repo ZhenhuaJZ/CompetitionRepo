@@ -146,13 +146,14 @@ def part_fit(clf, train, seg_date, pu_thresh_b, eval = True, save_score = True):
     if eval:
 
         #CV -5 Folds seg by date
-        inter = []
-        for i in range(0,5,1):
-            print(i)
-            interval = (int(len(_train["date"])/5))
-            inter.append(_train["date"].iloc[interval*i])
-        print(inter)
-        #slice_interval = [[d_1[0], d_1[1]], [d_1[1]+1, slice_inter[2]], [d_1[2], 20171015],[d_1[3],20171031],[d_1[4]]]
+        _day = []
+        interval = int(len(_train["date"])/5)
+        for i in range(6):
+            _day.append(_train["date"].iloc[interval*i])
+        print(_day)
+        slice_interval = [[_day[0], _day[1]], [_day[1]+1, _day[2]], [_day[2]+1, _day[3]],[_day[3]+1,_day[4]],[_day[4]+1, _day[5]]]
+        print(slice_interval)
+        sys.exit()
         #slice_interval = [[20170905, 20170920], [20170921, 20171005], [20171005, 20171015],[20171016,20171031],[20171101, seg_date]]
         roc = cv_fold(clf, _train, slice_interval)
         return roc
