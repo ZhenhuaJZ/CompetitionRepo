@@ -10,11 +10,11 @@ now = datetime.datetime.now()
 score_path = "log/last_3_days/{}d_{}h_{}m/".format(now.day, now.hour, now.minute)
 params_path = "log/last_3_days/log_{}h.csv".format(now.hour)
 
-train_path = "data/_train_data.csv"
+train_path = "data/train.csv"
+unlabel_path = "data/unlabel.csv"
+validation_path = "data/validation.csv"
 test_b_path = "data/test_b.csv"
 test_a_path = "data/test_a.csv"
-validation_path = "data/_test_offline.csv"
-unlabel_path = "data/unlabel.csv"
 
 pu_unlabel = 0.5
 pu_thresh_a = 0.85 #PU threshold for testa
@@ -48,7 +48,7 @@ def positive_unlabel_learning(clf, data_path, train, thresh, eval = True, prefix
     if eval:
 
         print("\n# EVAL PU")
-        validation_path = "data/_test_offline.csv"
+        validation_path = "data/validation.csv"
         validation = pd.read_csv(validation_path)
         val_feature, val_label = split_train_label(validation)
         val_probs = clf.predict_proba(val_feature)
@@ -103,7 +103,7 @@ def validation_black(clf, train, save_score = True, save_model = True):
     #Feed validation black label Back
     print("\n# Feed Validation Black Label Back")
     start = time.time()
-    validation_path = "data/_test_offline.csv"
+    validation_path = "data/validation.csv"
     validation = pd.read_csv(validation_path)
     validation_black = validation.loc[validation["label"] == 1]
     print("\n# Found <{}> black instances".format(len(validation_black)))
@@ -159,7 +159,6 @@ def part_fit(clf, train, seg_date, pu_thresh_b, eval = True, save_score = True):
         for i in range(6):
             _day.append(_train["date"].iloc[interval*i])
         slice_interval = [[_day[0], _day[1]], [_day[1]+1, _day[2]], [_day[2]+1, _day[3]],[_day[3]+1,_day[4]],[_day[4]+1, _day[5]]]
-        #slice_interval = [[20170905, 20170920], [20170921, 20171005], [20171005, 20171015],[20171016,20171031],[20171101, seg_date]]
         roc = cv_fold(clf, _train, slice_interval)
         return roc
 
@@ -168,7 +167,7 @@ def part_fit(clf, train, seg_date, pu_thresh_b, eval = True, save_score = True):
 
 def pu_a():
 
-    _clf = XGBClassifier(max_depth = 4, n_estimators = 480, subsample = 0.8, gamma = 0.1,
+    _clf = XGBClassifier(max_depth = 4, n_estimators = 4, subsample = 0.8, gamma = 0.1,
                     min_child_weight = 1, scale_pos_weight = 1,
                     colsample_bytree = 0.8, learning_rate = 0.06, n_jobs = -1)
 
@@ -191,7 +190,7 @@ def pu_a():
     return _train
 
 def pu_b(train, pu_test_b, eval):
-    _clf = XGBClassifier(max_depth = 4, n_estimators = 480, subsample = 0.8, gamma = 0.1,
+    _clf = XGBClassifier(max_depth = 4, n_estimators = 4, subsample = 0.8, gamma = 0.1,
                     min_child_weight = 1, scale_pos_weight = 1,
                     colsample_bytree = 0.8, learning_rate = 0.06, n_jobs = -1)
 
@@ -202,6 +201,11 @@ def pu_b(train, pu_test_b, eval):
     return
 
 def main():
+    val = pd.read_csv(train_path)
+    train_data, _test_offline =  test_train_split_by_date(val, 20171025, 20171105)
+    _test_offline.to_csv("data/validation.csv", header = None)
+
+    sys.exit()
     os.makedirs(score_path)
     print("\n# Make dirs in {}".format(score_path))
 
