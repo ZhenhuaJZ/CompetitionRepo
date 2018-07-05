@@ -66,8 +66,7 @@ def partical_fit(data, feed_ratio, sort_by = ""):
 	return data_seg_1, data_seg_2
 
 def cv_fold(clf, _train_data, fold_time_split, params_path):
-	roc_1_list = []
-	roc_2_list = []
+	roc_list = []
 	for i, offline_validation in enumerate(fold_time_split):
 		#CV in 5 fold
 		start = time.time()
@@ -75,16 +74,12 @@ def cv_fold(clf, _train_data, fold_time_split, params_path):
 		print("\n# Fold {} from {} - {}".format(i, offline_validation[0], offline_validation[1]))
 		print("\n"+"##"*40)
 		train_data, test_offline =  test_train_split_by_date(_train_data, offline_validation[0], offline_validation[1], params_path)
-		train, labels = split_train_label(train_data)
-		test_offline_feature, test_offline_labels = split_train_label(test_offline)
-		clear_mermory(test_offline, train_data)
-		#Fead data into the clf
-		_clf = clf.fit(train, labels)
-		clear_mermory(train, labels)
-		offline_probs = _clf.predict_proba(test_offline_feature)
-		clear_mermory(test_offline, _clf)
-		cv_offline_score_1 = offline_model_performance(test_offline_labels, offline_probs[:,1], params_path = params_path, fold = i)
-		roc_1_list.append(cv_offline_score_1)
+		_feature_train, _label_train = split_train_label(train_data)
+		_feature_val, _label_val = split_train_label(test_offline)
+		_clf = clf.fit(_feature_train, _label_train)
+		probs = _clf.predict_proba(_feature_val)
+		roc = offline_model_performance(_label_val, probs[:,1], params_path = params_path, fold = i)
+		roc_list.append(roc)
 		print("\n# >>>>Duration<<<< : {}min ".format(round((time.time()-start)/60,2)))
 	#eval performace
 	roc_1 = np.array(roc_1_list)

@@ -146,7 +146,7 @@ def part_fit(clf, train, partial_rate, pu_thresh_b, eval = True, save_score = Tr
 
     if eval:
 
-        cv_fold(clf, _train_data, fold_time_split, params_path)
+        #cv_fold(clf, _train_data, fold_time_split, params_path)
         print("TO DO CV5")
         # TODO:  CV5
 
