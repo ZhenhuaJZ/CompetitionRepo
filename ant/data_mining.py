@@ -76,7 +76,7 @@ def init_train(clf, eval = True, save_score = True, save_model = True):
     validation_path = "data/validation.csv"
     validation = pd.read_csv(validation_path)
 
-    params = { "gamma" : [0,0.1]}
+    params = { "gamma" : [0, 0.2,0.3]}
     clf = grid_search_roc(clf, train, validation, params)
     feature, label = split_train_label(train)
     clf.fit(feature, label)
