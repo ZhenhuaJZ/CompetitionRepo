@@ -143,7 +143,7 @@ def offline_model_performance_2(ground_truth, predict, **kwargs):
 
 # #############################Log all the data ################################
 
-def log_parmas(clf, save_path, score_path, **kwargs):
+def log_parmas(clf, save_path, **kwargs):
     #formate log
     #valset = str(valset[0]) + "-" + str(valset[1])
     #roc_1 = round(roc_1, 6)
@@ -168,9 +168,6 @@ def log_parmas(clf, save_path, score_path, **kwargs):
             if len(new) > 1:
                 header.append(new[0])
                 parmas.append(new[1])
-
-    header.append("score_path")
-    parmas.append(score_path)
 
     log_v = [(k,kwargs[k]) for k in sorted(kwargs.keys())]
     for l in log_v:
