@@ -11,7 +11,7 @@ def grid_search_roc(clf, train, test, params, log_path = ""):
 	feature, label = split_train_label(train)
 	test_feature, test_label = split_train_label(test)
 	best_clf = clone(clf)
-	auc_prev = 0
+	best_auc = 0
 	for para in params:
 		for i in params[para]:
 			clf = clone(best_clf)
@@ -28,7 +28,7 @@ def grid_search_roc(clf, train, test, params, log_path = ""):
 				print("# Best paramter found")
 				best_clf = clone(clf)
 				best_auc = auc
-	if log_path != ""
+	if log_path != "":
 		log_parmas(best_clf, log_path)
 	print(best_clf)
 	return best_clf
