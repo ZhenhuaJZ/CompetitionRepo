@@ -148,8 +148,9 @@ def part_fit(clf, train, partial_rate, pu_thresh_b, eval = True, save_score = Tr
         #CV -5 Folds
         slice_interval = [[20170905, 20170916], [20170917, 20170925], [20170926, 20171005],[20171006,20171015],[20171015,20171025]]
         roc = cv_fold(clf, _train, slice_interval)
-        return _train, roc
-    return _train
+        return roc
+
+    return
 
 def pu_a():
     _clf = XGBClassifier(max_depth = 4, n_estimators = 4, subsample = 0.8, gamma = 0.1,
@@ -182,7 +183,7 @@ def main():
     print("\n# Make dirs in {}".format(score_path))
 
     pu_train = pu_a()
-    pu_b(pu_train, pu_test_b = True, eval = False)
+    pu_b(pu_train, pu_test_b = True, eval = True)
 
 if __name__ == '__main__':
     main()
