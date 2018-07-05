@@ -129,7 +129,6 @@ def part_fit(clf, train, seg_date, pu_thresh_b, eval = True, save_score = True):
     score_seg_1 = pd.DataFrame(test_b_seg_1["id"]).assign(score = probs[:,1])
     test_b_seg_1_black = positive_unlabel_learning(clf, test_b_seg_1, pu_thresh_b) #pu threshold
     _train = file_merge(train, test_b_seg_1_black, "date")
-    print(_train["date"])
     _feature, _label = split_train_label(_train)
     clf.fit(_feature, _label)
     print("\n# >>>>Duration<<<< : {}min ".format(round((time.time()-start)/60,2)))
@@ -145,8 +144,14 @@ def part_fit(clf, train, seg_date, pu_thresh_b, eval = True, save_score = True):
         clear_mermory(probs, score_seg_2, score)
 
     if eval:
+
         #CV -5 Folds seg by date
-        slice_interval = [[20170905, 20170920], [20170921, 20171005], [20171005, 20171015],[20171016,20171031],[20171101, seg_date]]
+        inter = []
+        for i in range(0,5,1):
+            interval = (int(len(_train["date"])/5))
+            inter.append(_train["date"].iloc[interval*i])
+        #slice_interval = [[d_1[0], d_1[1]], [d_1[1]+1, slice_inter[2]], [d_1[2], 20171015],[d_1[3],20171031],[d_1[4]]]
+        #slice_interval = [[20170905, 20170920], [20170921, 20171005], [20171005, 20171015],[20171016,20171031],[20171101, seg_date]]
         roc = cv_fold(clf, _train, slice_interval)
         return roc
 
