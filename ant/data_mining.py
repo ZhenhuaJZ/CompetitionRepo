@@ -17,13 +17,13 @@ test_b_path = "data/test_b.csv"
 test_a_path = "data/test_a.csv"
 
 over_samp = True
-over_samp_ratio = 0.2
-pu_unlabel = 0.6
-pu_thresh_a = 0.70 #PU threshold for testa
+over_samp_ratio = 0.3
+pu_unlabel = 0.5
+pu_thresh_a = 0.60 #PU threshold for testa
 pu_test_b = True
 pu_thresh_b = 0.85 #PU threshold for testb
 seg_date = 20180215
-params = { "gamma" : [0, 0.1] } # params = None "subsample" : [0.7, 0.8]
+params = { "gamma" : [0, 0.1],  "min_child_weight" : [1, 2]} # params = None "subsample" : [0.7, 0.8]
 
 
 def positive_unlabel_learning(clf, data_path, train, thresh, eval = True, save_score = True, prefix = "pu"):
