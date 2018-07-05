@@ -16,8 +16,8 @@ validation_path = "data/_test_offline.csv"
 
 
 pu_thresh_a = 0.80 #PU threshold for testa
-pu_thresh_b = 0.80 #PU threshold for testb
-seg_date = 20180210
+pu_thresh_b = 0.85 #PU threshold for testb
+seg_date = 20180215
 ################################################################################
 ## DEBUG:
 debug = False
@@ -157,27 +157,27 @@ def part_fit(clf, train, seg_date, pu_thresh_b, eval = True, save_score = True):
     return
 
 def pu_a():
-    _clf = XGBClassifier(max_depth = 4, n_estimators = 4, subsample = 0.8, gamma = 0.1,
+    _clf = XGBClassifier(max_depth = 4, n_estimators = 480, subsample = 0.8, gamma = 0.1,
                     min_child_weight = 1, scale_pos_weight = 1,
-                    colsample_bytree = 0.8, learning_rate = 0.07, n_jobs = -1)
+                    colsample_bytree = 0.8, learning_rate = 0.06, n_jobs = -1)
 
     clf, train, roc_init = init_train(_clf)
     pu_train, roc_pu = positive_unlabel(clf, train, pu_thresh_a)
     # TODO: FINE TUNING CLF2
     pu_train = validation_black(_clf, pu_train)
     log_parmas(_clf, params_path, roc_init = round(roc_init,6),
-                roc_pu = round(roc_pu,6),pu_thresh_a = pu_thresh_a)
+                roc_pu = round(roc_pu,6),pu_thresh_a = pu_thresh_a, score_path = score_path)
 
     return pu_train
 
 def pu_b(pu_train, pu_test_b = True, eval = True):
-    _clf = XGBClassifier(max_depth = 4, n_estimators = 4, subsample = 0.8, gamma = 0.1,
+    _clf = XGBClassifier(max_depth = 4, n_estimators = 480, subsample = 0.8, gamma = 0.1,
                     min_child_weight = 1, scale_pos_weight = 1,
                     colsample_bytree = 0.8, learning_rate = 0.06, n_jobs = -1)
 
     if pu_test_b:
         roc_part = part_fit(_clf, pu_train, seg_date, pu_thresh_b, eval = eval)
-        log_parmas(_clf, params_path, roc_part = round(roc_part,6), pu_thresh_b = pu_thresh_b, seg_date = seg_date)
+        log_parmas(_clf, params_path, roc_part = round(roc_part,6), pu_thresh_b = pu_thresh_b, seg_date = seg_date, score_path = score_path)
 
     return
 
