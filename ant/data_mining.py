@@ -172,8 +172,7 @@ def pu_b(pu_train, pu_test_b = True):
 
     if pu_test_b:
         part_fit(_clf, pu_train, partial_rate, pu_thresh_b, save_score = True)
-        log_parmas(_clf, params_path, score_path = score_path,
-                    roc_part = round(roc_part,6), pu_thresh_b = pu_thresh_b,
+        log_parmas(_clf, params_path, score_path = score_path, pu_thresh_b = pu_thresh_b,
                     partial_rate = partial_rate)
 
     return
@@ -182,11 +181,9 @@ def pu_b(pu_train, pu_test_b = True):
 def main():
     os.makedirs(score_path)
     print("\n# Make dirs in {}".format(score_path))
-
     # clf, train, roc_init = init_train(save_score = True)
     # pu_train, roc_pu = positive_unlabel(clf, train, pu_thresh_a, save_score = True)
     pu_train = pu_a()
-
     # part_train, roc_part = part_fit(clf, pu_train, partial_rate, pu_thresh_b, save_score = True)
     # validation_black(clf, part_train, save_score = True)
     pu_b(pu_train, pu_test_b = True)
