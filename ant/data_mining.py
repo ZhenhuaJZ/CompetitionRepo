@@ -179,7 +179,7 @@ def pu_a():
                     min_child_weight = 1, scale_pos_weight = 1,
                     colsample_bytree = 0.8, learning_rate = 0.06, n_jobs = -1)
 
-    params = { "gamma" : [0, 0.2,0.3]}
+    params = { "n_estimators" : [1, 5, 20]}
     clf, train, roc_init = init_train(_clf, params = params, log_path = params_path)
 
     print("\n# START PU - UNLABEL , PU_thresh_unlabel = {}".format(pu_unlabel))
