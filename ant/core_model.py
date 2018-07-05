@@ -33,6 +33,48 @@ def grid_search_roc(clf, train, test, params, log_path = ""):
 	print(best_clf)
 	return best_clf
 
+def test_b_grid_search(clf, train_pu_a, validation, threshold_range, seg_date, params, log_path = ""):
+	test_b = pd.read_csv(test_b_path)
+	test_b = test_b.loc[:100000]
+	# print(test_b)
+	_feature, _label = split_train_label(train_pu_a)
+	validation_feature, validation_label = split_train_label(validation)
+	test_b_seg_1, _ = partical_fit(test_b, seg_date, "date")
+	best_clf = clone(clf)
+	best_auc = 0
+	best_param = {}
+	for threshold in threshold_range:
+		for para in params:
+			for i in params[para]:
+				clf = clone(best_clf)
+				parameter = {para : i}
+				test_b_1 = copy(test_b_seg_1)
+				print("\n#"+"*"*20+" Current parameter: {}".format(parameter)+" "+"*"*20)
+				print("\n# Current threshold: {}".format(threshold))
+				print("\n# Current best parameter ", best_param)
+				clf.set_params(**parameter)
+				clf.fit(_feature, _label)
+				probs = clf.predict_proba(test_b_1.iloc[:,2:])
+				test_b_seg_1_black = positive_unlabel_learning(clf, test_b_1, threshold) #pu threshold
+				pu_b_train = file_merge(train_pu_a, test_b_seg_1_black, "date")
+				pu_b_feature, pu_b_label = split_train_label(pu_b_train)
+				clf.fit(pu_b_feature, pu_b_label)
+				validation_score = clf.predict_proba(validation_feature)[:,1]
+				auc = offline_model_performance_2(validation_label, validation_score)
+				print("\n# AUC offline performance : {}".format(auc))
+				if auc > best_auc:
+					print("# Best paramter found")
+					best_param["threshold"] = threshold
+					best_clf = clone(clf)
+					best_auc = auc
+					best_thresh = threshold
+					best_param["{}".format(para)] = i
+	if log_path != "":
+		log_parmas(best_clf, log_path, best_thresh = best_thresh, best_auc = best_auc)
+	print(best_clf)
+	print(best_auc)
+	print(best_thresh)
+
 def segmentation_model(clf, data, test, feature_dic):
     # Segment data and test into segment a and b
     seg_a_train, seg_b_train = sample_segmentation(data,feature_dic)

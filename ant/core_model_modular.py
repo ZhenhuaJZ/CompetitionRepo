@@ -29,7 +29,6 @@ def segmentation_model(clf, data, test, feature_dic):
     seg_b_clf = clf.fit(seg_b_feature, seg_b_label)
     seg_b_test_score = clf.predict_proba(seg_b_test.iloc[:,2:])[:,1]
     seg_b_score = seg_b_score.assign(score = seg_b_test_score)
-
     final_score = seg_a_score.append(seg_b_score)
 
     return final_score
