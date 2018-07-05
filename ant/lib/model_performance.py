@@ -187,8 +187,8 @@ def log_parmas(clf, save_path, score_path, **kwargs):
 
     log_v = [(k,kwargs[k]) for k in sorted(kwargs.keys())]
     for l in log_v:
-        header.append(l[0][0])
-        parmas.append(l[0][1])
+        header.append(l[0])
+        parmas.append(l[1])
 
     f.writerow(log)
     f.writerow(header)
