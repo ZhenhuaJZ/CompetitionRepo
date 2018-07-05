@@ -16,7 +16,7 @@ validation_path = "data/validation.csv"
 test_b_path = "data/test_b.csv"
 test_a_path = "data/test_a.csv"
 
-over_samp = False
+over_samp = True
 over_samp_ratio = 0.1
 pu_unlabel = 0.5
 pu_thresh_a = 0.80 #PU threshold for testa
