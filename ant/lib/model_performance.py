@@ -151,7 +151,7 @@ def log_parmas(clf, save_path, **kwargs):
     #if isinstance(cv_roc_1_mean, float):
         #cv_roc_1_mean = round(cv_roc_1_mean, 6)
         #cv_roc_2_mean = round(cv_roc_2_mean, 6)
-    score_path = re.split('log/', score_path)[-1]
+    #score_path = re.split('log/', score_path)[-1]
     split_string = re.split('[(,' '\n)' ']', str(clf))
 
     f = csv.writer(open(save_path, "a"))
