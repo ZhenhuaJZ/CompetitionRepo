@@ -6,6 +6,7 @@ from core_model import pu_labeling, partical_fit, cv_fold, grid_search_roc
 from sklearn.externals import joblib
 from sklearn.base import clone
 import time, sys, datetime
+from stack import *
 now = datetime.datetime.now()
 
 score_path = "log/last_3_days/{}d_{}h_{}m/".format(now.day, now.hour, now.minute)
@@ -154,7 +155,6 @@ def part_fit(clf, train, seg_date, pu_thresh_b, eval = True, save_score = True):
         _score_path = score_path + "part_score_{}d_{}h_{}m.csv".format(now.day, now.hour, now.minute)
         score.to_csv(_score_path, index = None, float_format = "%.9f")
         print("\n# Score saved in {}".format(_score_path))
-        clear_mermory(probs, score_seg_2, score)
 
     if eval:
         #CV -5 Folds seg by date
@@ -171,7 +171,7 @@ def part_fit(clf, train, seg_date, pu_thresh_b, eval = True, save_score = True):
 
 def pu_a():
 
-    _clf = XGBClassifier(max_depth = 4, n_estimators = 480, subsample = 0.8, gamma = 0,
+    _clf = XGBClassifier(max_depth = 4, n_estimators = 4, subsample = 0.8, gamma = 0,
                     min_child_weight = 1, scale_pos_weight = 1,
                     colsample_bytree = 0.8, learning_rate = 0.07, n_jobs = -1)
 
@@ -205,15 +205,24 @@ def pu_b(train, pu_test_b, eval):
 
     return
 
+
+
 def main():
     os.makedirs(score_path)
     print("\n# Make dirs in {}".format(score_path))
     print("\n# Train_path : {}".format(train_path))
     print("\n# Validation_path : {}".format(validation_path))
 
-    pu_a()
-    #train = pu_a()
+    #pu_a()
+    train = pu_a()
     #pu_b(train, pu_test_b, eval = False)
+    test_b = pd.read_csv(test_b_path)
+    probs = two_layer_stacking(train, test_b)
+
+    score = pd.DataFrame(test_b["id"]).assign(score = probs[:,1])
+    _score_path = score_path  + "stacking_score_{}d_{}h_{}m.csv".format(now.day, now.hour, now.minute)
+    score.to_csv(_score_path, index = None, float_format = "%.9f")
+    print("\n# Stacking Score saved in {}".format(_score_path))
 
 if __name__ == '__main__':
     main()

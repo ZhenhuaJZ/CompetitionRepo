@@ -152,14 +152,6 @@ def stack_split(feature, labels, number_of_model):
 
     return fold_split, feature_split, label_split
 
-def save_final_layer_score(score):
-
-    final_score = pd.read_csv(stack_test_path)
-    f_score = final_score.assign(score = score)
-    f_score.to_csv(final_test_path, index = None, float_format = "%.9f")
-    progress_log(end_log = True)
-    print("\nFinal score saved to {}".format(final_test_path))
-
 def stack_xgb(train_path, label, test_path):
 
     dtrain = xgb.DMatrix(train_path, label=label)
@@ -227,11 +219,11 @@ def two_layer_stacking(train_data, test):
     # ####################First Layer Start#####################
     clf_names = ["XGB", "RF", "MLP"]#, "LR"]
     classifier = [
-        XGBClassifier(n_estimators=450, max_depth=4, learning_rate = 0.02,
-                      gamma = 0.2, reg_alpha = 0.07,
-                      subsample = 0.6, colsample_bytree = 0.7),
+        XGBClassifier(n_estimators=4, max_depth=4, learning_rate = 0.07,
+                      gamma = 0.1, reg_alpha = 0.07,
+                      subsample = 0.8, colsample_bytree = 0.8),
 
-        RandomForestClassifier(n_estimators = 450, max_depth = 4, criterion='entropy'), #450
+        RandomForestClassifier(n_estimators = 4, max_depth = 4, criterion='entropy'), #450
         MLPClassifier(hidden_layer_sizes=(256,128,128), activation = "logistic", batch_size = 20000)
         # LogisticRegression(class_weight = "balanced")
     ]
@@ -239,10 +231,10 @@ def two_layer_stacking(train_data, test):
     feature, test = stack_layer(clf_names, classifier, feature, label, test, layer_name = "layer1")
 
     # ####################Second Layer Start#####################
-    layer2_clf_names = ["XGB", "KNN", "QDA"]
+    layer2_clf_names = ["XGB"]
 
     layer2_classifier = [
-        XGBClassifier(n_estimators=450, max_depth=4, learning_rate = 0.02,
+        XGBClassifier(n_estimators=4, max_depth=4, learning_rate = 0.02,
                           gamma = 0.2, reg_alpha = 0.07,
                           subsample = 0.6, colsample_bytree = 0.7),
         KNeighborsClassifier(n_neighbors=5, weights='uniform', leaf_size=30, n_jobs=-1),
@@ -256,8 +248,6 @@ def two_layer_stacking(train_data, test):
     feature, test = stack_layer(layer2_clf_names, layer2_classifier, feature, label, test, layer_name = "layer2")
 
     final_preds = stack_xgb(feature, label, test)
-
-    # save_final_layer_score(final_preds)
 
     return final_preds
 
