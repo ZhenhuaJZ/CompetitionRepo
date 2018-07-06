@@ -32,7 +32,7 @@ param = {
         "silent" : 0
         }
 
-num_round = 450
+num_round = 4
 
 path1 = os.path.abspath(".")
 
@@ -220,16 +220,16 @@ def two_layer_stacking(train_data, test):
     clf_names = ["XGB", "RF", "MLP"]#, "LR"]
     classifier = [
         XGBClassifier(n_estimators=4, max_depth=4, learning_rate = 0.07,
-                      gamma = 0.1, reg_alpha = 0.07,
+                      gamma = 0.1, reg_alpha = 0.07,n_jobs = -1,
                       subsample = 0.8, colsample_bytree = 0.8),
 
-        RandomForestClassifier(n_estimators = 4, max_depth = 4, criterion='entropy'), #450
-        MLPClassifier(hidden_layer_sizes=(256,128,128), activation = "logistic", batch_size = 20000)
-        # LogisticRegression(class_weight = "balanced")
+        RandomForestClassifier(n_estimators = 1, min_samples_split = 110, max_depth = 20, criterion='entropy', n_jobs = -1), #450
+        #MLPClassifier(hidden_layer_sizes=(256,128,128), activation = "logistic", batch_size = 20000)
+        LogisticRegression(class_weight = "balanced", C = 1)
     ]
 
     feature, test = stack_layer(clf_names, classifier, feature, label, test, layer_name = "layer1")
-
+    """
     # ####################Second Layer Start#####################
     layer2_clf_names = ["XGB"]
 
@@ -246,6 +246,7 @@ def two_layer_stacking(train_data, test):
     ]
 
     feature, test = stack_layer(layer2_clf_names, layer2_classifier, feature, label, test, layer_name = "layer2")
+    """
 
     final_preds = stack_xgb(feature, label, test)
 
