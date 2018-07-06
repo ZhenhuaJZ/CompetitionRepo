@@ -37,7 +37,7 @@ def positive_unlabel_learning(clf, data_path, train, thresh, eval = True, save_s
     black = pu_labeling(clf, unlabel, thresh)
     _train = file_merge(train, black, "date")
     feature, label = split_train_label(_train)
-    #clf.set_params(learning_rate = 0.06, n_estimators = 4)
+    clf.set_params(learning_rate = 0.06, n_estimators = 460)
     print("\n# f ine_tune : 1 :\n", clf)
     clf.fit(feature, label)
     print("\n# >>>>Duration<<<< : {}min ".format(round((time.time()-start)/60,2)))
@@ -193,7 +193,7 @@ def pu_a():
     _, train, roc_pua = positive_unlabel_learning(clf, test_a_path, train, pu_thresh_a, prefix = "pua")
 
     # TODO: Fine tunning
-    _clf.set_params(n_estimators = 400, learning_rate = 0.06)
+    _clf.set_params(n_estimators = 440, learning_rate = 0.06)
     print("\n# fine_tune : 2 : \n", _clf)
 
     _train = validation_black(_clf, train)
@@ -230,8 +230,7 @@ def main():
 
         test_b = pd.read_csv(test_b_path)
         probs = two_layer_stacking(train, test_b)
-        print(probs)
-        print(type(probs))
+
         score = pd.DataFrame(test_b["id"]).assign(score = probs)
         _score_path = score_path  + "stacking_score_{}d_{}h_{}m.csv".format(now.day, now.hour, now.minute)
         score.to_csv(_score_path, index = None, float_format = "%.9f")
