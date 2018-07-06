@@ -24,7 +24,12 @@ pu_thresh_a = 0.50 #PU threshold for testa
 pu_test_b = False
 pu_thresh_b = 0.85 #PU threshold for testb
 seg_date = 20180215
-params =  { "gamma" : [0, 0.1], } # params = None "max_depth" : [3, 4], "min_child_weight" : [1, 2]
+params =  { "subsample" : [0.8, 0.7], "colsample_bytree" : [0.8 , 0.7]}
+#params = None
+#"max_depth" : [3, 4], "min_child_weight" : [1, 2]
+#"gamma" : [0, 0.1],
+#"subsample" : [0.8, 0.7], "colsample_bytree" : [0.8 , 0.7]
+
 
 def positive_unlabel_learning(clf, data_path, train, thresh, eval = True, save_score = True, prefix = "pu"):
 
@@ -185,13 +190,14 @@ def pu_a():
     # TODO: Fine tunning
     #_clf.set_params(n_estimators = 4, learning_rate = 0.07, subsample = 0.8)
 
-    _train = validation_black(_clf, train)
+    #_train = validation_black(_clf, train)
 
     log_parmas(_clf, params_path, roc_init = round(roc_init,6),#roc_unlabel = round(roc_unlabel,6), pu_unlabel = pu_unlabel,
                 roc_pua = round(roc_pua,6), pu_thresh_a = pu_thresh_a, score_path = score_path, over_samp = over_samp,
                 over_samp_ratio = over_samp_ratio, bst_clf = clf)
 
-    return _train
+    return
+    #return _train
 
 def pu_b(train, pu_test_b, eval):
     _clf = XGBClassifier(max_depth = 4, n_estimators = 480, subsample = 0.8, gamma = 0,
@@ -210,8 +216,9 @@ def main():
     print("\n# Train_path : {}".format(train_path))
     print("\n# Validation_path : {}".format(validation_path))
 
-    train = pu_a()
-    pu_b(train, pu_test_b, eval = False)
+    pu_a()
+    #train = pu_a()
+    #pu_b(train, pu_test_b, eval = False)
 
 if __name__ == '__main__':
     main()
