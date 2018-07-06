@@ -21,9 +21,9 @@ model_name = None #"6d_23h_10m" #best score model
 
 stacking = True
 over_samp = True
-over_samp_ratio = 0.01 # 0.06 add 808 to train
+over_samp_ratio = 0.015 # 0.06 add 808 to train
 #pu_unlabel = 0.5
-pu_thresh_a = 0.55 #PU threshold for testa
+pu_thresh_a = 0.65 #PU threshold for testa
 pu_test_b = True
 pu_thresh_b = 0.88 #PU threshold for testb
 seg_date = 20180215
