@@ -19,7 +19,7 @@ test_b_path = "data/test_b.csv"
 test_a_path = "data/test_a.csv"
 model_name = None #"6d_23h_10m" #best score model
 
-
+stack = True
 over_samp = False
 over_samp_ratio = 0.01 # 0.06 add 808 to train
 #pu_unlabel = 0.5
@@ -222,10 +222,10 @@ def main():
     print("\n# Train_path : {}".format(train_path))
     print("\n# Validation_path : {}".format(validation_path))
     os.makedirs(score_path)
-    #pu_a()
+    
     train = pu_a()
-    #train.to_csv("data/stack_train_best.csv", index = None)
-    #pu_b(train, pu_test_b, eval = False)
+    train.to_csv("data/stack_train_best.csv", index = None)
+    pu_b(train, pu_test_b, eval = False)
     if stack:
 
         test_b = pd.read_csv(test_b_path)
