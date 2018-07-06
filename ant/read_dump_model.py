@@ -33,7 +33,7 @@ def load_model():
     for pu_thresh_a in pu_thresh_a_range:
         _test_a = copy(test_a)
         print("\n# Tuning {}".format(pu_thresh_a) )
-        pu_black = positive_unlabel_learning(clf, _test_a, pu_thresh_a)
+        pu_black = pu_labeling(clf, _test_a, pu_thresh_a)
         _train = file_merge(train, pu_black, "date")
         _feature, _label = split_train_label(_train)
         #to do fine tunning
