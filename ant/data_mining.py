@@ -69,8 +69,8 @@ def init_train(clf, eval = True, save_score = True, save_model = True, params = 
     print("\n# Start Traing")
     print("\n# {}".format(clf))
     #Load model path
-    filename = "6d_16h_33m"
-    model_path = "log/last_3_days/" + filename + "/inti_model.pkl"
+    #filename = "6d_16h_33m"
+    #model_path = "log/last_3_days/" + filename + "/inti_model.pkl"
 
     train = pd.read_csv(train_path)
 
@@ -81,10 +81,10 @@ def init_train(clf, eval = True, save_score = True, save_model = True, params = 
         validation = pd.read_csv(validation_path)
         clf = grid_search_roc(clf, train, validation, params)
         #best_clf = clone(clf)
-    dump_clf = clf
+    #dump_clf = clf
     feature, label = split_train_label(train)
-    clf = joblib.load(model_path)
-    #clf.fit(feature, label)
+    #clf = joblib.load(model_path)
+    clf.fit(feature, label)
     if save_model:
         joblib.dump(clf, score_path + "inti_model.pkl")
         print("\n# Model dumped")
