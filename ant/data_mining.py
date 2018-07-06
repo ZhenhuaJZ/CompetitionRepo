@@ -35,6 +35,7 @@ def positive_unlabel_learning(clf, data_path, train, thresh, eval = True, save_s
     black = pu_labeling(clf, unlabel, thresh)
     _train = file_merge(train, black, "date")
     feature, label = split_train_label(_train)
+    clf.set_params(learning_rate = 0.06, n_estimators = 460)
     clf.fit(feature, label)
     print("\n# >>>>Duration<<<< : {}min ".format(round((time.time()-start)/60,2)))
 
@@ -183,7 +184,7 @@ def pu_a():
     _, train, roc_pua = positive_unlabel_learning(clf, test_a_path, train, pu_thresh_a, prefix = "pua")
 
     # TODO: Fine tunning
-    _clf.set_params(n_estimators = 450, learning_rate = 0.06)
+    _clf.set_params(n_estimators = 440, learning_rate = 0.06)
 
     _train = validation_black(_clf, train)
 
