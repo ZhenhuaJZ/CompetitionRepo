@@ -17,7 +17,7 @@ train_path = "data/train_float64.csv"  #train_normal_un.csv, train_float64.csv
 validation_path = "data/validation_float64.csv" #validation_normal_un.csv, validation_float64
 test_b_path = "data/test_b.csv"
 test_a_path = "data/test_a.csv"
-model_name = "6d_23h_10m" #"6d_23h_10m" #best score model
+model_name = None #"6d_23h_10m" #best score model
 
 
 over_samp = False
@@ -217,11 +217,11 @@ def pu_b(train, pu_test_b, eval):
     return
 
 def main():
-    os.makedirs(score_path)
+
     print("\n# Make dirs in {}".format(score_path))
     print("\n# Train_path : {}".format(train_path))
     print("\n# Validation_path : {}".format(validation_path))
-
+    os.makedirs(score_path)
     #pu_a()
     train = pu_a()
     #pu_b(train, pu_test_b, eval = False)
