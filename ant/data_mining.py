@@ -24,7 +24,7 @@ pu_thresh_a = 0.50 #PU threshold for testa
 pu_test_b = False
 pu_thresh_b = 0.85 #PU threshold for testb
 seg_date = 20180215
-params =  { "max_depth" : [3, 4], } # params = None "subsample" : [0.7, 0.8] "min_child_weight" : [1, 2]
+params =  { "max_depth" : [3, 4], "min_child_weight" : [1, 2]} # params = None "subsample" : [0.7, 0.8] "min_child_weight" : [1, 2]
 
 def positive_unlabel_learning(clf, data_path, train, thresh, eval = True, save_score = True, prefix = "pu"):
 
@@ -74,7 +74,7 @@ def init_train(clf, eval = True, save_score = True, save_model = True, params = 
     if params != None:
         validation = pd.read_csv(validation_path)
         clf = grid_search_roc(clf, train, validation, params)
-        best_clf = clone(clf)
+        #best_clf = clone(clf)
 
     feature, label = split_train_label(train)
     clf.fit(feature, label)
@@ -171,7 +171,7 @@ def part_fit(clf, train, seg_date, pu_thresh_b, eval = True, save_score = True):
 
 def pu_a():
 
-    _clf = XGBClassifier(max_depth = 4, n_estimators = 2, subsample = 0.8, gamma = 0,
+    _clf = XGBClassifier(max_depth = 4, n_estimators = 400, subsample = 0.8, gamma = 0,
                     min_child_weight = 1, scale_pos_weight = 1,
                     colsample_bytree = 0.8, learning_rate = 0.07, n_jobs = -1)
 
@@ -190,7 +190,7 @@ def pu_a():
 
     log_parmas(_clf, params_path, roc_init = round(roc_init,6),#roc_unlabel = round(roc_unlabel,6), pu_unlabel = pu_unlabel,
                 roc_pua = round(roc_pua,6), pu_thresh_a = pu_thresh_a, score_path = score_path, over_samp = over_samp,
-                over_samp_ratio = over_samp_ratio, bst_clf = bst_clf)
+                over_samp_ratio = over_samp_ratio, bst_clf = clf)
 
     return _train
 
