@@ -24,7 +24,8 @@ pu_thresh_a = 0.50 #PU threshold for testa
 pu_test_b = False
 pu_thresh_b = 0.85 #PU threshold for testb
 seg_date = 20180215
-params =  { "n_estimators" : [490, 510, 520]}
+params =  None #
+#{ "n_estimators" : [490, 510, 520]}
 #params = None
 #"max_depth" : [3, 4], "min_child_weight" : [1, 2]
 #"gamma" : [0, 0.1],
@@ -177,7 +178,7 @@ def part_fit(clf, train, seg_date, pu_thresh_b, eval = True, save_score = True):
 
 def pu_a():
 
-    _clf = XGBClassifier(max_depth = 4, n_estimators = 450, subsample = 0.8, gamma = 0,
+    _clf = XGBClassifier(max_depth = 4, n_estimators = 500, subsample = 0.8, gamma = 0,
                     min_child_weight = 1, scale_pos_weight = 1,
                     colsample_bytree = 0.8, learning_rate = 0.07, n_jobs = -1)
 
