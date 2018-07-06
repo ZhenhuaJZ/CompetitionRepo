@@ -11,30 +11,22 @@ now = datetime.datetime.now()
 score_path = "log/last_3_days/{}d_{}h_{}m/".format(now.day, now.hour, now.minute)
 params_path = "log/last_3_days/log_{}h.csv".format(now.hour)
 
-train_path = "data/train_normal_un.csv"  #train_normal_un.csv
+train_path = "data/train_int32.csv"  #train_normal_un.csv
 #unlabel_path = "data/unlabel.csv"
-validation_path = "data/validation_normal_un.csv" #validation_normal_un.csv
+validation_path = "data/validation_int32.csv" #validation_normal_un.csv
 test_b_path = "data/test_b.csv"
 test_a_path = "data/test_a.csv"
 
-over_samp = True
+over_samp = False
 over_samp_ratio = 0.1 # 0.06 add 808 to train
 #pu_unlabel = 0.5
-pu_thresh_a = 0.5 #PU threshold for testa
+pu_thresh_a = 0.6 #PU threshold for testa
 pu_test_b = False
 pu_thresh_b = 0.85 #PU threshold for testb
 seg_date = 20180215
-params =  {"n_estimators" : [410, 440]}
+params =  None
+#{"n_estimators" : [410, 440]}
 #{"gamma" : [0, 0.1], "learning_rate" : [0.06, 0.07]}
-#{"gamma" : [0, 0.1], "n_estimators" : [490, 500]}
-#None
-#{ "n_estimators" : [490, 510, 520]}
-#params = None
-#"max_depth" : [3, 4], "min_child_weight" : [1, 2]
-#"gamma" : [0, 0.1],
-#"subsample" : [0.8, 0.7], "colsample_bytree" : [0.8 , 0.7]
-#"reg_alpha" : [0, 0.02, 0.05]
-#"learning_rate" : [0.06, 0.07, 0.05]
 
 def positive_unlabel_learning(clf, data_path, train, thresh, eval = True, save_score = True, prefix = "pu"):
 
@@ -70,12 +62,16 @@ def positive_unlabel_learning(clf, data_path, train, thresh, eval = True, save_s
     no_roc = "n/a"
     return clf, _train, no_roc
 
-def init_train(clf, eval = True, save_score = True, save_model = True, params = None):
+def init_train(clf, eval = True, save_score = True, save_model = False, params = None):
 
     start = time.time()
     #Train
     print("\n# Start Traing")
     print("\n# {}".format(clf))
+    #Load model path
+    filename = "6d_16h_33m"
+    model_path = "log/last_3_days/" + filename + "/inti_model.pkl"
+
     train = pd.read_csv(train_path)
 
     if over_samp:
@@ -85,13 +81,13 @@ def init_train(clf, eval = True, save_score = True, save_model = True, params = 
         validation = pd.read_csv(validation_path)
         clf = grid_search_roc(clf, train, validation, params)
         #best_clf = clone(clf)
-
+    dump_clf = clf
     feature, label = split_train_label(train)
-    clf.fit(feature, label)
+    clf = joblib.load(model_path)
+    #clf.fit(feature, label)
     if save_model:
         joblib.dump(clf, score_path + "inti_model.pkl")
         print("\n# Model dumped")
-    clear_mermory(feature, label, train_path)
     print("\n# >>>>Duration<<<< : {}min ".format(round((time.time()-start)/60,2)))
 
     if eval:
