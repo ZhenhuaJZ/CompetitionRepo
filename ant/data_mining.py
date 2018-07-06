@@ -178,7 +178,7 @@ def part_fit(clf, train, seg_date, pu_thresh_b, eval = True, save_score = True):
 
 def pu_a():
 
-    _clf = XGBClassifier(max_depth = 4, n_estimators = 6, subsample = 0.8, gamma = 0,
+    _clf = XGBClassifier(max_depth = 4, n_estimators = 466, subsample = 0.8, gamma = 0,
                     min_child_weight = 1, scale_pos_weight = 1,
                     colsample_bytree = 0.8, learning_rate = 0.07, n_jobs = -1)
 
@@ -192,7 +192,7 @@ def pu_a():
     # TODO: Fine tunning
     #_clf.set_params(n_estimators = 4, learning_rate = 0.07, subsample = 0.8)
 
-    #_train = validation_black(_clf, train)
+    _train = validation_black(_clf, train)
 
     log_parmas(_clf, params_path, roc_init = round(roc_init,6),#roc_unlabel = round(roc_unlabel,6), pu_unlabel = pu_unlabel,
                 roc_pua = round(roc_pua,6), pu_thresh_a = pu_thresh_a, score_path = score_path, over_samp = over_samp,
