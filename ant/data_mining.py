@@ -62,7 +62,7 @@ def positive_unlabel_learning(clf, data_path, train, thresh, eval = True, save_s
     no_roc = "n/a"
     return clf, _train, no_roc
 
-def init_train(clf, eval = True, save_score = True, save_model = False, params = None):
+def init_train(clf, eval = True, save_score = True, save_model = True, params = None):
 
     start = time.time()
     #Train
@@ -81,13 +81,14 @@ def init_train(clf, eval = True, save_score = True, save_model = False, params =
         validation = pd.read_csv(validation_path)
         clf = grid_search_roc(clf, train, validation, params)
         #best_clf = clone(clf)
-    dump_clf = clf
+    #dump_clf = clf
     feature, label = split_train_label(train)
-    clf = joblib.load(model_path)
-    #clf.fit(feature, label)
+    #clf = joblib.load(model_path)
+    clf.fit(feature, label)
     if save_model:
         joblib.dump(clf, score_path + "inti_model.pkl")
         print("\n# Model dumped")
+
     print("\n# >>>>Duration<<<< : {}min ".format(round((time.time()-start)/60,2)))
 
     if eval:
@@ -177,7 +178,7 @@ def part_fit(clf, train, seg_date, pu_thresh_b, eval = True, save_score = True):
 
 def pu_a():
 
-    _clf = XGBClassifier(max_depth = 4, n_estimators = 480, subsample = 0.8, gamma = 0,
+    _clf = XGBClassifier(max_depth = 4, n_estimators = 450, subsample = 0.8, gamma = 0,
                     min_child_weight = 1, scale_pos_weight = 1,
                     colsample_bytree = 0.8, learning_rate = 0.07, n_jobs = -1)
 
