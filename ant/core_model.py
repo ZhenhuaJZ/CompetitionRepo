@@ -9,7 +9,7 @@ import sys
 from copy import copy
 now = datetime.datetime.now()
 
-def grid_search_roc(clf, train, test, params, log_path = ""):
+def grid_search_roc(clf, train, test, params):
 	feature, label = split_train_label(train)
 	test_feature, test_label = split_train_label(test)
 	best_clf = clone(clf)
@@ -33,8 +33,7 @@ def grid_search_roc(clf, train, test, params, log_path = ""):
 				best_auc = auc
 				best_param["{}".format(para)] = i
 			print("\n# >>>>Duration<<<< : {}min ".format(round((time.time()-start)/60,2)))
-	if log_path != "" :
-		log_parmas(best_clf, log_path)
+
 	print(best_clf)
 	return best_clf
 
