@@ -17,7 +17,7 @@ train_path = "data/train_float64.csv"  #train_normal_un.csv, train_float64.csv
 validation_path = "data/validation_float64.csv" #validation_normal_un.csv, validation_float64
 test_b_path = "data/test_b.csv"
 test_a_path = "data/test_a.csv"
-model_name = "6d_23h_10m" #best score model
+model_name = None#"6d_23h_10m" #best score model
 
 
 over_samp = False
