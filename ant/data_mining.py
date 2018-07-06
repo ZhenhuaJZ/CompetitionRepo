@@ -17,11 +17,13 @@ train_path = "data/train_float64.csv"  #train_normal_un.csv, train_float64.csv
 validation_path = "data/validation_float64.csv" #validation_normal_un.csv, validation_float64
 test_b_path = "data/test_b.csv"
 test_a_path = "data/test_a.csv"
+model_name = "6d_23h_10m" #best score model
 
-over_samp = False
-over_samp_ratio = 0.1 # 0.06 add 808 to train
+
+over_samp = True
+over_samp_ratio = 0.01 # 0.06 add 808 to train
 #pu_unlabel = 0.5
-pu_thresh_a = 0.5 #PU threshold for testa
+pu_thresh_a = 0.52 #PU threshold for testa
 pu_test_b = False
 pu_thresh_b = 0.85 #PU threshold for testb
 seg_date = 20180215
@@ -35,7 +37,8 @@ def positive_unlabel_learning(clf, data_path, train, thresh, eval = True, save_s
     black = pu_labeling(clf, unlabel, thresh)
     _train = file_merge(train, black, "date")
     feature, label = split_train_label(_train)
-    clf.set_params(learning_rate = 0.06, n_estimators = 460)
+    clf.set_params(learning_rate = 0.08, n_estimators = 460)
+    print("\n# f ine_tune : 1 :\n", clf)
     clf.fit(feature, label)
     print("\n# >>>>Duration<<<< : {}min ".format(round((time.time()-start)/60,2)))
 
@@ -63,7 +66,7 @@ def positive_unlabel_learning(clf, data_path, train, thresh, eval = True, save_s
     no_roc = "n/a"
     return clf, _train, no_roc
 
-def init_train(clf, eval = True, save_score = True, save_model = True, params = None):
+def init_train(clf, eval = True, save_score = True, save_model = True, params = None, dump_model = None):
 
     start = time.time()
     #Train
@@ -78,6 +81,11 @@ def init_train(clf, eval = True, save_score = True, save_model = True, params = 
         validation = pd.read_csv(validation_path)
         clf = grid_search_roc(clf, train, validation, params)
     feature, label = split_train_label(train)
+
+    if dump_model != None :
+        model_path =  "log/last_3_days/" + dump_model + "/inti_model.pkl"
+        print("\n# Load Model from {}".format(dump_model))
+        clf = joblib.load(model_path)
 
     clf.fit(feature, label)
     if save_model:
@@ -176,7 +184,7 @@ def pu_a():
                     min_child_weight = 1, scale_pos_weight = 1,
                     colsample_bytree = 0.8, learning_rate = 0.07, n_jobs = -1)
 
-    clf, train, roc_init = init_train(_clf, params = params)
+    clf, train, roc_init = init_train(_clf, params = params, dump_model = model_name)
     #print("\n# START PU - UNLABEL , PU_thresh_unlabel = {}".format(pu_unlabel))
     #clf, train, roc_unlabel = positive_unlabel_learning(clf, unlabel_path, train, pu_unlabel, prefix = "un_pu")
 
@@ -184,7 +192,8 @@ def pu_a():
     _, train, roc_pua = positive_unlabel_learning(clf, test_a_path, train, pu_thresh_a, prefix = "pua")
 
     # TODO: Fine tunning
-    _clf.set_params(n_estimators = 440, learning_rate = 0.06)
+    _clf.set_params(n_estimators = 420, learning_rate = 0.06)
+    print("\n# fine_tune : 2 : \n", _clf)
 
     _train = validation_black(_clf, train)
 
@@ -205,7 +214,6 @@ def pu_b(train, pu_test_b, eval):
         log_parmas(_clf, params_path, roc_part = round(roc_part,6), pu_thresh_b = pu_thresh_b, seg_date = seg_date, score_path = score_path)
 
     return
-
 
 def main():
     os.makedirs(score_path)
