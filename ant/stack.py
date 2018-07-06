@@ -218,7 +218,8 @@ def stack_layer(names, classifiers, feature, labels, test_feature, layer_name):
         return layer_transform_train, layer_transform_test
 
 def two_layer_stacking(train_data, test):
-
+    train_data = train_data.values
+    test = test.values
     feature = train_data[:,3:]
     label = train_data[:,1].astype(int)
     test = test[:,3:]
