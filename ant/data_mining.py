@@ -11,9 +11,9 @@ now = datetime.datetime.now()
 score_path = "log/last_3_days/{}d_{}h_{}m/".format(now.day, now.hour, now.minute)
 params_path = "log/last_3_days/log_{}h.csv".format(now.hour)
 
-train_path = "data/train_int32.csv"  #train_int32.csv
+train_path = "data/train_int32.csv"  #train_normal_un.csv
 #unlabel_path = "data/unlabel.csv"
-validation_path = "data/validation_int32.csv" #validation_int32.csv
+validation_path = "data/validation_int32.csv" #validation_normal_un.csv
 test_b_path = "data/test_b.csv"
 test_a_path = "data/test_a.csv"
 

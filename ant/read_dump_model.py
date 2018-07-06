@@ -18,7 +18,7 @@ validation_path = "data/validation_int32.csv"
 filename = "6d_15h_34m"
 
 
-pu_thresh_a_range = [0.5, 0.6, 0.7]
+pu_thresh_a_range = [0.6, 0.7]
 
 def load_model():
 
