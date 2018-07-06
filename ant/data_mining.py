@@ -20,7 +20,7 @@ test_a_path = "data/test_a.csv"
 over_samp = False
 over_samp_ratio = 0.1 # 0.06 add 808 to train
 #pu_unlabel = 0.5
-pu_thresh_a = 0.6 #PU threshold for testa
+pu_thresh_a = 0.52 #PU threshold for testa
 pu_test_b = False
 pu_thresh_b = 0.85 #PU threshold for testb
 seg_date = 20180215
@@ -69,9 +69,8 @@ def init_train(clf, eval = True, save_score = True, save_model = True, params = 
     print("\n# Start Traing")
     print("\n# {}".format(clf))
     #Load model path
-    filename = "6d_16h_33m"
-    model_path = "log/last_3_days/" + filename + "/inti_model.pkl"
-
+    #filename = "6d_16h_33m"
+    #model_path = "log/last_3_days/" + filename + "/inti_model.pkl"
     train = pd.read_csv(train_path)
 
     if over_samp:
@@ -81,9 +80,9 @@ def init_train(clf, eval = True, save_score = True, save_model = True, params = 
         validation = pd.read_csv(validation_path)
         clf = grid_search_roc(clf, train, validation, params)
         #best_clf = clone(clf)
-    dump_clf = clf
+    #dump_clf = clf
     feature, label = split_train_label(train)
-    clf = joblib.load(model_path)
+    #clf = joblib.load(model_path)
     clf.fit(feature, label)
     if save_model:
         joblib.dump(clf, score_path + "inti_model.pkl")
@@ -178,7 +177,7 @@ def part_fit(clf, train, seg_date, pu_thresh_b, eval = True, save_score = True):
 
 def pu_a():
 
-    _clf = XGBClassifier(max_depth = 4, n_estimators = 530, subsample = 0.8, gamma = 0,
+    _clf = XGBClassifier(max_depth = 4, n_estimators = 466, subsample = 0.8, gamma = 0,
                     min_child_weight = 1, scale_pos_weight = 1,
                     colsample_bytree = 0.8, learning_rate = 0.07, n_jobs = -1)
 
