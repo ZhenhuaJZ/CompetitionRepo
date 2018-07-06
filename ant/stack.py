@@ -172,7 +172,7 @@ def stack_layer(names, classifiers, feature, labels, test_feature, layer_name):
         for name, clf in zip(names, classifiers):
             fold_score = []
             test_score = []
-            print(label_split)
+
             for i in range(len(fold_split)):
                 start = time.time()
                 print("\nProcessing model :{} fold {}".format(name, i+1))
@@ -214,7 +214,7 @@ def two_layer_stacking(train_data, test):
     test = test.values
     feature = train_data[:,3:]
     label = train_data[:,1].astype(int)
-    test = test[:,3:]
+    test = test[:,2:]
 
     # ####################First Layer Start#####################
     clf_names = ["XGB", "RF", "MLP"]#, "LR"]
