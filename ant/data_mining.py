@@ -13,19 +13,18 @@ params_path = "log/last_3_days/log_{}h.csv".format(now.hour)
 
 train_path = "data/train_float64.csv"  #train_normal_un.csv, train_float64.csv
 #unlabel_path = "data/unlabel.csv"
-validation_path = "data/validation_int32.csv" #validation_normal_un.csv
+validation_path = "data/validation_float64.csv" #validation_normal_un.csv, validation_float64
 test_b_path = "data/test_b.csv"
 test_a_path = "data/test_a.csv"
 
 over_samp = False
 over_samp_ratio = 0.1 # 0.06 add 808 to train
 #pu_unlabel = 0.5
-pu_thresh_a = 0.52 #PU threshold for testa
+pu_thresh_a = 0.5 #PU threshold for testa
 pu_test_b = False
 pu_thresh_b = 0.85 #PU threshold for testb
 seg_date = 20180215
 params =  None
-#{"n_estimators" : [410, 440]}
 #{"gamma" : [0, 0.1], "learning_rate" : [0.06, 0.07]}
 
 def positive_unlabel_learning(clf, data_path, train, thresh, eval = True, save_score = True, prefix = "pu"):
@@ -77,6 +76,7 @@ def init_train(clf, eval = True, save_score = True, save_model = True, params = 
         validation = pd.read_csv(validation_path)
         clf = grid_search_roc(clf, train, validation, params)
     feature, label = split_train_label(train)
+
     clf.fit(feature, label)
     if save_model:
         joblib.dump(clf, score_path + "inti_model.pkl")
@@ -171,7 +171,7 @@ def part_fit(clf, train, seg_date, pu_thresh_b, eval = True, save_score = True):
 
 def pu_a():
 
-    _clf = XGBClassifier(max_depth = 4, n_estimators = 466, subsample = 0.8, gamma = 0,
+    _clf = XGBClassifier(max_depth = 4, n_estimators = 480, subsample = 0.8, gamma = 0,
                     min_child_weight = 1, scale_pos_weight = 1,
                     colsample_bytree = 0.8, learning_rate = 0.07, n_jobs = -1)
 
