@@ -11,22 +11,22 @@ now = datetime.datetime.now()
 score_path = "log/last_3_days/{}d_{}h_{}m/".format(now.day, now.hour, now.minute)
 params_path = "log/last_3_days/log_{}h.csv".format(now.hour)
 
-train_path = "data/_train_data.csv"
+train_path = "data/train_int32.csv"
 test_b_path = "data/test_b.csv"
 test_a_path = "data/test_a.csv"
-validation_path = "data/_test_offline.csv"
-filename = "5d_17h_9m"
+validation_path = "data/validation_int32.csv"
+filename = "6d_15h_34m"
 
 
-pu_thresh_a_range = [0.92, 0.91, 0.9, 0.89, 0.88, 0.87]
+pu_thresh_a_range = [0.4, 0.5, 0.6, 0.7]
 
 def load_model():
 
     model_path = "log/last_3_days/" + filename + "/inti_model.pkl"
     test_a = pd.read_csv(test_a_path)
     train = pd.read_csv(train_path)
-
     clf = joblib.load(model_path)
+
     for pu_thresh_a in pu_thresh_a_range:
         _test_a = copy(test_a)
         print("\n# Tuning {}".format(pu_thresh_a) )
@@ -37,7 +37,6 @@ def load_model():
         clf.fit(_feature, _label)
 
         print("\n# EVAL PU")
-        validation_path = "data/_test_offline.csv"
         validation = pd.read_csv(validation_path)
         val_feature, val_label = split_train_label(validation)
         val_probs = clf.predict_proba(val_feature)
