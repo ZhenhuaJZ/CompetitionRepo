@@ -19,12 +19,12 @@ test_a_path = "data/test_a.csv"
 
 over_samp = False
 over_samp_ratio = 0.1
-pu_unlabel = 0.5
+#pu_unlabel = 0.5
 pu_thresh_a = 0.50 #PU threshold for testa
 pu_test_b = False
 pu_thresh_b = 0.85 #PU threshold for testb
 seg_date = 20180215
-params =  { "reg_alpha" : [0, 0.02, 0.05]}
+params =  { "n_estimators" : [490, 510, 520]}
 #params = None
 #"max_depth" : [3, 4], "min_child_weight" : [1, 2]
 #"gamma" : [0, 0.1],
