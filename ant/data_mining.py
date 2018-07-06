@@ -191,8 +191,8 @@ def pu_a():
                 roc_pua = round(roc_pua,6), pu_thresh_a = pu_thresh_a, score_path = score_path, over_samp = over_samp,
                 over_samp_ratio = over_samp_ratio, bst_clf = clf)
 
-    return
-    #return _train
+    #return
+    return _train
 
 def pu_b(train, pu_test_b, eval):
     _clf = XGBClassifier(max_depth = 4, n_estimators = 480, subsample = 0.8, gamma = 0,
@@ -215,7 +215,7 @@ def main():
 
     #pu_a()
     train = pu_a()
-    pu_b(train, pu_test_b, eval = False)
+    #pu_b(train, pu_test_b, eval = False)
     test_b = pd.read_csv(test_b_path)
     probs = two_layer_stacking(train, test_b)
 
