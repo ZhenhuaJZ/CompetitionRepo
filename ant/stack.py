@@ -27,11 +27,11 @@ param = {
         "colsample_bytree" : 0.8,
         "min_child_weight" : 1,
         "gamma" : 0.1,
-        "eta" : 0.06, #learning_rate
+        "eta" : 0.07, #learning_rate
         "eval_metric" : ['error'], #early stop only effects on error
         "silent" : 0
         }
-num_round = 460
+num_round = 480
 
 path1 = os.path.abspath(".")
 
