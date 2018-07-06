@@ -20,10 +20,10 @@ test_a_path = "data/test_a.csv"
 model_name = None #"6d_23h_10m" #best score model
 
 stacking = True
-over_samp = False
+over_samp = True
 over_samp_ratio = 0.01 # 0.06 add 808 to train
 #pu_unlabel = 0.5
-pu_thresh_a = 0.50 #PU threshold for testa
+pu_thresh_a = 0.55 #PU threshold for testa
 pu_test_b = True
 pu_thresh_b = 0.88 #PU threshold for testb
 seg_date = 20180215
@@ -193,7 +193,7 @@ def pu_a():
     _, train, roc_pua = positive_unlabel_learning(clf, test_a_path, train, pu_thresh_a, prefix = "pua")
 
     # TODO: Fine tunning
-    #_clf.set_params(n_estimators = 440, learning_rate = 0.06)
+    _clf.set_params(n_estimators = 400, learning_rate = 0.06)
     print("\n# fine_tune : 2 : \n", _clf)
 
     _train = validation_black(_clf, train)
