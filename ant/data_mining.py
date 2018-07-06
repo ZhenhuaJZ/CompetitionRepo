@@ -23,7 +23,7 @@ model_name = "6d_23h_10m" #best score model
 over_samp = False
 over_samp_ratio = 0.01 # 0.06 add 808 to train
 #pu_unlabel = 0.5
-pu_thresh_a = 0.52 #PU threshold for testa
+pu_thresh_a = 0.51 #PU threshold for testa
 pu_test_b = False
 pu_thresh_b = 0.85 #PU threshold for testb
 seg_date = 20180215
@@ -37,7 +37,7 @@ def positive_unlabel_learning(clf, data_path, train, thresh, eval = True, save_s
     black = pu_labeling(clf, unlabel, thresh)
     _train = file_merge(train, black, "date")
     feature, label = split_train_label(_train)
-    clf.set_params(learning_rate = 0.07, n_estimators = 420)
+    clf.set_params(learning_rate = 0.07, n_estimators = 460)
     print("\n# f ine_tune : 1 :\n", clf)
     clf.fit(feature, label)
     print("\n# >>>>Duration<<<< : {}min ".format(round((time.time()-start)/60,2)))
