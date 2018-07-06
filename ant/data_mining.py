@@ -37,7 +37,7 @@ def positive_unlabel_learning(clf, data_path, train, thresh, eval = True, save_s
     black = pu_labeling(clf, unlabel, thresh)
     _train = file_merge(train, black, "date")
     feature, label = split_train_label(_train)
-    clf.set_params(learning_rate = 0.08, n_estimators = 460)
+    clf.set_params(learning_rate = 0.08, n_estimators = 420)
     print("\n# f ine_tune : 1 :\n", clf)
     clf.fit(feature, label)
     print("\n# >>>>Duration<<<< : {}min ".format(round((time.time()-start)/60,2)))
