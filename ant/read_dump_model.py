@@ -2,7 +2,7 @@ import pandas as pd
 from xgboost import XGBClassifier
 from lib.data_processing import *
 from lib.model_performance import *
-from core_model import positive_unlabel_learning, partical_fit, cv_fold
+from core_model import pu_labeling, partical_fit, cv_fold
 from sklearn.externals import joblib
 import time, sys, datetime
 from copy import copy
@@ -21,6 +21,9 @@ filename = "6d_15h_34m"
 pu_thresh_a_range = [0.4, 0.5, 0.6, 0.7]
 
 def load_model():
+
+    print("\n# Train_path : {}".format(train_path))
+    print("\n# Validation_path : {}".format(validation_path))
 
     model_path = "log/last_3_days/" + filename + "/inti_model.pkl"
     test_a = pd.read_csv(test_a_path)
