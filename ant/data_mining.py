@@ -12,9 +12,9 @@ now = datetime.datetime.now()
 score_path = "log/last_3_days/{}d_{}h_{}m/".format(now.day, now.hour, now.minute)
 params_path = "log/last_3_days/log_{}h.csv".format(now.hour)
 
-train_path = "data/train_float64.csv"  #train_normal_un.csv, train_float64.csv
+train_path = "data/train_int32.csv"  #train_normal_un.csv, train_float64.csv
 #unlabel_path = "data/unlabel.csv"
-validation_path = "data/validation_float64.csv" #validation_normal_un.csv, validation_float64
+validation_path = "data/validation_int32.csv" #validation_normal_un.csv, validation_float64
 test_b_path = "data/test_b.csv"
 test_a_path = "data/test_a.csv"
 
@@ -171,7 +171,7 @@ def part_fit(clf, train, seg_date, pu_thresh_b, eval = True, save_score = True):
 
 def pu_a():
 
-    _clf = XGBClassifier(max_depth = 4, n_estimators = 4, subsample = 0.8, gamma = 0,
+    _clf = XGBClassifier(max_depth = 4, n_estimators = 530, subsample = 0.8, gamma = 0,
                     min_child_weight = 1, scale_pos_weight = 1,
                     colsample_bytree = 0.8, learning_rate = 0.07, n_jobs = -1)
 
@@ -213,16 +213,16 @@ def main():
     print("\n# Train_path : {}".format(train_path))
     print("\n# Validation_path : {}".format(validation_path))
 
-    #pu_a()
-    train = pu_a()
+    pu_a()
+    #train = pu_a()
     #pu_b(train, pu_test_b, eval = False)
-    test_b = pd.read_csv(test_b_path)
-    probs = two_layer_stacking(train, test_b)
+    #test_b = pd.read_csv(test_b_path)
+    #probs = two_layer_stacking(train, test_b)
 
-    score = pd.DataFrame(test_b["id"]).assign(score = probs[:,1])
-    _score_path = score_path  + "stacking_score_{}d_{}h_{}m.csv".format(now.day, now.hour, now.minute)
-    score.to_csv(_score_path, index = None, float_format = "%.9f")
-    print("\n# Stacking Score saved in {}".format(_score_path))
+    #score = pd.DataFrame(test_b["id"]).assign(score = probs[:,1])
+    #_score_path = score_path  + "stacking_score_{}d_{}h_{}m.csv".format(now.day, now.hour, now.minute)
+    #score.to_csv(_score_path, index = None, float_format = "%.9f")
+    #print("\n# Stacking Score saved in {}".format(_score_path))
 
 if __name__ == '__main__':
     main()
