@@ -12,18 +12,18 @@ now = datetime.datetime.now()
 score_path = "log/last_3_days/{}d_{}h_{}m/".format(now.day, now.hour, now.minute)
 params_path = "log/last_3_days/log_{}h.csv".format(now.hour)
 
-train_path = "data/train_float64.csv"  #train_normal_un.csv, train_float64.csv
+train_path = "data/train_normal_unlabel_float.csv"  #train_normal_un.csv, train_float64.csv
 #unlabel_path = "data/unlabel.csv"
-validation_path = "data/validation_float64.csv" #validation_normal_un.csv, validation_float64
+validation_path = "data/test_normal_unlabel_float.csv" #validation_normal_un.csv, validation_float64
 test_b_path = "data/test_b.csv"
 test_a_path = "data/test_a.csv"
 model_name = None #"6d_23h_10m" #best score model
 
-stacking = True
+stacking = False
 over_samp = True
-over_samp_ratio = 0.015 # 0.06 add 808 to train
+over_samp_ratio = 0.08 # 0.06 add 808 to train
 #pu_unlabel = 0.5
-pu_thresh_a = 0.65 #PU threshold for testa
+pu_thresh_a = 0.60 #PU threshold for testa
 pu_test_b = True
 pu_thresh_b = 0.88 #PU threshold for testb
 seg_date = 20180215
@@ -206,7 +206,7 @@ def pu_a():
     return _train
 
 def pu_b(train, pu_test_b, eval):
-    _clf = XGBClassifier(max_depth = 4, n_estimators = 480, subsample = 0.8, gamma = 0,
+    _clf = XGBClassifier(max_depth = 4, n_estimators = 480, subsample = 0.8, gamma = 0.1,
                     min_child_weight = 1, scale_pos_weight = 1,
                     colsample_bytree = 0.8, learning_rate = 0.06, n_jobs = -1)
 
@@ -225,7 +225,7 @@ def main():
 
     train = pu_a()
     #train.to_csv("data/stack_train_best.csv", index = None)
-    pu_b(train, pu_test_b, eval = False)
+    pu_b(train, pu_test_b, eval = True)
 
     if stacking:
 
