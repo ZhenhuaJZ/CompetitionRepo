@@ -23,16 +23,16 @@ from lib.data_processing import *
 param = {
         "objective" : "binary:logistic",
         "max_depth" : 4,
-        "subsample" : 0.6,
-        "colsample_bytree" : 0.7,
+        "subsample" : 0.8,
+        "colsample_bytree" : 0.8,
         "min_child_weight" : 1,
         "gamma" : 0.1,
-        "eta" : 0.02, #learning_rate
+        "eta" : 0.06, #learning_rate
         "eval_metric" : ['error'], #early stop only effects on error
         "silent" : 0
         }
 
-num_round = 4
+num_round = 460
 
 path1 = os.path.abspath(".")
 
@@ -217,9 +217,9 @@ def two_layer_stacking(train_data, test):
     test = test[:,2:]
 
     # ####################First Layer Start#####################
-    clf_names = ["XGB", "RF", "MLP"]#, "LR"]
+    clf_names = ["XGB", "RF", "LR"]
     classifier = [
-        XGBClassifier(n_estimators=4, max_depth=4, learning_rate = 0.07,
+        XGBClassifier(n_estimators=400, max_depth=4, learning_rate = 0.07,
                       gamma = 0.1, reg_alpha = 0.07,n_jobs = -1,
                       subsample = 0.8, colsample_bytree = 0.8),
 
