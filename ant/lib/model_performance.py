@@ -153,7 +153,7 @@ def log_parmas(clf, save_path, **kwargs):
         #cv_roc_2_mean = round(cv_roc_2_mean, 6)
     #score_path = re.split('log/', score_path)[-1]
     split_string = re.split('[(,' '\n)' ']', str(clf))
-    split_string = re.split('[(,' '\n)' ']', str(kwargs["bst_clf"]))
+    #split_string = re.split('[(,' '\n)' ']', str(kwargs["bst_clf"]))
 
     f = csv.writer(open(save_path, "a"))
 
