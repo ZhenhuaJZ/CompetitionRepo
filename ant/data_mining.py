@@ -11,13 +11,13 @@ now = datetime.datetime.now()
 score_path = "log/last_3_days/{}d_{}h_{}m/".format(now.day, now.hour, now.minute)
 params_path = "log/last_3_days/log_{}h.csv".format(now.hour)
 
-train_path = "data/train_normal_un.csv"  #train_normal_un.csv
+train_path = "data/train_int32.csv"  #train_normal_un.csv
 #unlabel_path = "data/unlabel.csv"
-validation_path = "data/validation_normal_un.csv" #validation_normal_un.csv
+validation_path = "data/validation_int32.csv" #validation_normal_un.csv
 test_b_path = "data/test_b.csv"
 test_a_path = "data/test_a.csv"
 
-over_samp = True
+over_samp = False
 over_samp_ratio = 0.1 # 0.06 add 808 to train
 #pu_unlabel = 0.5
 pu_thresh_a = 0.6 #PU threshold for testa
@@ -69,8 +69,8 @@ def init_train(clf, eval = True, save_score = True, save_model = True, params = 
     print("\n# Start Traing")
     print("\n# {}".format(clf))
     #Load model path
-    #filename = "6d_16h_33m"
-    #model_path = "log/last_3_days/" + filename + "/inti_model.pkl"
+    filename = "6d_16h_33m"
+    model_path = "log/last_3_days/" + filename + "/inti_model.pkl"
 
     train = pd.read_csv(train_path)
 
@@ -81,10 +81,10 @@ def init_train(clf, eval = True, save_score = True, save_model = True, params = 
         validation = pd.read_csv(validation_path)
         clf = grid_search_roc(clf, train, validation, params)
         #best_clf = clone(clf)
-    #dump_clf = clf
+    dump_clf = clf
     feature, label = split_train_label(train)
-    #clf = joblib.load(model_path)
-    clf.fit(feature, label)
+    clf = joblib.load(model_path)
+    #clf.fit(feature, label)
     if save_model:
         joblib.dump(clf, score_path + "inti_model.pkl")
         print("\n# Model dumped")
