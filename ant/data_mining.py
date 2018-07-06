@@ -18,13 +18,13 @@ test_b_path = "data/test_b.csv"
 test_a_path = "data/test_a.csv"
 
 over_samp = True
-over_samp_ratio = 0.06 # 0.06 add 808 to train
+over_samp_ratio = 0.1 # 0.06 add 808 to train
 #pu_unlabel = 0.5
 pu_thresh_a = 0.5 #PU threshold for testa
 pu_test_b = False
 pu_thresh_b = 0.85 #PU threshold for testb
 seg_date = 20180215
-params = {"learning_rate" : [0.06, 0.07, 0.05]}
+params = {"gamma" : [0, 0.1], "learning_rate" : [0.06, 0.07]}
 #{"gamma" : [0, 0.1], "n_estimators" : [490, 500]}
 #None
 #{ "n_estimators" : [490, 510, 520]}
