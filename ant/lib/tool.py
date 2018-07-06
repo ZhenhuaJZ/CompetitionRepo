@@ -28,6 +28,5 @@ class Logger(object):
     def flush(self):
         pass
 
-sys.stdout = Logger("leo.txt")
-print("hello word")
-print("helleo")
+#sys.stdout = Logger("leo.txt")
+#print("hello word")
