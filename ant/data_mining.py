@@ -24,7 +24,7 @@ pu_thresh_a = 0.5 #PU threshold for testa
 pu_test_b = False
 pu_thresh_b = 0.85 #PU threshold for testb
 seg_date = 20180215
-params =  {"n_estimators" : [460, 480]}
+params =  {"n_estimators" : [410, 440]}
 #{"gamma" : [0, 0.1], "learning_rate" : [0.06, 0.07]}
 #{"gamma" : [0, 0.1], "n_estimators" : [490, 500]}
 #None
