@@ -37,7 +37,7 @@ def positive_unlabel_learning(clf, data_path, train, thresh, eval = True, save_s
     black = pu_labeling(clf, unlabel, thresh)
     _train = file_merge(train, black, "date")
     feature, label = split_train_label(_train)
-    #clf.set_params(learning_rate = 0.07, n_estimators = 460)
+    clf.set_params(learning_rate = 0.07, n_estimators = 420)
     print("\n# f ine_tune : 1 :\n", clf)
     clf.fit(feature, label)
     print("\n# >>>>Duration<<<< : {}min ".format(round((time.time()-start)/60,2)))
@@ -88,6 +88,7 @@ def init_train(clf, eval = True, save_score = True, save_model = False, params =
         clf = joblib.load(model_path)
 
     clf.fit(feature, label)
+
     if save_model and dump_model == None:
         joblib.dump(clf, score_path + "inti_model.pkl")
         print("\n# Model dumped")
@@ -192,7 +193,7 @@ def pu_a():
     _, train, roc_pua = positive_unlabel_learning(clf, test_a_path, train, pu_thresh_a, prefix = "pua")
 
     # TODO: Fine tunning
-    _clf.set_params(n_estimators = 390, learning_rate = 0.07)
+    _clf.set_params(n_estimators = 400, learning_rate = 0.06, gamma = 0.1)
     print("\n# fine_tune : 2 : \n", _clf)
 
     _train = validation_black(_clf, train)
