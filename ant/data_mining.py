@@ -183,7 +183,7 @@ def pu_a():
     _, train, roc_pua = positive_unlabel_learning(clf, test_a_path, train, pu_thresh_a, prefix = "pua")
 
     # TODO: Fine tunning
-    #_clf.set_params(n_estimators = 4, learning_rate = 0.07, subsample = 0.8)
+    _clf.set_params(n_estimators = 400, learning_rate = 0.06)
 
     _train = validation_black(_clf, train)
 
@@ -206,7 +206,6 @@ def pu_b(train, pu_test_b, eval):
     return
 
 
-
 def main():
     os.makedirs(score_path)
     print("\n# Make dirs in {}".format(score_path))
@@ -214,8 +213,9 @@ def main():
     print("\n# Validation_path : {}".format(validation_path))
 
     #pu_a()
-    train = pu_a()
+    pu_a()
     #pu_b(train, pu_test_b, eval = False)
+    """
     test_b = pd.read_csv(test_b_path)
     probs = two_layer_stacking(train, test_b)
 
@@ -223,6 +223,6 @@ def main():
     _score_path = score_path  + "stacking_score_{}d_{}h_{}m.csv".format(now.day, now.hour, now.minute)
     score.to_csv(_score_path, index = None, float_format = "%.9f")
     print("\n# Stacking Score saved in {}".format(_score_path))
-
+    """
 if __name__ == '__main__':
     main()
