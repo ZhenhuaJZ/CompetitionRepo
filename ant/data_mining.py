@@ -206,14 +206,6 @@ def pu_b(train, pu_test_b, eval):
     return
 
 def main():
-
-    _train_data = pd.read_csv(train_path)
-    _train_data.loc[_train_data["label"] == -1] = 1 #change -1 label to 1
-    _train_data, _test_offline =  test_train_split_by_date(_train_data, 20171025, 20171105)
-    _train_data.to_csv("train_float64_dul.csv", index = None)
-    _test_offline.to_csv("validation_float64.csv", index = None)
-    sys.exit()
-
     os.makedirs(score_path)
     print("\n# Make dirs in {}".format(score_path))
     print("\n# Train_path : {}".format(train_path))
