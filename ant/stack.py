@@ -32,7 +32,7 @@ param = {
         "silent" : 0
         }
 
-num_round = 4
+num_round = 460
 
 path1 = os.path.abspath(".")
 
@@ -157,8 +157,6 @@ def stack_xgb(train_path, label, test_path):
     dtrain = xgb.DMatrix(train_path, label=label)
     dtest = xgb.DMatrix(test_path)
     bst = xgb.train(param, dtrain, num_round)
-    # bst.save_model(model_path + "XGB_layer_2.model")
-    # print("\nSaved model <XGB_layer_2.model>")
     final_preds = bst.predict(dtest)
 
     return final_preds
@@ -219,13 +217,11 @@ def two_layer_stacking(train_data, test):
     # ####################First Layer Start#####################
     clf_names = ["XGB", "RF", "LR"]
     classifier = [
-        XGBClassifier(n_estimators=4, max_depth=4, learning_rate = 0.07,
-                      gamma = 0.1, reg_alpha = 0.07,n_jobs = -1,
+        XGBClassifier(n_estimators=488, max_depth=4, learning_rate = 0.07,
+                      gamma = 0.1, n_jobs = -1,
                       subsample = 0.8, colsample_bytree = 0.8),
-
-        RandomForestClassifier(n_estimators = 1, min_samples_split = 110, max_depth = 20, criterion='entropy', n_jobs = -1), #450
-        #MLPClassifier(hidden_layer_sizes=(256,128,128), activation = "logistic", batch_size = 20000)
-        #LogisticRegression(class_weight = "balanced", C = 1)
+        RandomForestClassifier(n_estimators = 288, min_samples_split = 110, max_depth = 20, criterion='entropy', n_jobs = -1), #450
+        LogisticRegression(class_weight = "balanced", C = 1)
     ]
 
     feature, test = stack_layer(clf_names, classifier, feature, label, test, layer_name = "layer1")
@@ -235,27 +231,6 @@ def two_layer_stacking(train_data, test):
     return final_preds
 
 
-# def main():
-#
-#     progress_log(start_log = True)
-#
-#     train_data = np.load(train_path)
-#
-#     test = np.load(test_path)
-#
-#     """
-#     prepro_names = ["Imputation", "StandardScaler", "Normalizaiton"]
-#
-#     preprocessors = [
-#         Imputer(missing_values='NaN', strategy='most_frequent', axis=0)
-#         StandardScaler()
-#         Normalizer(norm='l2')
-#     ]
-#     """
-#
-#     #feature, test = feature_processing(prepro_names, preprocessors, feature, test_feature)
-#
-#     #feature, test = select_feature_from_xgb(feature, label, test)
 #
 #     # ####################First Layer Start#####################
 #     clf_names = ["XGB", "RF", "MLP", "LR"]
@@ -288,12 +263,4 @@ def two_layer_stacking(train_data, test):
 #         #RandomForestClassifier(n_estimators = 3, max_depth = 4, criterion='entropy'), #450
 #     ]
 #
-#     feature, test = stack_layer(layer2_clf_names, layer2_classifier, feature, label, test, layer_name = "layer2")
 #
-#     final_preds = stack_xgb(feature, label, test)
-#
-#     save_final_layer_score(final_preds)
-#
-#
-# if __name__ == '__main__':
-#     main()

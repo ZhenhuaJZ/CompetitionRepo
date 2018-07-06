@@ -193,7 +193,7 @@ def pu_a():
     _, train, roc_pua = positive_unlabel_learning(clf, test_a_path, train, pu_thresh_a, prefix = "pua")
 
     # TODO: Fine tunning
-    _clf.set_params(n_estimators = 350, learning_rate = 0.06)
+    _clf.set_params(n_estimators = 400, learning_rate = 0.06)
     print("\n# fine_tune : 2 : \n", _clf)
 
     _train = validation_black(_clf, train)
@@ -224,6 +224,7 @@ def main():
     os.makedirs(score_path)
     #pu_a()
     train = pu_a()
+    train.to_csv("stack_train.csv", index = None)
     #pu_b(train, pu_test_b, eval = False)
     if stack:
 
