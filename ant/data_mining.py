@@ -69,8 +69,8 @@ def init_train(clf, eval = True, save_score = True, save_model = True, params = 
     print("\n# Start Traing")
     print("\n# {}".format(clf))
     #Load model path
-    filename = "6d_16h_33m"
-    model_path = "log/last_3_days/" + filename + "/inti_model.pkl"
+    #filename = "6d_16h_33m"
+    #model_path = "log/last_3_days/" + filename + "/inti_model.pkl"
 
     train = pd.read_csv(train_path)
 
