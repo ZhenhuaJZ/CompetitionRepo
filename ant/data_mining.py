@@ -11,7 +11,7 @@ now = datetime.datetime.now()
 score_path = "log/last_3_days/{}d_{}h_{}m/".format(now.day, now.hour, now.minute)
 params_path = "log/last_3_days/log_{}h.csv".format(now.hour)
 
-train_path = "data/train_int32.csv"  #train_normal_un.csv
+train_path = "data/train_float64.csv"  #train_normal_un.csv, train_float64.csv
 #unlabel_path = "data/unlabel.csv"
 validation_path = "data/validation_int32.csv" #validation_normal_un.csv
 test_b_path = "data/test_b.csv"
@@ -68,9 +68,6 @@ def init_train(clf, eval = True, save_score = True, save_model = True, params = 
     #Train
     print("\n# Start Traing")
     print("\n# {}".format(clf))
-    #Load model path
-    #filename = "6d_16h_33m"
-    #model_path = "log/last_3_days/" + filename + "/inti_model.pkl"
     train = pd.read_csv(train_path)
 
     if over_samp:
@@ -79,10 +76,7 @@ def init_train(clf, eval = True, save_score = True, save_model = True, params = 
     if params != None:
         validation = pd.read_csv(validation_path)
         clf = grid_search_roc(clf, train, validation, params)
-        #best_clf = clone(clf)
-    #dump_clf = clf
     feature, label = split_train_label(train)
-    #clf = joblib.load(model_path)
     clf.fit(feature, label)
     if save_model:
         joblib.dump(clf, score_path + "inti_model.pkl")
@@ -212,6 +206,14 @@ def pu_b(train, pu_test_b, eval):
     return
 
 def main():
+
+    _train_data = pd.read_csv(train_path)
+    _train_data.loc[_train_data["label"] == -1] = 1 #change -1 label to 1
+    _train_data, _test_offline =  test_train_split_by_date(_train_data, 20171025, 20171105)
+    _train_data.to_csv("train_float64_dul.csv", index = None)
+    _test_offline.to_csv("validation_float64.csv", index = None)
+    sys.exit()
+
     os.makedirs(score_path)
     print("\n# Make dirs in {}".format(score_path))
     print("\n# Train_path : {}".format(train_path))
