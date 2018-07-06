@@ -24,8 +24,8 @@ over_samp = False
 over_samp_ratio = 0.01 # 0.06 add 808 to train
 #pu_unlabel = 0.5
 pu_thresh_a = 0.50 #PU threshold for testa
-pu_test_b = False
-pu_thresh_b = 0.85 #PU threshold for testb
+pu_test_b = True
+pu_thresh_b = 0.88 #PU threshold for testb
 seg_date = 20180215
 params =  None
 #{"gamma" : [0, 0.1], "learning_rate" : [0.06, 0.07]}
@@ -224,8 +224,9 @@ def main():
     os.makedirs(score_path)
 
     train = pu_a()
-    train.to_csv("data/stack_train_best.csv", index = None)
+    #train.to_csv("data/stack_train_best.csv", index = None)
     pu_b(train, pu_test_b, eval = False)
+
     if stacking:
 
         test_b = pd.read_csv(test_b_path)
