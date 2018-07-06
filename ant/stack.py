@@ -31,7 +31,6 @@ param = {
         "eval_metric" : ['error'], #early stop only effects on error
         "silent" : 0
         }
-
 num_round = 460
 
 path1 = os.path.abspath(".")
