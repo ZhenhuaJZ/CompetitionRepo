@@ -24,11 +24,12 @@ pu_thresh_a = 0.50 #PU threshold for testa
 pu_test_b = False
 pu_thresh_b = 0.85 #PU threshold for testb
 seg_date = 20180215
-params =  { "gamma" : [0, 0.1]}
+params =  { "reg_alpha" : [0, 0.02, 0.05]}
 #params = None
 #"max_depth" : [3, 4], "min_child_weight" : [1, 2]
 #"gamma" : [0, 0.1],
 #"subsample" : [0.8, 0.7], "colsample_bytree" : [0.8 , 0.7]
+#"reg_alpha" : [0, 0.02, 0.05]
 
 
 def positive_unlabel_learning(clf, data_path, train, thresh, eval = True, save_score = True, prefix = "pu"):
