@@ -15,10 +15,10 @@ train_path = "data/train_int32.csv"
 test_b_path = "data/test_b.csv"
 test_a_path = "data/test_a.csv"
 validation_path = "data/validation_int32.csv"
-filename = "6d_15h_34m"
+filename = "6d_16h_33m"
 
 
-pu_thresh_a_range = [0.7, 0.8]
+pu_thresh_a_range = [0.6, 0.8]
 
 def load_model():
 
