@@ -222,29 +222,16 @@ def two_layer_stacking(train_data, test):
     feature = train_data[:,3:]
     label = train_data[:,1].astype(int)
     test = test[:,3:]
-    #feature, test = feature_processing(prepro_names, preprocessors, feature, test_feature)
-
-    #feature, test = select_feature_from_xgb(feature, label, test)
 
     # ####################First Layer Start#####################
     clf_names = ["XGB", "RF", "MLP"]#, "LR"]
-    # classifier = [
-    #     XGBClassifier(n_estimators=450, max_depth=4, learning_rate = 0.02,
-    #                   gamma = 0.2, reg_alpha = 0.07,
-    #                   subsample = 0.6, colsample_bytree = 0.7),
-    #
-    #     RandomForestClassifier(n_estimators = 450, max_depth = 4, criterion='entropy'), #450
-    #     MLPClassifier(hidden_layer_sizes=(256,128,128), activation = "logistic", batch_size = 20000)
-    #     # LogisticRegression(class_weight = "balanced")
-    # ]
-
     classifier = [
-        XGBClassifier(n_estimators=4, max_depth=2, learning_rate = 0.02,
+        XGBClassifier(n_estimators=450, max_depth=4, learning_rate = 0.02,
                       gamma = 0.2, reg_alpha = 0.07,
                       subsample = 0.6, colsample_bytree = 0.7),
 
-        RandomForestClassifier(n_estimators = 4, max_depth = 4, criterion='entropy'), #450
-        MLPClassifier(hidden_layer_sizes=(4,4,4), activation = "logistic", batch_size = 20)
+        RandomForestClassifier(n_estimators = 450, max_depth = 4, criterion='entropy'), #450
+        MLPClassifier(hidden_layer_sizes=(256,128,128), activation = "logistic", batch_size = 20000)
         # LogisticRegression(class_weight = "balanced")
     ]
 
@@ -254,10 +241,10 @@ def two_layer_stacking(train_data, test):
     layer2_clf_names = ["XGB", "KNN", "QDA"]
 
     layer2_classifier = [
-        XGBClassifier(n_estimators=4, max_depth=1, learning_rate = 0.02,
+        XGBClassifier(n_estimators=450, max_depth=4, learning_rate = 0.02,
                           gamma = 0.2, reg_alpha = 0.07,
                           subsample = 0.6, colsample_bytree = 0.7),
-        KNeighborsClassifier(n_neighbors=5, weights='uniform', leaf_size=15, n_jobs=-1),
+        KNeighborsClassifier(n_neighbors=5, weights='uniform', leaf_size=30, n_jobs=-1),
         QDA(),
         #ExtraTreesClassifier(n_estimators = 450, max_depth = 4, criterion='entropy'),
         #LogisticRegression(class_weight = "balanced"),
