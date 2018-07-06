@@ -37,7 +37,7 @@ def positive_unlabel_learning(clf, data_path, train, thresh, eval = True, save_s
     black = pu_labeling(clf, unlabel, thresh)
     _train = file_merge(train, black, "date")
     feature, label = split_train_label(_train)
-    clf.set_params(learning_rate = 0.08, n_estimators = 420)
+    clf.set_params(learning_rate = 0.07, n_estimators = 420)
     print("\n# f ine_tune : 1 :\n", clf)
     clf.fit(feature, label)
     print("\n# >>>>Duration<<<< : {}min ".format(round((time.time()-start)/60,2)))
@@ -182,7 +182,7 @@ def pu_a():
 
     _clf = XGBClassifier(max_depth = 4, n_estimators = 480, subsample = 0.8, gamma = 0,
                     min_child_weight = 1, scale_pos_weight = 1,
-                    colsample_bytree = 0.8, learning_rate = 0.07, n_jobs = -1)
+                    colsample_bytree = 0.8, learning_rate = 0.08, n_jobs = -1)
 
     clf, train, roc_init = init_train(_clf, params = params, dump_model = model_name)
     #print("\n# START PU - UNLABEL , PU_thresh_unlabel = {}".format(pu_unlabel))
