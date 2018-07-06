@@ -66,7 +66,7 @@ def positive_unlabel_learning(clf, data_path, train, thresh, eval = True, save_s
     no_roc = "n/a"
     return clf, _train, no_roc
 
-def init_train(clf, eval = True, save_score = True, save_model = True, params = None, dump_model = None):
+def init_train(clf, eval = True, save_score = True, save_model = False, params = None, dump_model = None):
 
     start = time.time()
     #Train
@@ -88,7 +88,7 @@ def init_train(clf, eval = True, save_score = True, save_model = True, params = 
         clf = joblib.load(model_path)
 
     clf.fit(feature, label)
-    if save_model:
+    if save_model and dump_model == None:
         joblib.dump(clf, score_path + "inti_model.pkl")
         print("\n# Model dumped")
 
