@@ -224,7 +224,7 @@ def main():
     os.makedirs(score_path)
     #pu_a()
     train = pu_a()
-    train.to_csv("stack_train.csv", index = None)
+    train.to_csv("data/stack_train.csv", index = None)
     #pu_b(train, pu_test_b, eval = False)
     if stack:
 
