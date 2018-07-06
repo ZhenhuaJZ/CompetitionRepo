@@ -17,14 +17,15 @@ validation_path = "data/validation_int32.csv" #validation.csv
 test_b_path = "data/test_b.csv"
 test_a_path = "data/test_a.csv"
 
-over_samp = False
-over_samp_ratio = 0.1
+over_samp = True
+over_samp_ratio = 0.06 # 0.06 add 808 to train
 #pu_unlabel = 0.5
-pu_thresh_a = 0.40 #PU threshold for testa
+pu_thresh_a = 0.5 #PU threshold for testa
 pu_test_b = False
 pu_thresh_b = 0.85 #PU threshold for testb
 seg_date = 20180215
-params =  None #
+params ={"min_child_weight" : [1, 2]}
+#None
 #{ "n_estimators" : [490, 510, 520]}
 #params = None
 #"max_depth" : [3, 4], "min_child_weight" : [1, 2]
