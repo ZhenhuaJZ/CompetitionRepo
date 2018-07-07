@@ -236,7 +236,7 @@ def two_layer_stacking(train_data, test):
             RandomForestClassifier(n_estimators = 30, min_samples_split = 110, max_depth = 25, criterion='entropy', n_jobs = -1), #160
             #LogisticRegression(class_weight = "balanced", C = 2),
             ExtraTreesClassifier(n_estimators = 30, n_jobs = -1, min_samples_split = 70),
-            GradientBoostingClassifier(n_estimators = 30, learning_rate = 0.08),
+            GradientBoostingClassifier(n_estimators = 30, learning_rate = 0.08, n_jobs = -1),
     ]
     print(classifier)
     feature, test = stack_layer(clf_names, classifier, feature, label, test, layer_name = "layer1")
