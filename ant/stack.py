@@ -124,6 +124,7 @@ def stack_split(feature, labels, number_of_model):
     fold_split = {}
     feature_split = {}
     label_split = {}
+    fold_split_label = {}
 
     for i in range(number_of_model):
         # define starting and end rows of the fold data
@@ -134,6 +135,7 @@ def stack_split(feature, labels, number_of_model):
 
             print("\nfold_{}".format(i+1) + " starting between row:{}".format(start_row) + " and row:{}".format(end_row))
             fold_split["fold_{}".format(i+1)] = feature[start_row:,:]
+            fold_split_label["fold_label_{}".format(i+1)] = labels[start_row:]
             # Delete the extrated data from feature and label data
             feature_split["feature_{}".format(i+1)] = np.delete(feature, np.s_[start_row:], axis = 0)
             label_split["label_{}".format(i+1)] = np.delete(labels, np.s_[start_row:], axis = 0)
@@ -143,6 +145,7 @@ def stack_split(feature, labels, number_of_model):
             print("\nfold_{}".format(i+1) + " starting between row:{}".format(start_row) + " and row:{}".format(end_row))
             # Store extrated fold data from feature
             fold_split["fold_{}".format(i+1)] = feature[start_row:end_row,:]
+            fold_split_label["fold_label_{}".format(i+1)] = labels[start_row:end_row]
             # Delete the extrated data from feature and label data
             feature_split["feature_{}".format(i+1)] = np.delete(feature, np.s_[start_row:(start_row + fold_size)], axis = 0)
             label_split["label_{}".format(i+1)] = np.delete(labels, np.s_[start_row:(start_row + fold_size)], axis = 0)
@@ -161,7 +164,7 @@ def stack_xgb(train_path, label, test_path):
 def stack_layer(names, classifiers, feature, labels, test_feature, layer_name):
 
         progress_log(names, classifiers, layer_name)
-        fold_split, feature_split, label_split = stack_split(feature,labels,5)
+        fold_split,fold_split_label, feature_split, label_split = stack_split(feature,labels,5)
         layer_transform_train = []
         layer_transform_test = []
         weighted_avg_roc = []
