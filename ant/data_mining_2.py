@@ -25,8 +25,8 @@ stacking = True
 over_samp = True
 pu_test_b = True
 
-over_samp_ratio = 0.035 # 0.06 add 808 to train
-thresh_a = 0.65 #PU threshold for testa
+over_samp_ratio = 0.040 # 0.06 add 808 to train
+thresh_a = 0.70 #PU threshold for testa
 thresh_b = 0.8 #PU threshold for testb
 seg_date = 20180215
 params = None
