@@ -226,7 +226,7 @@ def pu_b(train, pu_test_b, eval):
     return
 
 def main():
-
+    sys.stdout = Logger(score_path + "log_{}d_{}h_{}m.txt".format(now.day, now.hour, now.minute))
     print("\n# Make dirs in {}".format(score_path))
     print("\n# Train_path : {}".format(train_path))
     print("\n# Validation_path : {}".format(validation_path))
