@@ -314,12 +314,12 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
     clear_mermory(now)
 
 def eval_test_set(clf, test_set):
-    _feature, _label = split_train_label(test_set)
+	_feature, _label = split_train_label(test_set)
 	print(_feature)
 	print(_label)
-    probs = clf.predict_proba(_feature)
-    roc = offline_model_performance(_label, probs[:,1])
-    return roc
+	probs = clf.predict_proba(_feature)
+	roc = offline_model_performance(_label, probs[:,1])
+	return roc
 
 def eval_validation_set(clf, train_set):
     _day = []
