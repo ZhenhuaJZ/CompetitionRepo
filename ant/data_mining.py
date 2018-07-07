@@ -226,6 +226,10 @@ def pu_b(train, pu_test_b, eval):
     return
 
 def main():
+    train_path = "log/2018_7_8/layer1_train_2:38.csv/"
+    test_b_path = "log/2018_7_8/layer1_test_2:38.csv/"
+    label_path = "data/stack_train_best.csv"
+
     print("\n# Make dirs in {}".format(score_path))
     print("\n# Train_path : {}".format(train_path))
     print("\n# Validation_path : {}".format(validation_path))
@@ -238,11 +242,6 @@ def main():
     """
 
     if stacking:
-        train_path = "log/2018_7_8/layer1_train_2:38.csv/"
-        test_b_path = "log/2018_7_8/layer1_test_2:38.csv/"
-        label_path = "data/stack_train_best.csv"
-
-
 
         train = pd.read_csv(train_path, low_memory = False)
         test_b = pd.read_csv(test_b_path)
