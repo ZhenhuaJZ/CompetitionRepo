@@ -60,8 +60,8 @@ def init_train(clf, store_score = True, save_model = False, model_path = None, p
         train = SMOTE_sampling(train, over_samp_ratio)
 
     if params != None:
-        validation = pd.read_csv(test_set_path)
-        clf = grid_search_roc(clf, train, validation, params)
+        test_set = pd.read_csv(test_set_path)
+        clf = grid_search_roc(clf, train, test_set, params)
 
     feature, label = split_train_label(train)
 
@@ -140,7 +140,7 @@ def validation_black(clf, train, eval = True, save_score = True, save_model = Tr
 def pu_a(clf):
 
     _clf, train = init_train(clf,  model_path = model_path, params = params)
-    roc_val, roc_test = evaluation(_clf, validation_path, _train)
+    roc_val, roc_test = evaluation(_clf, test_set_path, _train)
     print("\n# Tuning init parmas")
     sys.exit()
 
@@ -164,9 +164,7 @@ def main():
     print("\n# Test_set_path : {}".format(test_set_path))
     print("\n# Classifier : {}".format(xgb_a))
 
-
     _clf, _train = pu_a(xgb_a)
-    #print("\n# EVAL INIT CLASSIFIER")
     #roc_val, roc_test = evaluation(_clf, validation_path, _train)
 
     if pu_test_b:
