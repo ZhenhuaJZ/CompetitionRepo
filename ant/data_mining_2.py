@@ -31,7 +31,7 @@ thresh_b = 0.8 #PU threshold for testb
 seg_date = 20180215
 params = None
 
-feature_drops = None
+feature_drops = []
 #np.load(corr_data).tolist()
 
 xgb_a = XGBClassifier(max_depth = 4, n_estimators = 480, subsample = 0.8, gamma = 0,
