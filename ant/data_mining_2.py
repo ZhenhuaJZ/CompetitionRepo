@@ -86,7 +86,7 @@ def init_train(clf, store_score = True, save_model = False, model_path = None, p
     print("\n# >>>>Duration<<<< : {}min ".format(round((time.time()-start)/60,2)))
 
     if store_score:
-        save_score(clf, test_b_path, score_path, prefix = "inti")
+        save_score(clf, test_b_path, score_path, feature_drops, prefix = "inti")
 
     return clf, train
 
@@ -97,6 +97,9 @@ def part_fit(clf, train, seg_date, pu_thresh_b, store_score = True):
     print("\n# PART FIT TESTB, PU_thresh_b = {}, Seg_Date = {}".format(pu_thresh_b, seg_date))
     print("\n# Part_Fit Classifier {} : \n".format(clf))
     test_b = pd.read_csv(test_b_path)
+    #Drop features
+    if len(feature_drops) != 0:
+        test_b = test_b.drop(feature_drops, axis = 1)
     test_b_seg_1, test_b_seg_2 = partical_fit(test_b, seg_date, "date")
     _feature, _label = split_train_label(train)
     clf.fit(_feature, _label)
@@ -154,6 +157,11 @@ def main():
 
         _train = pd.read_csv(train_path)
         test_b = pd.read_csv(test_b_path)
+
+        if len(feature_drops) != 0:
+            train = train.drop(feature_drops, axis = 1)
+            test_b = test_b.drop(feature_drops, axis = 1)
+
         probs = two_layer_stacking(_train, test_b)
 
         score = pd.DataFrame(test_b["id"]).assign(score = probs)
