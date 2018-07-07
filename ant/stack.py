@@ -215,7 +215,7 @@ def two_layer_stacking(train_data, test):
     clf_names = ["XGB", "RF", "LR", "ET", "GBDT"]
     classifier = [
             #XGBClassifier(n_estimators=1, max_depth=3, learning_rate = 0.06, #380
-                    gamma = 0.1, n_jobs = -1, subsample = 0.8, colsample_bytree = 0.8),
+                    #gamma = 0.1, n_jobs = -1, subsample = 0.8, colsample_bytree = 0.8),
             #RandomForestClassifier(n_estimators = 1, min_samples_split = 110, max_depth = 20, criterion='entropy', n_jobs = -1), #160
             #LogisticRegression(class_weight = "balanced", C = 1),
             ExtraTreesClassifier(n_estimators = 2, n_jobs = -1, min_samples_split = 50), #120
