@@ -313,8 +313,7 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
     """
     clear_mermory(now)
 
-def eval_test_set(clf, test_set_path):
-    test_set = pd.read_csv(test_set_path)
+def eval_test_set(clf, test_set):
     _feature, _label = split_train_label(test_set)
     probs = clf.predict_proba(_feature)
     roc = offline_model_performance(_label, probs[:,1])

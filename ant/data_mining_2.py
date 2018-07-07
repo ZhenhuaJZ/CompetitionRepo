@@ -30,7 +30,8 @@ thresh_b = 0.8 #PU threshold for testb
 seg_date = 20180215
 params = None
 #{"gamma" : [0, 0.1]}
-feature_drops = ["f21", "f22", "f23", "f25","f26", "f27", "f106", "f105", "f104", "f103", "f154", "f153", "f152"]
+feature_drops = ["f2","f8", "f33", "f34", "f60", "f61", "f62", "f63" "f21", "f22", "f23", "f25","f26", "f27", "f106", "f105",
+                    "f104", "f103", "f154", "f153", "f152"]
 
 xgb_a = XGBClassifier(max_depth = 4, n_estimators = 4, subsample = 0.8, gamma = 0,
                 min_child_weight = 1, scale_pos_weight = 1,
@@ -152,7 +153,13 @@ def main():
 
     if pu_test_b:
         _clf, _train = pu_b(xgb_b, _train)
-        roc_val, roc_test = evaluation(_clf, test_set_path, _train)
+
+        test_set = pd.read_csv(test_set_path)
+        
+        if len(feature_drops) != 0:
+            test_set = test_set.drop(feature_drops, axis = 1)
+
+        roc_val, roc_test = evaluation(_clf, test_set, _train)
     #############################Stacking#######################################
 
     if stacking:
