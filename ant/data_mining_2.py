@@ -178,9 +178,9 @@ def main():
             _train = _train.drop(feature_drops, axis = 1)
             test_b = test_b.drop(feature_drops, axis = 1)
 
-        _train.iloc[:,1:] = _train.iloc[:,1:].astype('float32')
+        _train.iloc[:,1:] = _train.iloc[:,1:].astype('int32')
         _train.iloc[:,0] = _train.iloc[:,0].astype('category')
-        test_b.iloc[:,1:] = test_b.iloc[:,1:].astype('float32')
+        test_b.iloc[:,1:] = test_b.iloc[:,1:].astype('int32')
         test_b.iloc[:,0] = test_b.iloc[:,0].astype('category')
 
         probs = two_layer_stacking(_train, test_b)
