@@ -25,14 +25,12 @@ stacking = True
 over_samp = True
 pu_test_b = True
 
-over_samp_ratio = 0.040 # 0.06 add 808 to train
-thresh_a = 0.70 #PU threshold for testa
+over_samp_ratio = 0.20 # 0.06 add 808 to train
+thresh_a = 0.75 #PU threshold for testa
 thresh_b = 0.8 #PU threshold for testb
 seg_date = 20180215
 params = None
-
-feature_drops = []
-#np.load(corr_data).tolist()
+feature_drops = np.load(corr_data).tolist()
 
 xgb_a = XGBClassifier(max_depth = 4, n_estimators = 480, subsample = 0.8, gamma = 0,
                 min_child_weight = 1, scale_pos_weight = 1,
