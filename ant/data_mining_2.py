@@ -30,7 +30,10 @@ thresh_b = 0.8 #PU threshold for testb
 seg_date = 20180215
 params = None
 #{"gamma" : [0, 0.1]}
-feature_drops = ["f2","f8", "f33", "f34", "f49", "f50", "f60", "f61", "f62", "f63", "f21", "f22", "f23", "f25","f26", "f27", "f106", "f105",
+feature_drops = ["f2","f8", "f21", "f22", "f23", "f25","f26", "f27","f33", "f34",
+                        "f49", "f50", "f51",
+                        "f61", "f63", "f65", "f66", "f67" "f68", "f69","f70","f71",
+                        "f106", "f105",
                     "f104", "f103", "f154", "f153", "f152"]
 
 xgb_a = XGBClassifier(max_depth = 4, n_estimators = 4, subsample = 0.8, gamma = 0,
@@ -168,7 +171,7 @@ def main():
         test_b = pd.read_csv(test_b_path)
 
         if len(feature_drops) != 0:
-            train = train.drop(feature_drops, axis = 1)
+            _train = _train.drop(feature_drops, axis = 1)
             test_b = test_b.drop(feature_drops, axis = 1)
 
         probs = two_layer_stacking(_train, test_b)
