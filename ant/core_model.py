@@ -312,3 +312,26 @@ def core(fillna, log_path, offline_validation, clf, train_path, test_path, test_
         under_samp = under_samp, fillna = fillna)
     """
     clear_mermory(now)
+
+def eval_test_set(clf, test_set_path):
+    test_set = pd.read_csv(test_set_path)
+    _feature, _label = split_train_label(test_set)
+    probs = clf.predict_proba(_feature)
+    roc = offline_model_performance(_label, probs[:,1])
+    return roc
+
+def eval_validation_set(clf, train_set):
+    _day = []
+    interval = int(len(train_set["date"])/5)
+    for i in range(6):
+        _day.append(train_set["date"].iloc[interval*i])
+    slice_interval = [[_day[0], _day[1]], [_day[1]+1, _day[2]], [_day[2]+1, _day[3]],[_day[3]+1,_day[4]],[_day[4]+1, _day[5]]]
+    roc = cv_fold(clf, train_set, slice_interval)
+    print("\n# Val 5 : CV5 score {}".format(roc))
+    return roc
+
+def evaluation(clf, test_set_path, train_set):
+    roc_val = eval_validation_set(clf, train_set)
+    roc_test =  eval_test_set(clf, test_set_path)
+    # TODO:  high variance, low varience .etc
+    return roc_val, roc_test
