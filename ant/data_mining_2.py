@@ -30,11 +30,12 @@ thresh_b = 0.8 #PU threshold for testb
 seg_date = 20180215
 params = None
 #{"gamma" : [0, 0.1]}
-feature_drops = ["f2","f8", "f21", "f22", "f23", "f25","f26", "f27","f33", "f34",
+feature_drops = ["f21", "f22", "f23", "f25","f26", "f27","f33", "f34",
                         "f49", "f50", "f51",
-                        "f61", "f63", "f65", "f66", "f67", "f68", "f69","f70","f71",
+                        "f61", "f63", "f65", "f68", "f69","f70","f71",
                         "f106", "f105",
-                    "f104", "f103", "f154", "f153", "f152"]
+                    "f104", "f103", "f154", "f153", "f152",
+                    "f286", "f287"]
 
 xgb_a = XGBClassifier(max_depth = 4, n_estimators = 4, subsample = 0.8, gamma = 0,
                 min_child_weight = 1, scale_pos_weight = 1,
