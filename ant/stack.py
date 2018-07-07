@@ -215,7 +215,7 @@ def stack_layer(names, classifiers, feature, labels, test_feature, layer_name):
         weighted_avg_roc = np.array(weighted_avg_roc).transpose()
         layer_transform_train = np.array(layer_transform_train).transpose()
         layer_transform_test = np.array(layer_transform_test).transpose()
-        print("layer_transform_train : \n" layer_transform_train)
+        print("layer_transform_train : \n" , layer_transform_train)
         np.savetxt(log_file + "{}_train_{}:{}.csv".format(layer_name, now.hour, now.minute) ,layer_transform_train , fmt = '%.9f', delimiter = ',')
         np.savetxt(log_file + "{}_test_{}:{}.csv".format(layer_name, now.hour, now.minute) ,layer_transform_test ,fmt = '%.9f', delimiter = ',')
         return layer_transform_train, layer_transform_test, weighted_avg_roc
