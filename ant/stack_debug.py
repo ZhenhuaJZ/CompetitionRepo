@@ -189,11 +189,11 @@ def stack_layer(names, classifiers, feature, labels, test_feature, layer_name):
                 print(">>>>Duration<<<< : {}min ".format(round((end-start)/60,2)))
 
             roc = np.array(roc_list)
-        	roc_mean = np.mean(roc, axis = 0)
-        	roc_std = np.std(roc, axis = 0)
-        	print("##"*40)
-        	print("\n# ROC_1(JL) :{} (+/- {:2f})".format(roc_mean, roc_std*2))
-        	print("##"*40)
+            roc_mean = np.mean(roc, axis = 0)
+            roc_std = np.std(roc, axis = 0)
+            print("##"*40)
+            print("\n# ROC_1(JL) :{} (+/- {:2f})".format(roc_mean, roc_std*2))
+            print("##"*40)
             #Averaging stacked
             stack_test_layer1_preds = np.stack(test_score, 1)
             #averaging stacked data
