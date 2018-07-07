@@ -64,6 +64,7 @@ def SMOTE_sampling(data, ratio = 1):
     sampled_num_label_0 = len(over_sampled_data.loc[over_sampled_data["label"] == 0])
     print("\n# After SMOTE sampling: label 1 = {}, label 0 = {}".format(sampled_num_label_1, sampled_num_label_0))
     print("\n# Added total number of label 1 = {}".format(sampled_num_label_1-num_label_1))
+    print("\n# Smote Ratio = {:3f}".format(sampled_num_label_1/num_label_0))
     print("\n# End of SMOTE sampling")
     pd.options.mode.chained_assignment = "warn"
     return over_sampled_data
