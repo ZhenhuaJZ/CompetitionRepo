@@ -30,7 +30,7 @@ params =  {"gamma" : [0, 0.1]}
 #{"gamma" : [0, 0.1]}
 #{"gamma" : [0, 0.1], "learning_rate" : [0.06, 0.07]}
 
-xgb_a = XGBClassifier(max_depth = 4, n_estimators = 480, subsample = 0.8, gamma = 0.1,
+xgb_a = XGBClassifier(max_depth = 4, n_estimators = 4, subsample = 0.8, gamma = 0.1,
                 min_child_weight = 1, scale_pos_weight = 1,
                 colsample_bytree = 0.8, learning_rate = 0.07, n_jobs = -1)
 
@@ -141,9 +141,8 @@ def validation_black(clf, train, eval = True, save_score = True, save_model = Tr
 def pu_a(clf):
 
     _clf, _train = init_train(clf,  model_path = model_path, params = params)
-    roc_val, roc_test = evaluation(_clf, test_set_path, _train)
-    print("\n# Tuning init parmas")
-    sys.exit()
+    #roc_val, roc_test = evaluation(_clf, test_set_path, _train)
+    #print("\n# Tuning init parmas")
 
     print("\n# START PU - TESTA , PU_thresh_A = {}".format(thresh_a))
     _clf, _train = positive_unlabel_learning(_clf, test_a_path, _train, thresh_a, prefix = "pua")

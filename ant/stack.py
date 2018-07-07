@@ -31,7 +31,7 @@ param = {
         "eval_metric" : ['error'], #early stop only effects on error
         "silent" : 0
         }
-num_round = 480
+num_round = 4
 
 path1 = os.path.abspath(".")
 
@@ -216,24 +216,27 @@ def two_layer_stacking(train_data, test):
     # ####################First Layer Start#####################
     clf_names = ["XGB", "RF", "LR"]
     classifier = [
-        XGBClassifier(n_estimators=488, max_depth=4, learning_rate = 0.07,
+        XGBClassifier(n_estimators=4, max_depth=4, learning_rate = 0.07,
                       gamma = 0.1, n_jobs = -1,
                       subsample = 0.8, colsample_bytree = 0.8),
-        RandomForestClassifier(n_estimators = 288, min_samples_split = 110, max_depth = 20, criterion='entropy', n_jobs = -1), #450
-        LogisticRegression(class_weight = "balanced", C = 1)
-    ]
-
-    layer2_clf_names = ["XGB", "KNN", "LR"]
-
-    layer2_classifier = [
-        XGBClassifier(n_estimators=450, max_depth=4, learning_rate = 0.02,
-                          gamma = 0.2, reg_alpha = 0.07,
-                          subsample = 0.6, colsample_bytree = 0.7),
-        LogisticRegression(class_weight = "balanced"),
-        RandomForestClassifier(n_estimators = 3, max_depth = 4, criterion='entropy'), #450
+        RandomForestClassifier(n_estimators = 2, min_samples_split = 110, max_depth = 20, criterion='entropy', n_jobs = -1), #450
+        #LogisticRegression(class_weight = "balanced", C = 1)
     ]
 
     feature, test = stack_layer(clf_names, classifier, feature, label, test, layer_name = "layer1")
+
+    layer2_clf_names = ["XGB", "RF", "LR"]
+
+    layer2_classifier = [
+        XGBClassifier(n_estimators=480, max_depth=4, learning_rate = 0.06,
+                          gamma = 0.1, reg_alpha = 0.07,n_jobs = -1,
+                          subsample = 0.6, colsample_bytree = 0.7),
+        RandomForestClassifier(n_estimators = 2, min_samples_split = 110, max_depth = 20, criterion='entropy', n_jobs = -1), #450
+        #LogisticRegression(class_weight = "balanced"),
+
+    ]
+
+    feature, test = stack_layer(layer2_clf_names, layer2_classifier, feature, label, test, layer_name = "layer2")
 
     final_preds = stack_xgb(feature, label, test)
 
