@@ -26,7 +26,7 @@ thresh_a = 0.60 #PU threshold for testa
 pu_test_b = True
 thresh_b = 0.88 #PU threshold for testb
 seg_date = 20180215
-params =  None
+params =  {"gamma" : [0, 0.1]}#None
 #{"gamma" : [0, 0.1], "learning_rate" : [0.06, 0.07]}
 
 xgb_a = XGBClassifier(max_depth = 4, n_estimators = 4, subsample = 0.8, gamma = 0.1,
@@ -49,7 +49,7 @@ def positive_unlabel_learning(clf, data_path, train, thresh, prefix = "pu"):
 
     return clf, _train
 
-def init_train(clf, store_score = True, save_model = False, model_path = None, params = None, ):
+def init_train(clf, store_score = True, save_model = False, model_path = None, params = None):
 
     start = time.time()
     print("\n# Start Traing")
@@ -140,6 +140,9 @@ def validation_black(clf, train, eval = True, save_score = True, save_model = Tr
 def pu_a(clf):
 
     _clf, train = init_train(clf,  model_path = model_path, params = params)
+    roc_val, roc_test = evaluation(_clf, validation_path, _train)
+    print("\n# Tuning init parmas")
+    sys.exit()
 
     print("\n# START PU - TESTA , PU_thresh_A = {}".format(thresh_a))
     _clf, _train = positive_unlabel_learning(_clf, test_a_path, train, thresh_a, prefix = "pua")
