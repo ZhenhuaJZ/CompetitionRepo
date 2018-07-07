@@ -223,6 +223,16 @@ def two_layer_stacking(train_data, test):
         LogisticRegression(class_weight = "balanced", C = 1)
     ]
 
+    layer2_clf_names = ["XGB", "KNN", "LR"]
+
+    layer2_classifier = [
+        XGBClassifier(n_estimators=450, max_depth=4, learning_rate = 0.02,
+                          gamma = 0.2, reg_alpha = 0.07,
+                          subsample = 0.6, colsample_bytree = 0.7),
+        LogisticRegression(class_weight = "balanced"),
+        RandomForestClassifier(n_estimators = 3, max_depth = 4, criterion='entropy'), #450
+    ]
+
     feature, test = stack_layer(clf_names, classifier, feature, label, test, layer_name = "layer1")
 
     final_preds = stack_xgb(feature, label, test)

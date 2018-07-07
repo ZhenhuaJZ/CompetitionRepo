@@ -47,7 +47,7 @@ def positive_unlabel_learning(clf, data_path, train, thresh, prefix = "pu"):
     clf.fit(_feature, _label)
     print("\n# >>>>Duration<<<< : {}min ".format(round((time.time()-start)/60,2)))
 
-    return clf, _train, roc
+    return clf, _train
 
 def init_train(clf, store_score = True, save_model = False, model_path = None, params = None, ):
 
@@ -79,7 +79,7 @@ def init_train(clf, store_score = True, save_model = False, model_path = None, p
     if store_score:
         save_score(clf, test_b_path, score_path, prefix = "inti")
 
-    return clf, train, roc
+    return clf, train
 
 def part_fit(clf, train, seg_date, pu_thresh_b, store_score = True):
     #Partical_Fit
@@ -139,10 +139,10 @@ def validation_black(clf, train, eval = True, save_score = True, save_model = Tr
 
 def pu_a(clf):
 
-    _clf, train, roc_init = init_train(clf,  model_path = model_path, params = params)
+    _clf, train = init_train(clf,  model_path = model_path, params = params)
 
     print("\n# START PU - TESTA , PU_thresh_A = {}".format(thresh_a))
-    _clf, _train, roc_pua = positive_unlabel_learning(_clf, test_a_path, train, thresh_a, prefix = "pua")
+    _clf, _train = positive_unlabel_learning(_clf, test_a_path, train, thresh_a, prefix = "pua")
 
     return  _clf, _train
 
