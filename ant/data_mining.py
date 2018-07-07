@@ -6,6 +6,7 @@ from core_model import pu_labeling, partical_fit, cv_fold, grid_search_roc
 from sklearn.externals import joblib
 from sklearn.base import clone
 import time, sys, datetime
+from tool import *
 from stack import *
 now = datetime.datetime.now()
 
@@ -13,7 +14,6 @@ score_path = "log/last_3_days/{}d_{}h_{}m/".format(now.day, now.hour, now.minute
 params_path = "log/last_3_days/log_{}h.csv".format(now.hour)
 
 train_path = "data/train_float64.csv"  #train_normal_un.csv, train_float64.csv, train_normal_unlabel_float
-#unlabel_path = "data/unlabel.csv"
 validation_path = "data/validation_float64.csv" #validation_normal_un.csv, validation_float64, test_normal_unlabel_float
 test_b_path = "data/test_b.csv"
 test_a_path = "data/test_a.csv"
@@ -22,7 +22,6 @@ model_name = None #"6d_23h_10m" #best score model
 stacking = False
 over_samp = True
 over_samp_ratio = 0.08 # 0.06 add 808 to train
-#pu_unlabel = 0.5
 pu_thresh_a = 0.60 #PU threshold for testa
 pu_test_b = True
 pu_thresh_b = 0.88 #PU threshold for testb
@@ -55,7 +54,6 @@ def positive_unlabel_learning(clf, data_path, train, thresh, eval = True, save_s
     if eval:
 
         print("\n# EVAL PU")
-
         validation = pd.read_csv(validation_path)
         val_feature, val_label = split_train_label(validation)
         val_probs = clf.predict_proba(val_feature)
@@ -90,7 +88,6 @@ def init_train(clf, eval = True, save_score = True, save_model = False, params =
     if save_model and dump_model == None:
         joblib.dump(clf, score_path + "inti_model.pkl")
         print("\n# Model dumped")
-
     print("\n# >>>>Duration<<<< : {}min ".format(round((time.time()-start)/60,2)))
 
     if eval:
@@ -147,7 +144,7 @@ def validation_black(clf, train, eval = True, save_score = True, save_model = Tr
         slice_interval = [[_day[0], _day[1]], [_day[1]+1, _day[2]], [_day[2]+1, _day[3]],[_day[3]+1,_day[4]],[_day[4]+1, _day[5]]]
         roc = cv_fold(clf, _train, slice_interval)
         print("\n# Val 5 : CV5 score {}".format(roc))
-        #return _train, roc
+
     return  _train, roc
 
 def part_fit(clf, train, seg_date, pu_thresh_b, eval = True, save_score = True):
