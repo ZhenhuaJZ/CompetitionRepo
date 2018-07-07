@@ -239,7 +239,7 @@ def main():
 
     if stacking:
 
-        train = pd.read_csv(train_path)
+        train = pd.read_csv(train_path, low_memory = True)
         test_b = pd.read_csv(test_b_path)
         probs = two_layer_stacking(train, test_b)
 
