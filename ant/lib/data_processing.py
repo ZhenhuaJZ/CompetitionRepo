@@ -58,12 +58,14 @@ def SMOTE_sampling(data, ratio = 1):
     new_feature.insert(0, value = id, column = "id")
     over_sampled_data = new_feature.drop(new_feature.index[-int(num_label_0*(1-ratio)):])
     over_sampled_data.iloc[:,1:] = over_sampled_data.iloc[:,1:].astype("int32")
-    over_sampled_data.iloc[:,1:] = over_sampled_data.iloc[:,1:].astype("float32")
+    over_sampled_data.iloc[:,3:] = over_sampled_data.iloc[:,3:].astype("float32")
+    over_sampled_data = over_sampled_data.sort_by("date").reset_index()
     sampled_num_label_1 = len(over_sampled_data.loc[over_sampled_data["label"] == 1])
     sampled_num_label_0 = len(over_sampled_data.loc[over_sampled_data["label"] == 0])
     print("\n# After SMOTE sampling: label 1 = {}, label 0 = {}".format(sampled_num_label_1, sampled_num_label_0))
     print("\n# Added total number of label 1 = {}".format(sampled_num_label_1-num_label_1))
     print("\n# End of SMOTE sampling")
+    print(type(over_sampled_data['label']))
     pd.options.mode.chained_assignment = "warn"
     return over_sampled_data
 
@@ -133,7 +135,7 @@ def sample_segmentation(data, feature_list):
     return seg_a_data, seg_b_data
 
 #Pass the training dataframe or datapath and split to feature and label
-def split_train_label(data, cache = True):
+def split_train_label(data):
     #print(type(data))
     if isinstance(data, str):
         data = pd.read_csv(data)
@@ -142,8 +144,6 @@ def split_train_label(data, cache = True):
     elif isinstance(data, pd.core.frame.DataFrame):
         feature = data.iloc[:,3:]
         label = data.iloc[:,1]
-    if cache:
-        clear_mermory(data)
     return feature, label
 
 # test_train_split_by_date split the test set by providing a range of dates in yyyymmdd
