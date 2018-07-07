@@ -175,7 +175,7 @@ def main():
         #test_b.iloc[:,1:] = test_b.iloc[:,1:].astype('int32')
         #test_b.iloc[:,0] = test_b.iloc[:,0].astype('category')
 
-        probs = two_layer_stacking(_train[:100000], test_b)
+        probs = two_layer_stacking(_train, test_b)
 
         score = pd.DataFrame(test_b["id"]).assign(score = probs)
         _score_path = score_path  + "stacking_score_{}d_{}h_{}m.csv".format(now.day, now.hour, now.minute)
