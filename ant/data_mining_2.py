@@ -13,7 +13,8 @@ now = datetime.datetime.now()
 score_path = "log/last_1_day/{}d_{}h_{}m/".format(now.day, now.hour, now.minute)
 params_path = "log/last_1_day/log_{}h.csv".format(now.hour)
 
-train_path = "data/train_normal_unlabel_float.csv"  #train_normal_un.csv, train_float64.csv, train_normal_unlabel_float
+train_path = "data/stack_train_best.csv"
+#train_path = "data/train_normal_unlabel_float.csv"  #train_normal_un.csv, train_float64.csv, train_normal_unlabel_float
 test_set_path = "data/test_normal_unlabel_float.csv" #validation_normal_un.csv, validation_float64, test_normal_unlabel_float
 test_b_path = "data/test_b.csv"
 test_a_path = "data/test_a.csv"
@@ -148,7 +149,7 @@ def main():
     #############################Stacking#######################################
 
     if stacking:
-        train_path = "data/stack_train_best.csv"
+
         _train = pd.read_csv(train_path)
         test_b = pd.read_csv(test_b_path)
         probs = two_layer_stacking(_train, test_b)
