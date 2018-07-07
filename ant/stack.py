@@ -31,7 +31,7 @@ param = {
         "eval_metric" : ['error'], #early stop only effects on error
         "silent" : 0
         }
-num_round = 480
+num_round = 460
 
 path1 = os.path.abspath(".")
 
@@ -216,15 +216,16 @@ def two_layer_stacking(train_data, test):
     # ####################First Layer Start#####################
     clf_names = ["XGB", "RF", "LR"]
     classifier = [
-        XGBClassifier(n_estimators=4, max_depth=480, learning_rate = 0.07,
+        XGBClassifier(n_estimators=4, max_depth=400, learning_rate = 0.07,
                       gamma = 0, n_jobs = -1,
                       subsample = 0.8, colsample_bytree = 0.8),
-        RandomForestClassifier(n_estimators = 320, min_samples_split = 110, max_depth = 20, criterion='entropy', n_jobs = -1), #450
+        RandomForestClassifier(n_estimators = 260, min_samples_split = 110, max_depth = 20, criterion='entropy', n_jobs = -1), #450
         LogisticRegression(class_weight = "balanced", C = 1)
     ]
 
     feature, test = stack_layer(clf_names, classifier, feature, label, test, layer_name = "layer1")
 
+"""
     layer2_clf_names = ["XGB", "RF", "LR"]
 
     layer2_classifier = [
@@ -235,6 +236,7 @@ def two_layer_stacking(train_data, test):
         LogisticRegression(class_weight = "balanced", C = 1),
 
     ]
+"""
 
     feature, test = stack_layer(layer2_clf_names, layer2_classifier, feature, label, test, layer_name = "layer2")
 

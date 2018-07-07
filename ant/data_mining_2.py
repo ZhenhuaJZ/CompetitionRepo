@@ -26,8 +26,8 @@ over_samp = True
 pu_test_b = True
 
 over_samp_ratio = 0.030 # 0.06 add 808 to train
-thresh_a = 0.80 #PU threshold for testa
-thresh_b = 0.9 #PU threshold for testb
+thresh_a = 0.90 #PU threshold for testa
+thresh_b = 0.95 #PU threshold for testb
 seg_date = 20180215
 params = None
 feature_drops = np.load(corr_data).tolist()
