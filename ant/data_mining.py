@@ -18,16 +18,16 @@ validation_path = "data/validation_float64.csv" #validation_normal_un.csv, valid
 test_b_path = "data/test_b.csv"
 test_a_path = "data/test_a.csv"
 model_name = None #"6d_23h_10m" #best score model
+corr_data = "data/corr_data.npy"
 
 stacking = False
-over_samp = True
-over_samp_ratio = 0.08 # 0.06 add 808 to train
-pu_thresh_a = 0.60 #PU threshold for testa
+over_samp = False
+over_samp_ratio = 0.019 # 0.06 add 808 to train
+pu_thresh_a = 0.486 #PU threshold for testa
 pu_test_b = True
 pu_thresh_b = 0.88 #PU threshold for testb
 seg_date = 20180215
 params =  None
-#{"gamma" : [0, 0.1], "learning_rate" : [0.06, 0.07]}
 
 def positive_unlabel_learning(clf, data_path, train, thresh, eval = True, save_score = True, prefix = "pu"):
 
