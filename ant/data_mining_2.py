@@ -22,7 +22,7 @@ test_a_path = "data/test_a.csv"
 model_path =  None
 stacking = False
 over_samp = False
-pu_test_b = False
+pu_test_b = True
 
 over_samp_ratio = 0.02 # 0.06 add 808 to train
 thresh_a = 0.65 #PU threshold for testa
