@@ -226,8 +226,8 @@ def pu_b(train, pu_test_b, eval):
     return
 
 def main():
-    train_path = "log/2018_7_8/layer1_train_2:38.csv/"
-    test_b_path = "log/2018_7_8/layer1_test_2:38.csv/"
+    train_path = "log/2018_7_8/layer1_train_2:38.csv"
+    test_b_path = "log/2018_7_8/layer1_test_2:38.csv"
     label_path = "data/stack_train_best.csv"
 
     print("\n# Make dirs in {}".format(score_path))
