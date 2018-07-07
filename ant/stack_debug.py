@@ -124,6 +124,7 @@ def stack_split(feature, labels, number_of_model):
     fold_split = {}
     feature_split = {}
     label_split = {}
+    fold_split_label = {}
 
     for i in range(number_of_model):
         # define starting and end rows of the fold data
