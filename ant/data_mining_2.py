@@ -25,9 +25,9 @@ stacking = True
 over_samp = True
 pu_test_b = True
 
-over_samp_ratio = 0.20 # 0.06 add 808 to train
-thresh_a = 0.75 #PU threshold for testa
-thresh_b = 0.8 #PU threshold for testb
+over_samp_ratio = 0.15 # 0.06 add 808 to train
+thresh_a = 0.85 #PU threshold for testa
+thresh_b = 0.9 #PU threshold for testb
 seg_date = 20180215
 params = None
 feature_drops = np.load(corr_data).tolist()
