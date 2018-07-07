@@ -20,7 +20,7 @@ test_b_path = "data/test_b.csv"
 test_a_path = "data/test_a.csv"
 
 model_path =  None
-stacking = False
+stacking = True
 over_samp = False
 pu_test_b = True
 
@@ -30,7 +30,7 @@ thresh_b = 0.8 #PU threshold for testb
 seg_date = 20180215
 params = None
 #{"gamma" : [0, 0.1]}
-feature_drops = ["f2","f8", "f33", "f34", "f60", "f61", "f62", "f63", "f21", "f22", "f23", "f25","f26", "f27", "f106", "f105",
+feature_drops = ["f2","f8", "f33", "f34", "f49", "f50", "f60", "f61", "f62", "f63", "f21", "f22", "f23", "f25","f26", "f27", "f106", "f105",
                     "f104", "f103", "f154", "f153", "f152"]
 
 xgb_a = XGBClassifier(max_depth = 4, n_estimators = 4, subsample = 0.8, gamma = 0,
