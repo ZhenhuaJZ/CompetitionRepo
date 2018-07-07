@@ -252,6 +252,7 @@ def custom_imputation(df, fillna_value = 0):
     return data
 # #############################Save score#######################################
 #pass preds and save score file path
+"""
 def save_score(preds, score_path):
     as_path = "lib/answer_sheet.csv"
     answer_sheet = pd.read_csv(as_path)
@@ -259,3 +260,34 @@ def save_score(preds, score_path):
     answer = answer_sheet.assign(score = preds)
     answer.to_csv(score_path + "score_day{}_time{}:{}.csv".format(now.day, now.hour, now.minute), index = None, float_format = "%.9f")
     return print("\n# Score saved in {}".format(score_path))
+"""
+def save_score(clf, test_path, score_path, prefix):
+    test_data = pd.read_csv(test_path)
+    probs = clf.predict_proba(test_data.iloc[:,2:])
+    score = pd.DataFrame(test_data["id"]).assign(score = probs[:,1])
+    _score_path = score_path  + "{}_score_{}d_{}h_{}m.csv".format(prefix, now.day, now.hour, now.minute)
+    score.to_csv(_score_path, index = None, float_format = "%.9f")
+    return print("\n# Score saved in {}".format(_score_path))
+
+def eval_test_set(clf, validation_path):
+    validation = pd.read_csv(validation_path)
+    _feature, _label = split_train_label(validation)
+    probs = clf.predict_proba(val_feature)
+    roc = offline_model_performance(_label, probs[:,1])
+    return roc
+
+def eval_validation_set(clf, train_set):
+    _day = []
+    interval = int(len(train_set["date"])/5)
+    for i in range(6):
+        _day.append(train_set["date"].iloc[interval*i])
+    slice_interval = [[_day[0], _day[1]], [_day[1]+1, _day[2]], [_day[2]+1, _day[3]],[_day[3]+1,_day[4]],[_day[4]+1, _day[5]]]
+    roc = cv_fold(clf, train_set, slice_interval)
+    print("\n# Val 5 : CV5 score {}".format(roc))
+    return roc
+
+def evaluation(clf, validation_path, train_set):
+    roc_val = eval_validation_set(clf, validation_path)
+    roc_test =  eval_test_set(clf, train_set)
+    # TODO:  high variance, low varience .etc
+    return roc_val, roc_test
