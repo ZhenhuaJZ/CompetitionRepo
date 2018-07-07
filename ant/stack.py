@@ -229,15 +229,15 @@ def two_layer_stacking(train_data, test):
     test = test[:,2:]
 
     # ####################First Layer Start#####################
-    clf_names = ["XGB", "RF", "LR", "ET", "GBDT"]
+    clf_names = ["LR", "XGB", "RF", "ET", "GBDT"]
     classifier = [
-            #LogisticRegression(class_weight = "balanced", C = 1),
-            MLPClassifier(hidden_layer_sizes=(256,128,128), activation = "logistic", batch_size = 20000),
-            XGBClassifier(n_estimators=40, max_depth=3, learning_rate = 0.07, #380
+            LogisticRegression(class_weight = "balanced", C = 1),
+            #MLPClassifier(hidden_layer_sizes=(256,128,128), activation = "logistic", batch_size = 20000),
+            XGBClassifier(n_estimators=300, max_depth=3, learning_rate = 0.07, #380
                     gamma = 0, n_jobs = -1, subsample = 0.8, colsample_bytree = 0.8),
-            #RandomForestClassifier(n_estimators = 400, min_samples_split = 110, max_depth = 25, criterion='entropy', n_jobs = -1), #160
-            #ExtraTreesClassifier(n_estimators = 320, n_jobs = -1, min_samples_split = 70),
-            #GradientBoostingClassifier(n_estimators = 330, learning_rate = 0.08),
+            RandomForestClassifier(n_estimators = 260, min_samples_split = 110, max_depth = 25, criterion='entropy', n_jobs = -1), #160
+            ExtraTreesClassifier(n_estimators = 320, n_jobs = -1, min_samples_split = 70),
+            GradientBoostingClassifier(n_estimators = 230, learning_rate = 0.08),
             #MLPClassifier(hidden_layer_sizes=(256,128,128), activation = "logistic", batch_size = 20000)
     ]
     print(classifier)
