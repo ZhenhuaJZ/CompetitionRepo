@@ -49,7 +49,7 @@ def positive_unlabel_learning(clf, data_path, train, thresh, prefix = "pu"):
 
     return clf, _train, roc
 
-def init_train(clf, save_score = True, save_model = False, model_path = None, params = None, ):
+def init_train(clf, store_score = True, save_model = False, model_path = None, params = None, ):
 
     start = time.time()
     print("\n# Start Traing")
@@ -76,12 +76,12 @@ def init_train(clf, save_score = True, save_model = False, model_path = None, pa
         print("\n# Model dumped")
     print("\n# >>>>Duration<<<< : {}min ".format(round((time.time()-start)/60,2)))
 
-    if save_score:
+    if store_score:
         save_score(clf, test_b_path, score_path, prefix = "inti")
 
     return clf, train, roc
 
-def part_fit(clf, train, seg_date, pu_thresh_b, save_score = True):
+def part_fit(clf, train, seg_date, pu_thresh_b, store_score = True):
     #Partical_Fit
     roc = 0
     start = time.time()
