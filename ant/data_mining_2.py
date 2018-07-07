@@ -56,18 +56,18 @@ def init_train(clf, store_score = True, save_model = False, model_path = None, p
 
     start = time.time()
     print("\n# Start Traing")
-    print("\n# Init classifier : {}".format(clf))
+    print("\n# Init classifier : \n{}".format(clf))
     train = pd.read_csv(train_path)
 
     if len(feature_drops) != 0:
         print("\n Feature selection droped features {}".format(feature_drops))
-        train = train.drop(feature_drops)
+        train = train.drop(feature_drops, axis = 1)
 
     if over_samp:
         train = SMOTE_sampling(train, over_samp_ratio)
 
     if params != None:
-        test_set = pd.read_csv(test_set_path)
+        #test_set = pd.read_csv(test_set_path)
         #clf = grid_search_roc(clf, train, test_set, params)
         # TODO:
         print("\n# invalid grid search")
@@ -95,7 +95,7 @@ def part_fit(clf, train, seg_date, pu_thresh_b, store_score = True):
     roc = 0
     start = time.time()
     print("\n# PART FIT TESTB, PU_thresh_b = {}, Seg_Date = {}".format(pu_thresh_b, seg_date))
-    print("\n# Part_Fit Classifier{}".format(clf))
+    print("\n# Part_Fit Classifier {} : \n".format(clf))
     test_b = pd.read_csv(test_b_path)
     test_b_seg_1, test_b_seg_2 = partical_fit(test_b, seg_date, "date")
     _feature, _label = split_train_label(train)
