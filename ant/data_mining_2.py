@@ -20,21 +20,21 @@ test_a_path = "data/test_a.csv"
 
 model_path =  None
 stacking = True
-over_samp = False
-over_samp_ratio = 0.0185 # 0.06 add 808 to train
-thresh_a = 0.60 #PU threshold for testa
+over_samp = True
+over_samp_ratio = 0.02 # 0.06 add 808 to train
+thresh_a = 0.65 #PU threshold for testa
 pu_test_b = True
-thresh_b = 0.88 #PU threshold for testb
+thresh_b = 0.8 #PU threshold for testb
 seg_date = 20180215
-params =  {"gamma" : [0, 0.1]}
+params = {"gamma" : [0, 0.1]}
 #{"gamma" : [0, 0.1]}
 #{"gamma" : [0, 0.1], "learning_rate" : [0.06, 0.07]}
 
-xgb_a = XGBClassifier(max_depth = 4, n_estimators = 4, subsample = 0.8, gamma = 0.1,
+xgb_a = XGBClassifier(max_depth = 4, n_estimators = 480, subsample = 0.8, gamma = 0,
                 min_child_weight = 1, scale_pos_weight = 1,
                 colsample_bytree = 0.8, learning_rate = 0.07, n_jobs = -1)
 
-xgb_b = XGBClassifier(max_depth = 4, n_estimators = 4, subsample = 0.8, gamma = 0.1,
+xgb_b = XGBClassifier(max_depth = 4, n_estimators = 4, subsample = 0.8, gamma = 0,
                 min_child_weight = 1, scale_pos_weight = 1,
                 colsample_bytree = 0.8, learning_rate = 0.06, n_jobs = -1)
 
@@ -87,7 +87,7 @@ def part_fit(clf, train, seg_date, pu_thresh_b, store_score = True):
     roc = 0
     start = time.time()
     print("\n# PART FIT TESTB, PU_thresh_b = {}, Seg_Date = {}".format(pu_thresh_b, seg_date))
-    print("\n# {}".format(clf))
+    print("\n# Part_Fit Classifier{}".format(clf))
     test_b = pd.read_csv(test_b_path)
     test_b_seg_1, test_b_seg_2 = partical_fit(test_b, seg_date, "date")
     _feature, _label = split_train_label(train)
@@ -146,13 +146,13 @@ def pu_a(clf):
 
     print("\n# START PU - TESTA , PU_thresh_A = {}".format(thresh_a))
     _clf, _train = positive_unlabel_learning(_clf, test_a_path, _train, thresh_a, prefix = "pua")
-
+    _train.to_csv(score_path + "pua_data.csv")
+    sys.exit()
     return  _clf, _train
 
 def pu_b(clf, train):
 
     print("\n# START PU - TESTB , PU_thresh_B = {}".format(thresh_b))
-    print("\n# Pu_b classifier : {}".format(clf))
     _clf, _train = part_fit(clf, train, seg_date, thresh_b)
 
     return _clf, _train
@@ -169,7 +169,7 @@ def main():
 
     if pu_test_b:
         _clf, _train = pu_b(xgb_b, _train)
-        #roc_val, roc_test = evaluation(_clf, validation_path, _train)
+        roc_val, roc_test = evaluation(_clf, validation_path, _train)
 
     #############################Stacking#######################################
 

@@ -26,7 +26,7 @@ param = {
         "subsample" : 0.8,
         "colsample_bytree" : 0.8,
         "min_child_weight" : 1,
-        "gamma" : 0.1,
+        "gamma" : 0,
         "eta" : 0.07, #learning_rate
         "eval_metric" : ['error'], #early stop only effects on error
         "silent" : 0
