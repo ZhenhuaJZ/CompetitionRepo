@@ -18,9 +18,9 @@ test_set_path = "data/test_normal_unlabel_float.csv" #validation_normal_un.csv, 
 test_b_path = "data/test_b.csv"
 test_a_path = "data/test_a.csv"
 
-model_path =  "log/last_1_day/6d_23h_10m/inti_model.pkl"
+model_path =  None
 stacking = False
-over_samp = True
+over_samp = False
 over_samp_ratio = 0.0185 # 0.06 add 808 to train
 thresh_a = 0.60 #PU threshold for testa
 pu_test_b = True
