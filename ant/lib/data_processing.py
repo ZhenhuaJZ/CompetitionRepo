@@ -267,8 +267,10 @@ def save_score(preds, score_path):
     answer.to_csv(score_path + "score_day{}_time{}:{}.csv".format(now.day, now.hour, now.minute), index = None, float_format = "%.9f")
     return print("\n# Score saved in {}".format(score_path))
 """
-def save_score(clf, test_path, score_path, prefix):
+def save_score(clf, test_path, score_path, feature_drops, prefix):
     test_data = pd.read_csv(test_path)
+    if len(feature_drops) != 0:
+        test_b = test_b.drop(feature_drops, axis = 1)
     probs = clf.predict_proba(test_data.iloc[:,2:])
     score = pd.DataFrame(test_data["id"]).assign(score = probs[:,1])
     _score_path = score_path  + "{}_score_{}d_{}h_{}m.csv".format(prefix, now.day, now.hour, now.minute)
