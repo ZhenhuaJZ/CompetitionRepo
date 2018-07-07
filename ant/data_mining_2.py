@@ -29,11 +29,11 @@ seg_date = 20180215
 params =  None
 #{"gamma" : [0, 0.1], "learning_rate" : [0.06, 0.07]}
 
-xgb_a = XGBClassifier(max_depth = 4, n_estimators = 480, subsample = 0.8, gamma = 0.1,
+xgb_a = XGBClassifier(max_depth = 4, n_estimators = 4, subsample = 0.8, gamma = 0.1,
                 min_child_weight = 1, scale_pos_weight = 1,
                 colsample_bytree = 0.8, learning_rate = 0.07, n_jobs = -1)
 
-xgb_b = XGBClassifier(max_depth = 4, n_estimators = 480, subsample = 0.8, gamma = 0.1,
+xgb_b = XGBClassifier(max_depth = 4, n_estimators = 4, subsample = 0.8, gamma = 0.1,
                 min_child_weight = 1, scale_pos_weight = 1,
                 colsample_bytree = 0.8, learning_rate = 0.06, n_jobs = -1)
 
