@@ -25,5 +25,5 @@ for dtype in ['float','int','object']:
 """
 a = np.array([[1,2,3,4], [5,6,7,8]])
 print(a)
-final_preds = np.average(a, axis =1, weights=[3./4, 1./4])
+final_preds = np.average(a, axis =0, weights=[3./4, 1./4])
 print(final_preds)

@@ -236,7 +236,7 @@ def two_layer_stacking(train_data, test):
 
     feature, test = stack_layer(layer2_clf_names, layer2_classifier, feature, label, test, layer_name = "layer2")
 
-    final_preds = np.average(feature, axis =1, weights=[3./4, 1./4])
+    final_preds = np.average(feature, axis =0, weights=[3./4, 1./4])
     #final_preds = feature[:,0]*0.85 + feature[:,1]*0.15
     print(final_preds)
     #print(final_preds.shape)
