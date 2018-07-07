@@ -214,13 +214,15 @@ def two_layer_stacking(train_data, test):
     test = test[:,2:]
 
     # ####################First Layer Start#####################
-    clf_names = ["XGB", "RF", "LR"]
+    clf_names = ["XGB_1", "XGB_2", "RF_1", "RF_2", "LR"]
     classifier = [
-        XGBClassifier(n_estimators=4, max_depth=400, learning_rate = 0.07,
-                      gamma = 0, n_jobs = -1,
-                      subsample = 0.8, colsample_bytree = 0.8),
-        RandomForestClassifier(n_estimators = 260, min_samples_split = 110, max_depth = 20, criterion='entropy', n_jobs = -1), #450
-        LogisticRegression(class_weight = "balanced", C = 1)
+            XGBClassifier(n_estimators=3, max_depth=360, learning_rate = 0.07,
+                    gamma = 0.1, n_jobs = -1, subsample = 0.8, colsample_bytree = 0.8),
+            XGBClassifier(n_estimators=4, max_depth=420, learning_rate = 0.07,
+                    gamma = 0, n_jobs = -1, subsample = 0.8, colsample_bytree = 0.8),
+            RandomForestClassifier(n_estimators = 220, min_samples_split = 50, max_depth = 40, criterion='entropy', n_jobs = -1), #450
+            RandomForestClassifier(n_estimators = 260, min_samples_split = 110, max_depth = 20, criterion='entropy', n_jobs = -1),
+            LogisticRegression(class_weight = "balanced", C = 1)
     ]
 
     feature, test = stack_layer(clf_names, classifier, feature, label, test, layer_name = "layer1")
