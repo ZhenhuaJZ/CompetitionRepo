@@ -19,14 +19,15 @@ test_b_path = "data/test_b.csv"
 test_a_path = "data/test_a.csv"
 
 model_path =  None
-stacking = False
+stacking = True
 over_samp = False
 over_samp_ratio = 0.0185 # 0.06 add 808 to train
 thresh_a = 0.60 #PU threshold for testa
 pu_test_b = True
 thresh_b = 0.88 #PU threshold for testb
 seg_date = 20180215
-params =  {"gamma" : [0, 0.1]}#None
+params =  None
+#{"gamma" : [0, 0.1]}
 #{"gamma" : [0, 0.1], "learning_rate" : [0.06, 0.07]}
 
 xgb_a = XGBClassifier(max_depth = 4, n_estimators = 4, subsample = 0.8, gamma = 0.1,
