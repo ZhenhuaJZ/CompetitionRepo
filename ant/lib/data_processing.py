@@ -23,6 +23,11 @@ def under_sampling(data, ratio = 1):
     print("\n# Number of label 1 and 0:\n", under_sample_data["label"].value_counts())
     return under_sample_data
 
+def populate_1 (data, num_label_1):
+	new_label_1 = pd.DataFrame(1, index = pd.Series(range(0,num_label_1)), columns = data.columns.values)
+	data = file_merge(data, new_label_1, sort_by = "date" , reset_index = True)
+	return data
+
 def over_sampling(data, ratio = 1):
     label_1_data = data.loc[data["label"] == 1]
     label_1_size = len(label_1_data["label"])
@@ -34,7 +39,7 @@ def over_sampling(data, ratio = 1):
     return over_sampled_data
 
 #TODO: SMOTE sampling technique
-Synthetic Minority Over-sampling technique
+# Synthetic Minority Over-sampling technique
 def SMOTE_sampling(data, ratio = 1):
     pd.options.mode.chained_assignment = None
     print("\n# Initiate SMOTE over sampling")
