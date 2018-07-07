@@ -13,10 +13,10 @@ now = datetime.datetime.now()
 score_path = "log/last_1_day/{}d_{}h_{}m/".format(now.day, now.hour, now.minute)
 params_path = "log/last_1_day/log_{}h.csv".format(now.hour)
 
-train_path = "data/stack_train_best.csv"
+#train_path = "data/stack_train_best.csv"
 #train_path = "data/train_float64.csv"  #train_normal_un.csv, train_float64.csv, train_normal_unlabel_float
 validation_path = "data/validation_float64.csv" #validation_normal_un.csv, validation_float64, test_normal_unlabel_float
-test_b_path = "data/test_b.csv"
+#test_b_path = "data/test_b.csv"
 test_a_path = "data/test_a.csv"
 model_name = None #"6d_23h_10m" #best score model
 corr_data = "data/corr_data.npy"
@@ -238,10 +238,18 @@ def main():
     """
 
     if stacking:
+        train_path = "log/2018_7_8/layer1_train_2:38.csv/"
+        test_b_path = "log/2018_7_8/layer1_test_2:38.csv/""
+        label_path = "data/stack_train_best.csv"
+
+
 
         train = pd.read_csv(train_path, low_memory = False)
         test_b = pd.read_csv(test_b_path)
-        probs = two_layer_stacking(train, test_b)
+        label = pd.read_csv(label_path, low_memory = False)
+
+        #probs = two_layer_stacking(train, test_b)
+        read_saved_layer(train, test_b, label)
 
         score = pd.DataFrame(test_b["id"]).assign(score = probs)
         _score_path = score_path  + "stacking_score_{}d_{}h_{}m.csv".format(now.day, now.hour, now.minute)

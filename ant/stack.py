@@ -241,7 +241,7 @@ def two_layer_stacking(train_data, test):
             #MLPClassifier(hidden_layer_sizes=(256,128,128), activation = "logistic", batch_size = 20000)
     ]
     print(classifier)
-    feature, test, _ = stack_layer(clf_names, classifier, feature, label, test, layer_name = "layer1")
+    feature, test, avg_roc = stack_layer(clf_names, classifier, feature, label, test, layer_name = "layer1")
 
     layer2_clf_names = ["XGB", "RF"]
 
@@ -266,6 +266,44 @@ def two_layer_stacking(train_data, test):
     final_preds = np.average(test, axis =1, weights=[3./4, 1./4])
 
     #final_preds = stack_xgb(feature, label, test)
+
+    return final_preds
+
+
+def read_saved_layer(train_data, test, label):
+    train_data = train_data.values
+    print(len(train_data))
+    test = test.values
+    print(len(test))
+    label = label.values
+    print(len(label))
+
+    feature = train_data[:,:]
+    label = train_data[:,1].astype(int)
+    test = test[:,:]
+
+    print("\n# Read saved layer data  !! ")
+    layer2_clf_names = ["XGB", "RF"]
+
+    layer2_classifier = [
+        XGBClassifier(n_estimators=480, max_depth=4, learning_rate = 0.07,
+                          gamma = 0, n_jobs = -1,
+                          subsample = 0.8, colsample_bytree = 0.8),
+
+        RandomForestClassifier(n_estimators = 320, min_samples_split = 110, max_depth = 20, criterion='entropy', n_jobs = -1),
+    ]
+    print(layer2_classifier)
+
+    feature, test, avg_roc = stack_layer(layer2_clf_names, layer2_classifier, feature, label, test, layer_name = "layer2")
+
+    try:
+        avg_roc = np.average(avg_roc, axis =1, weights=[3./4, 1./4])
+        print("\n# Average 5-FOLD ROC : ".format(avg_roc))
+
+    except Exception as e:
+        pass
+
+    final_preds = np.average(test, axis =1, weights=[3./4, 1./4])
 
     return final_preds
 
