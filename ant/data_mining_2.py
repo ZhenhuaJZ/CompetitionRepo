@@ -18,6 +18,7 @@ train_path = "data/train_normal_unlabel_float.csv"  #train_normal_un.csv, train_
 test_set_path = "data/test_normal_unlabel_float.csv" #validation_normal_un.csv, validation_float64, test_normal_unlabel_float
 test_b_path = "data/test_b.csv"
 test_a_path = "data/test_a.csv"
+corr_data = "data/corr_data.npy"
 
 model_path =  None
 stacking = True
@@ -30,13 +31,15 @@ thresh_b = 0.8 #PU threshold for testb
 seg_date = 20180215
 params = None
 #{"gamma" : [0, 0.1]}
+feature_drops = np.load(corr_data).tolist()
+"""
 feature_drops = ["f21", "f22", "f23", "f25","f26", "f27","f33", "f34",
                         "f49", "f50", "f51",
                         "f61", "f63", "f65", "f68", "f69","f70","f71",
                         "f106", "f105",
                     "f104", "f103", "f154", "f153", "f152",
                     "f286", "f287"]
-
+"""
 xgb_a = XGBClassifier(max_depth = 4, n_estimators = 4, subsample = 0.8, gamma = 0,
                 min_child_weight = 1, scale_pos_weight = 1,
                 colsample_bytree = 0.8, learning_rate = 0.07, n_jobs = -1)
@@ -174,6 +177,11 @@ def main():
         if len(feature_drops) != 0:
             _train = _train.drop(feature_drops, axis = 1)
             test_b = test_b.drop(feature_drops, axis = 1)
+
+        _train.iloc[:,1:] = _train.iloc[:,1:].astype('float32')
+        _train.iloc[:,0] = _train.iloc[:,0].astype('category')
+        test_b.iloc[:,1:] = test_b.iloc[:,1:].astype('float32')
+        test_b.iloc[:,0] = test_b.iloc[:,0].astype('category')
 
         probs = two_layer_stacking(_train, test_b)
 
