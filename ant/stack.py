@@ -150,7 +150,7 @@ def stack_split(feature, labels, number_of_model):
             feature_split["feature_{}".format(i+1)] = np.delete(feature, np.s_[start_row:(start_row + fold_size)], axis = 0)
             label_split["label_{}".format(i+1)] = np.delete(labels, np.s_[start_row:(start_row + fold_size)], axis = 0)
 
-    return fold_split, feature_split, label_split
+    return fold_split, fold_split_label, feature_split, label_split
 
 def stack_xgb(train_path, label, test_path):
 
