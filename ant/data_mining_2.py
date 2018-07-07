@@ -26,7 +26,7 @@ thresh_a = 0.65 #PU threshold for testa
 pu_test_b = True
 thresh_b = 0.8 #PU threshold for testb
 seg_date = 20180215
-params = {"gamma" : [0, 0.1]}
+params = None
 #{"gamma" : [0, 0.1]}
 #{"gamma" : [0, 0.1], "learning_rate" : [0.06, 0.07]}
 
@@ -111,33 +111,6 @@ def part_fit(clf, train, seg_date, pu_thresh_b, store_score = True):
 
     return clf, _train
 
-"""
-def validation_black(clf, train, eval = True, save_score = True, save_model = True):
-    #Feed validation black label Back
-    roc = 0
-    print("\n# Feed Validation Black Label Back")
-    start = time.time()
-    validation = pd.read_csv(test_set_path)
-    validation_black = validation.loc[validation["label"] == 1]
-    print("\n# Found <{}> black instances".format(len(validation_black)))
-    _train = file_merge(train, validation_black, "date")
-    _feature, _label = split_train_label(_train)
-    clf.fit(_feature, _label)
-    if save_model:
-        joblib.dump(clf, score_path + "val_model.pkl")
-        print("\n# Model dumped")
-    print("\n# >>>>Duration<<<< : {}min ".format(round((time.time()-start)/60,2)))
-
-    if save_score:
-        save_score(test_b_path, score_path, prefix = "val")
-
-    if eval:
-        #evaluation validation
-        val_roc = eval_validation_set(clf, _train)
-
-    return  _train, roc
-"""
-
 def pu_a(clf):
 
     _clf, _train = init_train(clf,  model_path = model_path, params = params)
@@ -164,16 +137,19 @@ def main():
     print("\n# Train_path : {}".format(train_path))
     print("\n# Test_set_path : {}".format(test_set_path))
 
+    """
     _clf, _train = pu_a(xgb_a)
     #roc_val, roc_test = evaluation(_clf, validation_path, _train)
 
     if pu_test_b:
         _clf, _train = pu_b(xgb_b, _train)
         roc_val, roc_test = evaluation(_clf, validation_path, _train)
-
+    """
     #############################Stacking#######################################
 
     if stacking:
+        train_path = "data/stack_train_best.csv"
+        _train = pd.read_csv(train_path)
         test_b = pd.read_csv(test_b_path)
         probs = two_layer_stacking(_train, test_b)
 
@@ -184,12 +160,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-
-
-"""
-log_parmas(_clf, params_path, roc_init = round(roc_init,6),#roc_unlabel = round(roc_unlabel,6), pu_unlabel = pu_unlabel,
-            roc_pua = round(roc_pua,6), pu_thresh_a = pu_thresh_a, score_path = score_path, over_samp = over_samp,
-            over_samp_ratio = over_samp_ratio, bst_clf = clf)
-"""
-#log_parmas(_clf, params_path, roc_part = round(roc_part,6), pu_thresh_b = pu_thresh_b, seg_date = seg_date, score_path = score_path)
