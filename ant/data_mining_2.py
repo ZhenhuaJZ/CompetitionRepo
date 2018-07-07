@@ -44,6 +44,8 @@ def positive_unlabel_learning(clf, data_path, train, thresh, prefix = "pu"):
     start = time.time()
     roc = "n/a"
     unlabel = pd.read_csv(data_path)
+    if len(feature_drops) != 0:
+        unlabel = unlabel.drop(feature_drops, axis = 1)
     black = pu_labeling(clf, unlabel, thresh)
     _train = file_merge(train, black, "date")
     _feature, _label = split_train_label(_train)
