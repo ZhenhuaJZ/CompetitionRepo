@@ -275,10 +275,10 @@ def save_score(clf, test_path, score_path, prefix):
     score.to_csv(_score_path, index = None, float_format = "%.9f")
     return print("\n# Score saved in {}".format(_score_path))
 
-def eval_test_set(clf, validation_path):
-    validation = pd.read_csv(validation_path)
-    _feature, _label = split_train_label(validation)
-    probs = clf.predict_proba(val_feature)
+def eval_test_set(clf, test_set_path):
+    test_set = pd.read_csv(test_set_path)
+    _feature, _label = split_train_label(test_set)
+    probs = clf.predict_proba(_feature)
     roc = offline_model_performance(_label, probs[:,1])
     return roc
 
@@ -292,8 +292,8 @@ def eval_validation_set(clf, train_set):
     print("\n# Val 5 : CV5 score {}".format(roc))
     return roc
 
-def evaluation(clf, validation_path, train_set):
-    roc_val = eval_validation_set(clf, validation_path)
-    roc_test =  eval_test_set(clf, train_set)
+def evaluation(clf, test_set_path, train_set):
+    roc_val = eval_validation_set(clf, train_set)
+    roc_test =  eval_test_set(clf, test_set_path)
     # TODO:  high variance, low varience .etc
     return roc_val, roc_test
