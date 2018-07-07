@@ -248,14 +248,18 @@ def two_layer_stacking(train_data, test):
                           gamma = 0, n_jobs = -1,
                           subsample = 0.8, colsample_bytree = 0.8),
 
-        RandomForestClassifier(n_estimators = 380, min_samples_split = 110, max_depth = 20, criterion='entropy', n_jobs = -1),
+        RandomForestClassifier(n_estimators = 320, min_samples_split = 110, max_depth = 20, criterion='entropy', n_jobs = -1),
     ]
     print(layer2_classifier)
 
     feature, test, avg_roc = stack_layer(layer2_clf_names, layer2_classifier, feature, label, test, layer_name = "layer2")
 
-    avg_roc = np.average(avg_roc, axis =1, weights=[3./4, 1./4])
-    print("\n# Average 5-FOLD ROC : ".format(avg_roc))
+    try:
+        avg_roc = np.average(avg_roc, axis =1, weights=[3./4, 1./4])
+        print("\n# Average 5-FOLD ROC : ".format(avg_roc))
+
+    except Exception as e:
+        pass
 
     final_preds = np.average(test, axis =1, weights=[3./4, 1./4])
 
