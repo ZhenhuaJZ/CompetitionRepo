@@ -140,13 +140,13 @@ def validation_black(clf, train, eval = True, save_score = True, save_model = Tr
 
 def pu_a(clf):
 
-    _clf, train = init_train(clf,  model_path = model_path, params = params)
+    _clf, _train = init_train(clf,  model_path = model_path, params = params)
     roc_val, roc_test = evaluation(_clf, test_set_path, _train)
     print("\n# Tuning init parmas")
     sys.exit()
 
     print("\n# START PU - TESTA , PU_thresh_A = {}".format(thresh_a))
-    _clf, _train = positive_unlabel_learning(_clf, test_a_path, train, thresh_a, prefix = "pua")
+    _clf, _train = positive_unlabel_learning(_clf, test_a_path, _train, thresh_a, prefix = "pua")
 
     return  _clf, _train
 
