@@ -30,7 +30,7 @@ params =  {"gamma" : [0, 0.1]}
 #{"gamma" : [0, 0.1]}
 #{"gamma" : [0, 0.1], "learning_rate" : [0.06, 0.07]}
 
-xgb_a = XGBClassifier(max_depth = 4, n_estimators = 4, subsample = 0.8, gamma = 0.1,
+xgb_a = XGBClassifier(max_depth = 4, n_estimators = 480, subsample = 0.8, gamma = 0.1,
                 min_child_weight = 1, scale_pos_weight = 1,
                 colsample_bytree = 0.8, learning_rate = 0.07, n_jobs = -1)
 
@@ -54,7 +54,7 @@ def init_train(clf, store_score = True, save_model = False, model_path = None, p
 
     start = time.time()
     print("\n# Start Traing")
-    print("\n# {}".format(clf))
+    print("\n# Init classifier : {}".format(clf))
     train = pd.read_csv(train_path)
 
     if over_samp:
@@ -153,6 +153,7 @@ def pu_a(clf):
 def pu_b(clf, train):
 
     print("\n# START PU - TESTB , PU_thresh_B = {}".format(thresh_b))
+    print("\n# Pu_b classifier : {}".format(clf))
     _clf, _train = part_fit(clf, train, seg_date, thresh_b)
 
     return _clf, _train
@@ -163,7 +164,6 @@ def main():
     print("\n# Make dirs in {}".format(score_path))
     print("\n# Train_path : {}".format(train_path))
     print("\n# Test_set_path : {}".format(test_set_path))
-    print("\n# Classifier : {}".format(xgb_a))
 
     _clf, _train = pu_a(xgb_a)
     #roc_val, roc_test = evaluation(_clf, validation_path, _train)
