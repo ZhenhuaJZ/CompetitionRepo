@@ -22,7 +22,7 @@ corr_data = "data/corr_data.npy"
 
 model_path =  None
 stacking = True
-over_samp = True
+over_samp = False
 pu_test_b = True
 
 over_samp_ratio = 0.02 # 0.06 add 808 to train
