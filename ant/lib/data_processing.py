@@ -59,7 +59,7 @@ def SMOTE_sampling(data, ratio = 1):
     over_sampled_data = new_feature.drop(new_feature.index[-int(num_label_0*(1-ratio)):])
     over_sampled_data.iloc[:,1:] = over_sampled_data.iloc[:,1:].astype("int32")
     over_sampled_data.iloc[:,3:] = over_sampled_data.iloc[:,3:].astype("float32")
-    over_sampled_data = over_sampled_data.sort_values(by = "date").reset_index()
+    over_sampled_data = over_sampled_data.sort_values(by = "date").reset_index(drop = True)
     sampled_num_label_1 = len(over_sampled_data.loc[over_sampled_data["label"] == 1])
     sampled_num_label_0 = len(over_sampled_data.loc[over_sampled_data["label"] == 0])
     print("\n# After SMOTE sampling: label 1 = {}, label 0 = {}".format(sampled_num_label_1, sampled_num_label_0))
