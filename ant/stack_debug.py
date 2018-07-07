@@ -182,7 +182,7 @@ def stack_layer(names, classifiers, feature, labels, test_feature, layer_name):
                 test_score.append(test_prediction[:,1].tolist())
                 fold_score += stack_score[:,1].tolist()
                 print("model {}".format(name) + " complete")
-                roc = offline_model_performance(label_split["label_{}".format(i+1), test_prediction[:,1])
+                roc = offline_model_performance(label_split["label_{}".format(i+1)], test_prediction[:,1])
                 roc_list.append(roc)
                 print("\n# Fold {} performace is {:4f}".format(i+1, roc))
                 end = time.time()
