@@ -157,6 +157,7 @@ def main():
 
         if len(feature_drops) != 0:
             test_set = test_set.drop(feature_drops, axis = 1)
+            _train = _train.drop(feature_drops, axis = 1)
 
         roc_val, roc_test = evaluation(_clf, test_set, _train)
     #############################Stacking#######################################
