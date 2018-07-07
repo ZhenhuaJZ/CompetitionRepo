@@ -214,28 +214,31 @@ def two_layer_stacking(train_data, test):
     # ####################First Layer Start#####################
     clf_names = ["XGB", "RF", "LR", "ET", "GBDT"]
     classifier = [
-            #XGBClassifier(n_estimators=480, max_depth=4, learning_rate = 0.06,
-                    #gamma = 0.1, n_jobs = -1, subsample = 0.8, colsample_bytree = 0.8),
-            #RandomForestClassifier(n_estimators = 1, min_samples_split = 110, max_depth = 20, criterion='entropy', n_jobs = -1),
+            XGBClassifier(n_estimators=380, max_depth=3, learning_rate = 0.06, #380
+                    gamma = 0.1, n_jobs = -1, subsample = 0.8, colsample_bytree = 0.8),
+            RandomForestClassifier(n_estimators = 160, min_samples_split = 110, max_depth = 20, criterion='entropy', n_jobs = -1), #160
             #LogisticRegression(class_weight = "balanced", C = 1),
-            ExtraTreesClassifier(n_estimators = 2, n_jobs = -1, min_samples_split = 50),
-            GradientBoostingClassifier(n_estimators = 2),
+            ExtraTreesClassifier(n_estimators = 2, n_jobs = -1, min_samples_split = 50), #120
+            GradientBoostingClassifier(n_estimators = 120, learning_rate = 0.08), #120
     ]
 
     feature, test = stack_layer(clf_names, classifier, feature, label, test, layer_name = "layer1")
 
-    # layer2_clf_names = ["XGB", "RF", "LR"]
+    layer2_clf_names = ["XGB", "RF"]
 
-    # layer2_classifier = [
-    #     XGBClassifier(n_estimators=480, max_depth=4, learning_rate = 0.06,
-    #                       gamma = 0, n_jobs = -1,
-    #                       subsample = 0.8, colsample_bytree = 0.8),
-    #
-    # ]
+    layer2_classifier = [
+        XGBClassifier(n_estimators=1, max_depth=4, learning_rate = 0.07,
+                          gamma = 0, n_jobs = -1,
+                          subsample = 0.8, colsample_bytree = 0.8),
 
-    #feature, test = stack_layer(layer2_clf_names, layer2_classifier, feature, label, test, layer_name = "layer2")
+        RandomForestClassifier(n_estimators = 1, min_samples_split = 110, max_depth = 20, criterion='entropy', n_jobs = -1),
+    ]
 
-    final_preds = stack_xgb(feature, label, test)
+    feature, test = stack_layer(layer2_clf_names, layer2_classifier, feature, label, test, layer_name = "layer2")
+
+    final_preds = feature[:,0]*0.85 + feature[:,1]*0.15
+
+    #final_preds = stack_xgb(feature, label, test)
 
     return final_preds
 
