@@ -13,25 +13,26 @@ now = datetime.datetime.now()
 score_path = "log/last_1_day/{}d_{}h_{}m/".format(now.day, now.hour, now.minute)
 params_path = "log/last_1_day/log_{}h.csv".format(now.hour)
 
-train_path = "data/stack_train_best.csv"
-#train_path = "data/train_normal_unlabel_float.csv"  #train_normal_un.csv, train_float64.csv, train_normal_unlabel_float
+#train_path = "data/stack_train_best.csv"
+train_path = "data/train_normal_unlabel_float.csv"  #train_normal_un.csv, train_float64.csv, train_normal_unlabel_float
 test_set_path = "data/test_normal_unlabel_float.csv" #validation_normal_un.csv, validation_float64, test_normal_unlabel_float
 test_b_path = "data/test_b.csv"
 test_a_path = "data/test_a.csv"
 
 model_path =  None
-stacking = True
-over_samp = True
+stacking = False
+over_samp = False
+pu_test_b = False
+
 over_samp_ratio = 0.02 # 0.06 add 808 to train
 thresh_a = 0.65 #PU threshold for testa
-pu_test_b = True
 thresh_b = 0.8 #PU threshold for testb
 seg_date = 20180215
 params = None
 #{"gamma" : [0, 0.1]}
-#{"gamma" : [0, 0.1], "learning_rate" : [0.06, 0.07]}
+feature_drops = ["f21", "f22", "f23", "f25","f26", "f27", "f106", "f105", "f104", "f103", "f154", "f153", "f152"]
 
-xgb_a = XGBClassifier(max_depth = 4, n_estimators = 480, subsample = 0.8, gamma = 0,
+xgb_a = XGBClassifier(max_depth = 4, n_estimators = 4, subsample = 0.8, gamma = 0,
                 min_child_weight = 1, scale_pos_weight = 1,
                 colsample_bytree = 0.8, learning_rate = 0.07, n_jobs = -1)
 
@@ -58,12 +59,18 @@ def init_train(clf, store_score = True, save_model = False, model_path = None, p
     print("\n# Init classifier : {}".format(clf))
     train = pd.read_csv(train_path)
 
+    if len(feature_drops) != 0:
+        print("\n Feature selection droped features {}".format(feature_drops))
+        train = train.drop(feature_drops)
+
     if over_samp:
         train = SMOTE_sampling(train, over_samp_ratio)
 
     if params != None:
         test_set = pd.read_csv(test_set_path)
-        clf = grid_search_roc(clf, train, test_set, params)
+        #clf = grid_search_roc(clf, train, test_set, params)
+        # TODO:
+        print("\n# invalid grid search")
 
     feature, label = split_train_label(train)
 
@@ -120,15 +127,12 @@ def pu_a(clf):
 
     print("\n# START PU - TESTA , PU_thresh_A = {}".format(thresh_a))
     _clf, _train = positive_unlabel_learning(_clf, test_a_path, _train, thresh_a, prefix = "pua")
-    _train.to_csv(score_path + "pua_data.csv")
-    sys.exit()
     return  _clf, _train
 
 def pu_b(clf, train):
 
     print("\n# START PU - TESTB , PU_thresh_B = {}".format(thresh_b))
     _clf, _train = part_fit(clf, train, seg_date, thresh_b)
-
     return _clf, _train
 
 def main():
@@ -138,14 +142,12 @@ def main():
     print("\n# Train_path : {}".format(train_path))
     print("\n# Test_set_path : {}".format(test_set_path))
 
-    """
     _clf, _train = pu_a(xgb_a)
-    #roc_val, roc_test = evaluation(_clf, validation_path, _train)
+    #roc_val, roc_test = evaluation(_clf, test_set_path, _train)
 
     if pu_test_b:
         _clf, _train = pu_b(xgb_b, _train)
-        roc_val, roc_test = evaluation(_clf, validation_path, _train)
-    """
+        roc_val, roc_test = evaluation(_clf, test_set_path, _train)
     #############################Stacking#######################################
 
     if stacking:
