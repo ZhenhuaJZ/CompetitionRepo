@@ -327,7 +327,6 @@ def eval_validation_set(clf, train_set):
         _day.append(train_set["date"].iloc[interval*i])
     slice_interval = [[_day[0], _day[1]], [_day[1]+1, _day[2]], [_day[2]+1, _day[3]],[_day[3]+1,_day[4]],[_day[4]+1, _day[5]]]
     roc = cv_fold(clf, train_set, slice_interval)
-    print("\n# Val 5 : CV5 score {}".format(roc))
     return roc
 
 def evaluation(clf, test_set_path, train_set):
