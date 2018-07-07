@@ -31,7 +31,7 @@ param = {
         "eval_metric" : ['error'], #early stop only effects on error
         "silent" : 0
         }
-num_round = 480
+num_round = 4
 
 path1 = os.path.abspath(".")
 
@@ -210,17 +210,18 @@ def two_layer_stacking(train_data, test):
     train_data = train_data.values
     test = test.values
     feature = train_data[:,3:]
-    label = train_data[:,1].astype(int)
+    #label = train_data[:,1].astype(int)
+    label = train_data[:,1]
     test = test[:,2:]
 
     # ####################First Layer Start#####################
     clf_names = ["XGB", "RF", "LR"]
     classifier = [
-        XGBClassifier(n_estimators=480, max_depth=4, learning_rate = 0.07,
+        XGBClassifier(n_estimators=4, max_depth=4, learning_rate = 0.07,
                       gamma = 0, n_jobs = -1,
                       subsample = 0.8, colsample_bytree = 0.8),
         RandomForestClassifier(n_estimators = 320, min_samples_split = 110, max_depth = 20, criterion='entropy', n_jobs = -1), #450
-        LogisticRegression(class_weight = "balanced", C = 1)
+        #LogisticRegression(class_weight = "balanced", C = 1)
     ]
 
     feature, test = stack_layer(clf_names, classifier, feature, label, test, layer_name = "layer1")
@@ -232,7 +233,7 @@ def two_layer_stacking(train_data, test):
                           gamma = 0, reg_alpha = 0.07,n_jobs = -1,
                           subsample = 0.6, colsample_bytree = 0.7),
         RandomForestClassifier(n_estimators = 280, min_samples_split = 110, max_depth = 20, criterion='entropy', n_jobs = -1), #450
-        LogisticRegression(class_weight = "balanced", C = 1),
+        #LogisticRegression(class_weight = "balanced", C = 1),
 
     ]
 
