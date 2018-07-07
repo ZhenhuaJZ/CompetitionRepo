@@ -239,7 +239,7 @@ def two_layer_stacking(train_data, test):
     print(feature.shape)
     final_preds = np.average(feature, axis =1, weights=[3./4, 1./4])
     #final_preds = feature[:,0]*0.85 + feature[:,1]*0.15
-    #print(final_preds)
+    print(final_preds)
     #print(final_preds.shape)
     #final_preds = stack_xgb(feature, label, test)
 
