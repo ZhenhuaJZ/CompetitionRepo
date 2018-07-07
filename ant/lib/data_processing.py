@@ -4,7 +4,7 @@ import pandas as pd
 import math
 import datetime
 import gc
-# from imblearn.over_sampling import SMOTE
+from imblearn.over_sampling import SMOTE
 now = datetime.datetime.now()
 
 ##################### Data subsampling / imbalanced data ######################
