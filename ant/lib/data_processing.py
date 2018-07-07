@@ -33,32 +33,32 @@ def over_sampling(data, ratio = 1):
             len(over_sampled_data.loc[over_sampled_data["label"] == 1]),len(over_sampled_data.loc[over_sampled_data["label"] == 0])))
     return over_sampled_data
 
-# TODO: SMOTE sampling technique
-# Synthetic Minority Over-sampling technique
-# def SMOTE_sampling(data, ratio = 1):
-#     pd.options.mode.chained_assignment = None
-#     print("\n# Initiate SMOTE over sampling")
-#     sm = SMOTE(ratio = "minority", random_state = 5)
-#     id = data["id"]
-#     feature = data.drop(columns = ["label", "id"])
-#     header = feature.columns.values
-#     label = data.iloc[:,1]
-#     num_label_1 = len(label[label == 1])
-#     num_label_0 = len(label[label == 0])
-#     print("\n# Before sampling: label 1 = {}, label 0 = {}".format(num_label_1, num_label_0))
-#     new_feature, new_label = sm.fit_sample(feature,label)
-#     new_feature = pd.DataFrame(new_feature, columns = header)
-#     new_label = pd.Series(new_label)
-#     new_feature.insert(0, value = new_label, column = "label")
-#     new_feature.insert(0, value = id, column = "id")
-#     over_sampled_data = new_feature.drop(new_feature.index[-int(num_label_0*(1-ratio)):])
-#     over_sampled_data.iloc[:,1:] = over_sampled_data.iloc[:,1:].astype("int32")
-#     sampled_num_label_1 = len(over_sampled_data.loc[over_sampled_data["label"] == 1])
-#     sampled_num_label_0 = len(over_sampled_data.loc[over_sampled_data["label"] == 0])
-#     print("\n# After SMOTE sampling: label 1 = {}, label 0 = {}".format(sampled_num_label_1, sampled_num_label_0))
-#     print("\n# End of SMOTE sampling")
-#     pd.options.mode.chained_assignment = "warn"
-#     return over_sampled_data
+#TODO: SMOTE sampling technique
+Synthetic Minority Over-sampling technique
+def SMOTE_sampling(data, ratio = 1):
+    pd.options.mode.chained_assignment = None
+    print("\n# Initiate SMOTE over sampling")
+    sm = SMOTE(ratio = "minority", random_state = 5)
+    id = data["id"]
+    feature = data.drop(columns = ["label", "id"])
+    header = feature.columns.values
+    label = data.iloc[:,1]
+    num_label_1 = len(label[label == 1])
+    num_label_0 = len(label[label == 0])
+    print("\n# Before sampling: label 1 = {}, label 0 = {}".format(num_label_1, num_label_0))
+    new_feature, new_label = sm.fit_sample(feature,label)
+    new_feature = pd.DataFrame(new_feature, columns = header)
+    new_label = pd.Series(new_label)
+    new_feature.insert(0, value = new_label, column = "label")
+    new_feature.insert(0, value = id, column = "id")
+    over_sampled_data = new_feature.drop(new_feature.index[-int(num_label_0*(1-ratio)):])
+    over_sampled_data.iloc[:,1:] = over_sampled_data.iloc[:,1:].astype("int32")
+    sampled_num_label_1 = len(over_sampled_data.loc[over_sampled_data["label"] == 1])
+    sampled_num_label_0 = len(over_sampled_data.loc[over_sampled_data["label"] == 0])
+    print("\n# After SMOTE sampling: label 1 = {}, label 0 = {}".format(sampled_num_label_1, sampled_num_label_0))
+    print("\n# End of SMOTE sampling")
+    pd.options.mode.chained_assignment = "warn"
+    return over_sampled_data
 
 # TODO: uncompleted
 # def SMOTETomek(data):
