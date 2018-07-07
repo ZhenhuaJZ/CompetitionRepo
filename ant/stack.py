@@ -233,7 +233,7 @@ def two_layer_stacking(train_data, test):
     #
     # ]
 
-    feature, test = stack_layer(layer2_clf_names, layer2_classifier, feature, label, test, layer_name = "layer2")
+    #feature, test = stack_layer(layer2_clf_names, layer2_classifier, feature, label, test, layer_name = "layer2")
 
     final_preds = stack_xgb(feature, label, test)
 
