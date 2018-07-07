@@ -154,12 +154,13 @@ def pu_b(clf, train):
     return _clf, _train
 
 def main():
+    os.makedirs(score_path)
     sys.stdout = Logger(score_path + "log_{}d_{}h_{}m.txt".format(now.day, now.hour, now.minute))
     print("\n# Make dirs in {}".format(score_path))
     print("\n# Train_path : {}".format(train_path))
     print("\n# Test_set_path : {}".format(test_set_path))
     print("\n# Classifier : {}".format(xgb_a))
-    os.makedirs(score_path)
+
 
     _clf, _train = pu_a(xgb_a)
     #print("\n# EVAL INIT CLASSIFIER")
