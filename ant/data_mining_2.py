@@ -154,7 +154,7 @@ def pu_b(clf, train):
     return _clf, _train
 
 def main():
-    sys.stdout = Logger("log_{}d_{}h_{}m.txt".format(now.day, now.hour, now.minute))
+    sys.stdout = Logger(score_path + "log_{}d_{}h_{}m.txt".format(now.day, now.hour, now.minute))
     print("\n# Make dirs in {}".format(score_path))
     print("\n# Train_path : {}".format(train_path))
     print("\n# Test_set_path : {}".format(test_set_path))
