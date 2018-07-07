@@ -12,9 +12,9 @@ now = datetime.datetime.now()
 score_path = "log/last_3_days/{}d_{}h_{}m/".format(now.day, now.hour, now.minute)
 params_path = "log/last_3_days/log_{}h.csv".format(now.hour)
 
-train_path = "data/train_normal_unlabel_float.csv"  #train_normal_un.csv, train_float64.csv
+train_path = "data/train_float64.csv"  #train_normal_un.csv, train_float64.csv, train_normal_unlabel_float
 #unlabel_path = "data/unlabel.csv"
-validation_path = "data/test_normal_unlabel_float.csv" #validation_normal_un.csv, validation_float64
+validation_path = "data/validation_float64.csv" #validation_normal_un.csv, validation_float64, test_normal_unlabel_float
 test_b_path = "data/test_b.csv"
 test_a_path = "data/test_a.csv"
 model_name = None #"6d_23h_10m" #best score model
@@ -33,6 +33,7 @@ params =  None
 def positive_unlabel_learning(clf, data_path, train, thresh, eval = True, save_score = True, prefix = "pu"):
 
     start = time.time()
+    roc = "n/a"
     unlabel = pd.read_csv(data_path)
     black = pu_labeling(clf, unlabel, thresh)
     _train = file_merge(train, black, "date")
@@ -61,10 +62,7 @@ def positive_unlabel_learning(clf, data_path, train, thresh, eval = True, save_s
         roc = offline_model_performance(val_label, val_probs[:,1])
         clear_mermory(val_feature, val_label, validation, validation_path, val_probs)
 
-        return clf, _train, roc
-
-    no_roc = "n/a"
-    return clf, _train, no_roc
+    return clf, _train, roc
 
 def init_train(clf, eval = True, save_score = True, save_model = False, params = None, dump_model = None):
 
@@ -115,8 +113,9 @@ def init_train(clf, eval = True, save_score = True, save_model = False, params =
 
     return clf, train, roc
 
-def validation_black(clf, train, save_score = True, save_model = True):
+def validation_black(clf, train, eval = True, save_score = True, save_model = True):
     #Feed validation black label Back
+    roc = 0
     print("\n# Feed Validation Black Label Back")
     start = time.time()
     validation = pd.read_csv(validation_path)
@@ -138,10 +137,22 @@ def validation_black(clf, train, save_score = True, save_model = True):
         _score_path = score_path  + "val_score_{}d_{}h_{}m.csv".format(now.day, now.hour, now.minute)
         score.to_csv(_score_path, index = None, float_format = "%.9f")
         print("\n# Score saved in {}".format(_score_path))
-    return  _train
+
+    if eval:
+        #CV -5 Folds seg by date
+        _day = []
+        interval = int(len(_train["date"])/5)
+        for i in range(6):
+            _day.append(_train["date"].iloc[interval*i])
+        slice_interval = [[_day[0], _day[1]], [_day[1]+1, _day[2]], [_day[2]+1, _day[3]],[_day[3]+1,_day[4]],[_day[4]+1, _day[5]]]
+        roc = cv_fold(clf, _train, slice_interval)
+        print("\n# Val 5 : CV5 score {}".format(roc))
+        #return _train, roc
+    return  _train, roc
 
 def part_fit(clf, train, seg_date, pu_thresh_b, eval = True, save_score = True):
     #Partical_Fit
+    roc = 0
     start = time.time()
     print("\n# PART FIT TESTB, PU_thresh_b = {}, Seg_Date = {}".format(pu_thresh_b, seg_date))
     print("\n# {}".format(clf))
@@ -174,14 +185,13 @@ def part_fit(clf, train, seg_date, pu_thresh_b, eval = True, save_score = True):
             _day.append(_train["date"].iloc[interval*i])
         slice_interval = [[_day[0], _day[1]], [_day[1]+1, _day[2]], [_day[2]+1, _day[3]],[_day[3]+1,_day[4]],[_day[4]+1, _day[5]]]
         roc = cv_fold(clf, _train, slice_interval)
-        return roc
-
-    no_roc = 0.0
-    return no_roc
+        print("\n# Partb: CV5 score {}".format(roc))
+        print("\n# Partb: CV5 score {}".format(roc))
+    return roc
 
 def pu_a():
 
-    _clf = XGBClassifier(max_depth = 4, n_estimators = 480, subsample = 0.8, gamma = 0,
+    _clf = XGBClassifier(max_depth = 4, n_estimators = 480, subsample = 0.8, gamma = 0.1,
                     min_child_weight = 1, scale_pos_weight = 1,
                     colsample_bytree = 0.8, learning_rate = 0.07, n_jobs = -1)
 
@@ -193,10 +203,11 @@ def pu_a():
     _, train, roc_pua = positive_unlabel_learning(clf, test_a_path, train, pu_thresh_a, prefix = "pua")
 
     # TODO: Fine tunning
-    _clf.set_params(n_estimators = 400, learning_rate = 0.06)
+    #_clf.set_params(n_estimators = 350, learning_rate = 0.06)
     print("\n# fine_tune : 2 : \n", _clf)
 
     _train = validation_black(_clf, train)
+    _train.to_csv("data/after_valdation_data.csv", index =None)
 
     log_parmas(_clf, params_path, roc_init = round(roc_init,6),#roc_unlabel = round(roc_unlabel,6), pu_unlabel = pu_unlabel,
                 roc_pua = round(roc_pua,6), pu_thresh_a = pu_thresh_a, score_path = score_path, over_samp = over_samp,
