@@ -23,9 +23,11 @@ for dtype in ['float','int','object']:
     mean_usage_mb = mean_usage_b / 1024 ** 2
     print("Average memory usage for {} columns: {:03.2f} MB".format(dtype,mean_usage_mb))
 """
-a = [[1,2,3,4],[1,2,3,4]]
-
-b = np.array(a)
+a = [[1,2, 3,4],[1,2,3,4]]
+print(a)
+b = np.array(a).transpose()
 print(b)
-final_preds = np.average(a, axis =0, weights=[3./4, 1./4])
+print(b.shape)
+
+final_preds = np.average(b, axis = 1, weights=[3./4, 1./4])
 print(final_preds)
