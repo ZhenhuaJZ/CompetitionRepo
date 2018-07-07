@@ -10,21 +10,22 @@ from lib.tool import *
 from stack import *
 now = datetime.datetime.now()
 
-score_path = "log/last_3_days/{}d_{}h_{}m/".format(now.day, now.hour, now.minute)
-params_path = "log/last_3_days/log_{}h.csv".format(now.hour)
+score_path = "log/last_1_day/{}d_{}h_{}m/".format(now.day, now.hour, now.minute)
+params_path = "log/last_1_day/log_{}h.csv".format(now.hour)
 
-train_path = "data/train_float64.csv"  #train_normal_un.csv, train_float64.csv, train_normal_unlabel_float
+train_path = "data/stack_train_best.csv"
+#train_path = "data/train_float64.csv"  #train_normal_un.csv, train_float64.csv, train_normal_unlabel_float
 validation_path = "data/validation_float64.csv" #validation_normal_un.csv, validation_float64, test_normal_unlabel_float
 test_b_path = "data/test_b.csv"
 test_a_path = "data/test_a.csv"
 model_name = None #"6d_23h_10m" #best score model
 corr_data = "data/corr_data.npy"
 
-stacking = False
+stacking = True
 over_samp = False
 over_samp_ratio = 0.019 # 0.06 add 808 to train
 pu_thresh_a = 0.486 #PU threshold for testa
-pu_test_b = True
+pu_test_b = False
 pu_thresh_b = 0.88 #PU threshold for testb
 seg_date = 20180215
 params =  None
@@ -230,13 +231,15 @@ def main():
     print("\n# Train_path : {}".format(train_path))
     print("\n# Validation_path : {}".format(validation_path))
     os.makedirs(score_path)
-
+    """
     train = pu_a()
     #train.to_csv("data/stack_train_best.csv", index = None)
     pu_b(train, pu_test_b, eval = True)
+    """
 
     if stacking:
 
+        train = pd.read_csv(train_path)
         test_b = pd.read_csv(test_b_path)
         probs = two_layer_stacking(train, test_b)
 
