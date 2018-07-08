@@ -102,6 +102,7 @@ def select_feature_from_xgb(feature,labels,test_feature):
     xgb = XGBClassifier(n_estimators=2, max_depth=4, learning_rate = 0.07, subsample = 0.8, colsample_bytree = 0.9)
     xgb = xgb.fit(feature, labels)
     importances = xgb.feature_importances_
+    print(importances)
     indices = np.argsort(importances)[::-1]
 
     model = SelectFromModel(xgb, prefit=True)
@@ -229,7 +230,6 @@ def two_layer_stacking(train_data, test):
     test = test[:,2:]
 
     feature_new, test_feature_new = select_feature_from_xgb(feature, label, test)
-    print(feature_new)
     sys.exit()
 
     # ####################First Layer Start#####################
