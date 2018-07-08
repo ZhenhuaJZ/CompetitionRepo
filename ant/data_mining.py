@@ -238,6 +238,9 @@ def main():
 
     if stacking:
 
+        train = pd.read_csv(train_path,low_memory = False)
+        test_b = pd.read_csv(test_b_path)
+        
         probs = two_layer_stacking(train, test_b)
 
         score = pd.DataFrame(test_b["id"]).assign(score = probs)
