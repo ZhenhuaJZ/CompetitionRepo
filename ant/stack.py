@@ -278,19 +278,17 @@ def two_layer_stacking(train_data, test):
 def read_saved_layer(train_data, test, label, score_id):
     train_data = train_data.drop(train_data.index[:3500])
     label = label.drop(label.index[:3500])
-    score_id = score_id.drop(score_id.index[:3500])
 
     train_data = train_data.values
     test = test.values
     _label = label.values
     _score_id = score_id.values
-    #mg_f = 4
-    #print("\n# Magic feature is {} : ".format("f"+ str(mg_f + 1)))
+    mg_f = 4
+    print("\n# Magic feature is {} : ".format("f"+ str(mg_f + 1)))
 
     feature = train_data
     label = _label[:,1].astype(int)
 
-    """
     magic_feature = _label[:,mg_f] #feature 6, 209, 5, 46, 20, 45, 247, 233
     magic_test = _score_id[:,mg_f-1] #
     #Append magic feature
@@ -311,7 +309,7 @@ def read_saved_layer(train_data, test, label, score_id):
 
         feature = np.append(magic_feature, feature, axis = 1)
         test = np.append(magic_test, test, axis = 1)
-    """
+
 
     print("\n# Read saved layer data  !! ")
     layer2_clf_names = ["XGB", "RF"]
