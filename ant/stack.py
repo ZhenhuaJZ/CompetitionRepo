@@ -49,7 +49,7 @@ test_path = data_path + "test_a.npy"
 stack_test_path = score_path + "stack_test_sheet.csv"
 
 now = datetime.datetime.now()
-log_file = "log/"+ "{}_".format(now.year)+"{}_".format(now.month)+"{}/".format(now.day)
+log_file = "log/last_1_day/{}d_{}h_{}m/".format(now.day, now.hour, now.minute)
 final_test_path = log_file + "score_{}:{}.csv".format(now.hour, now.minute)
 
 fmap = path1 + "/fmap/xgb.fmap"

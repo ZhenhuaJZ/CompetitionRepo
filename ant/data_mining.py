@@ -229,11 +229,11 @@ def main():
     print("\n# Validation_path : {}".format(validation_path))
     os.makedirs(score_path)
     sys.stdout = Logger(score_path + "log_{}d_{}h_{}m.txt".format(now.day, now.hour, now.minute))
-    """
+
     train = pu_a()
-    #train.to_csv("data/stack_train_best.csv", index = None)
+    train.to_csv("data/stack_train_best.csv", index = None)
     pu_b(train, pu_test_b, eval = True)
-    """
+
     if stacking:
 
         probs = two_layer_stacking(train, test_b)

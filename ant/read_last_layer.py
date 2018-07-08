@@ -25,13 +25,16 @@ def main():
     os.makedirs(score_path)
     sys.stdout = Logger(score_path + "log_{}d_{}h_{}m.txt".format(now.day, now.hour, now.minute))
 
+    #Read data
     train = pd.read_csv(train_path, header = None, low_memory = False)
     test_b = pd.read_csv(test_b_path, header = None)
     label = pd.read_csv(label_path, low_memory = False)
     score_id = pd.read_csv(score_id_path)
 
-    read_saved_layer(train, test_b, label)
+    #Read second layer
+    probs = read_saved_layer(train, test_b, label)
 
+    #Save score
     score = pd.DataFrame(score_id["id"]).assign(score = probs)
     _score_path = score_path  + "stacking_score_{}d_{}h_{}m.csv".format(now.day, now.hour, now.minute)
     score.to_csv(_score_path, index = None, float_format = "%.9f")
