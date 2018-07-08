@@ -284,9 +284,9 @@ def read_saved_layer(train_data, test, label):
     label = _label[:,1].astype(int)
 
     feature_new, test_feature_new = select_feature_from_xgb(feature, label, test)
-    print("feature_new\n", feature_new[0])
+    print("feature_new\n", feature_new[:,0])
 
-    feature_new = pd.Series(feature_new[0])
+    feature_new = pd.Series(feature_new[:,0])
     print(feature_new)
     sys.exit()
     #test_feature_new = pd.Series(test_feature_new[0])
