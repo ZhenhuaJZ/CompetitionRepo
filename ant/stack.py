@@ -284,10 +284,11 @@ def read_saved_layer(train_data, test, label):
     feature = train_data
     label = _label[:,1].astype(int)
 
-    #feature_new, test_feature_new = select_feature_from_xgb(feature, label, test)
-    # feature_new = feature_new[0]
-    # test_feature_new = test_feature_new[0]
-    # print(feature)
+    feature_new, test_feature_new = select_feature_from_xgb(feature, label, test)
+    feature_new = feature_new[0]
+    test_feature_new = test_feature_new[0]
+    print(feature_new[0])
+    print(len(feature_new[0]))
 
     print("\n# Read saved layer data  !! ")
     layer2_clf_names = ["XGB", "RF"]
