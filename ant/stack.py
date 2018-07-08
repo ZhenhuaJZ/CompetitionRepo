@@ -260,7 +260,7 @@ def two_layer_stacking(train_data, test):
 
     try:
         avg_roc = np.average(avg_roc, axis =0, weights=[3./4, 1./4])
-        print("\n# Average 5-FOLD ROC : ".format(avg_roc))
+        print("\n# Average 5-FOLD ROC {}: ".format(avg_roc))
 
     except Exception as e:
         pass
@@ -295,7 +295,7 @@ def read_saved_layer(train_data, test, label):
 
     try:
         avg_roc = np.average(avg_roc, axis =0, weights=[3./4, 1./4])
-        print("\n# Average 5-FOLD ROC : ".format(avg_roc))
+        print("\n# Average 5-FOLD ROC : {}".format(avg_roc))
 
     except Exception as e:
         pass
