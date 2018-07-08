@@ -32,7 +32,7 @@ def main():
     score_id = pd.read_csv(score_id_path)
 
     #Read second layer
-    probs = read_saved_layer(train, test_b, label)
+    probs = read_saved_layer(train, test_b, label, score_id)
 
     #Save score
     score = pd.DataFrame(score_id["id"]).assign(score = probs)

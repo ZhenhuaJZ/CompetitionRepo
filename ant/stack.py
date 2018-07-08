@@ -275,21 +275,28 @@ def two_layer_stacking(train_data, test):
 
 ####################################################################################################
 
-def read_saved_layer(train_data, test, label):
+def read_saved_layer(train_data, test, label, score_id):
     train_data = train_data.values
     test = test.values
-    _label = label.values
+    _label = label.values #
+    _score_id = score_id.values
+
+    print(label)
+    print(score_id)
 
     feature = train_data
     label = _label[:,1].astype(int)
-    magic_feature = _label[:,5] #feature 6
-    print("1\n", magic_feature)
+    magic_feature = _label[:,5] #feature 6, 209, 5, 46, 20, 45, 247, 233
+    magic_test = _score_id[:,4]
 
     magic_feature = pd.Series(magic_feature)
-
     magic_feature = (magic_feature-magic_feature.min())/(magic_feature.max()-magic_feature.min())
-    print("2\n", magic_feature)
 
+    magic_test = pd.Series(magic_test)
+    magic_test = (magic_test-magic_test.min())/(magic_test.max()-magic_test.min())
+
+    feature = feature.assign(magic_feature)
+    print(feature)
     sys.exit()
 
     print("\n# Read saved layer data  !! ")
