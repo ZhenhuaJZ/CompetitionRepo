@@ -22,7 +22,6 @@ def main():
 
     print("\n# Make dirs in {}".format(score_path))
     print("\n# Train_path : {}".format(train_path))
-    print("\n# Validation_path : {}".format(validation_path))
     os.makedirs(score_path)
     sys.stdout = Logger(score_path + "log_{}d_{}h_{}m.txt".format(now.day, now.hour, now.minute))
 
