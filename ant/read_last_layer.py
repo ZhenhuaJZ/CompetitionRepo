@@ -19,7 +19,7 @@ label_path = "data/stack_train_best.csv"
 score_id_path = "data/test_b.csv"
 
 def main():
-    
+
     print("\n# Make dirs in {}".format(score_path))
     print("\n# Train_path : {}".format(train_path))
     os.makedirs(score_path)

@@ -229,6 +229,7 @@ def two_layer_stacking(train_data, test):
     test = test[:,2:]
 
     feature_new, test_feature_new = select_feature_from_xgb(feature, label, test)
+    print(feature_new)
     sys.exit()
 
     # ####################First Layer Start#####################
