@@ -228,6 +228,9 @@ def two_layer_stacking(train_data, test):
     label = train_data[:,1].astype(int)
     test = test[:,2:]
 
+    feature_new, test_feature_new = select_feature_from_xgb(feature, label, test)
+    sys.exit()
+
     # ####################First Layer Start#####################
     clf_names = ["LR","mlp", "XGB", "RF", "ET", "GBDT"]
     classifier = [
