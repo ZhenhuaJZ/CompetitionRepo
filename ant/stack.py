@@ -285,19 +285,26 @@ def read_saved_layer(train_data, test, label, score_id):
 
     feature = train_data
     label = _label[:,1].astype(int)
-    magic_feature = _label[:,mg_f] #feature 6, 209, 5, 46, 20, 45, 247, 233
-    magic_test = _score_id[:,mg_f-1] #
+    #magic_feature = _label[:,mg_f] #feature 6, 209, 5, 46, 20, 45, 247, 233
+    #magic_test = _score_id[:,mg_f-1] #
+    #Append magic feature
+    for mg_f in [5, 208, 4, 45, 19]:
 
-    magic_feature = pd.Series(magic_feature)
-    magic_feature = (magic_feature-magic_feature.min())/(magic_feature.max()-magic_feature.min())
-    magic_feature = np.array(magic_feature).reshape(-1,1)
+        print("\n# Magic feature is {} : ".format("f"+ str(mg_f + 1)))
 
-    magic_test = pd.Series(magic_test)
-    magic_test = (magic_test-magic_test.min())/(magic_test.max()-magic_test.min())
-    magic_test = np.array(magic_test).reshape(-1,1)
+        magic_feature = _label[:,mg_f] #feature 6, 209, 5, 46, 20, 45, 247, 233
+        magic_test = _score_id[:,mg_f-1] #
 
-    feature = np.append(magic_feature, feature, axis = 1)
-    test = np.append(magic_test, test, axis = 1)
+        magic_feature = pd.Series(magic_feature)
+        magic_feature = (magic_feature-magic_feature.min())/(magic_feature.max()-magic_feature.min())
+        magic_feature = np.array(magic_feature).reshape(-1,1)
+
+        magic_test = pd.Series(magic_test)
+        magic_test = (magic_test-magic_test.min())/(magic_test.max()-magic_test.min())
+        magic_test = np.array(magic_test).reshape(-1,1)
+
+        feature = np.append(magic_feature, feature, axis = 1)
+        test = np.append(magic_test, test, axis = 1)
 
     print("\n# Read saved layer data  !! ")
     layer2_clf_names = ["XGB", "RF"]
