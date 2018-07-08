@@ -286,21 +286,18 @@ def read_saved_layer(train_data, test, label, score_id):
     magic_feature = _label[:,5] #feature 6, 209, 5, 46, 20, 45, 247, 233
     magic_test = _score_id[:,4]
 
-    feature = pd.DataFrame(feature)
     magic_feature = pd.Series(magic_feature)
     magic_feature = (magic_feature-magic_feature.min())/(magic_feature.max()-magic_feature.min())
-    feature = feature.assign(magic_feature)
-    prin(feature)
-    #magic_feature = np.array(magic_feature)
+    magic_feature = np.array(magic_feature)
 
     magic_test = pd.Series(magic_test)
     magic_test = (magic_test-magic_test.min())/(magic_test.max()-magic_test.min())
-    #magic_test = np.array(magic_test)
+    magic_test = np.array(magic_test)
 
     print(magic_feature.shape)
-    print(feature.shape)
-    feature = np.hstack((magic_feature, feature))
-    test = np.hstack((magic_test, test))
+    print(magic_feature.shape)
+    feature = np.append(magic_feature, feature, axis = 1)
+    test = np.append(magic_test, test, axis = 1)
     print(feature)
     print(feature.shape)
     sys.exit()
