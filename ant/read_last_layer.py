@@ -31,6 +31,13 @@ def main():
     label = pd.read_csv(label_path, low_memory = False)
     score_id = pd.read_csv(score_id_path)
 
+    feature_new, test_feature_new = select_feature_from_xgb(feature, label, test)
+    feature_new = pd.Series(feature_new[:,2])
+    normalized_feature_new = (feature_new-feature_new.min())/(feature_new.max()-feature_new.min())
+    normalized_test_feature_new = (test_feature_new-test_feature_new.min())/(test_feature_new.max()-test_feature_new.min())
+    print(normalized_feature_new)
+    sys.exit()
+
     #Read second layer
     probs = read_saved_layer(train, test_b, label)
 

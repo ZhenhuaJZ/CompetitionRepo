@@ -282,17 +282,13 @@ def read_saved_layer(train_data, test, label):
 
     feature = train_data
     label = _label[:,1].astype(int)
+    magic_feature = _label[:,5] #feature 6
+    print("1\n", magic_feature)
 
-    feature_new, test_feature_new = select_feature_from_xgb(feature, label, test)
-    print("feature_new\n", feature_new[:,0])
+    magic_feature = pd.Series(magic_feature)
 
-    feature_new = pd.Series(feature_new[:,0])
-    print(feature_new)
-    sys.exit()
-    #test_feature_new = pd.Series(test_feature_new[0])
-
-    #normalized_feature_new = (feature_new-feature_new.min())/(feature_new.max()-feature_new.min())
-    #normalized_feature_new = (test_feature_new-test_feature_new.min())/(test_feature_new.max()-test_feature_new.min())
+    magic_feature = (magic_feature-magic_feature.min())/(magic_feature.max()-magic_feature.min())
+    print("2\n", magic_feature)
 
     print("\n# Read saved layer data  !! ")
     layer2_clf_names = ["XGB", "RF"]
