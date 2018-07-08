@@ -102,7 +102,6 @@ def select_feature_from_xgb(feature,labels,test_feature):
     xgb = XGBClassifier(n_estimators=30, max_depth=4, learning_rate = 0.07, subsample = 0.8, colsample_bytree = 0.8, gamma = 0.1, n_jobs = -1)
     xgb = xgb.fit(feature, labels)
     importances = xgb.feature_importances_
-    print(importances)
     indices = np.argsort(importances)[::-1]
 
     model = SelectFromModel(xgb, prefit=True)
@@ -285,14 +284,12 @@ def read_saved_layer(train_data, test, label):
     label = _label[:,1].astype(int)
 
     feature_new, test_feature_new = select_feature_from_xgb(feature, label, test)
+    print("feature_new", feature_new)
     feature_new = pd.Series(feature_new[0])
     test_feature_new = pd.Series(test_feature_new[0])
 
     normalized_feature_new = (feature_new-feature_new.min())/(feature_new.max()-feature_new.min())
     normalized_feature_new = (test_feature_new-test_feature_new.min())/(test_feature_new.max()-test_feature_new.min())
-
-    print(normalized_feature_new[0])
-    print(len(normalized_feature_new[0]))
 
     print("\n# Read saved layer data  !! ")
     layer2_clf_names = ["XGB", "RF"]
