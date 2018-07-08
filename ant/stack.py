@@ -291,6 +291,8 @@ def read_saved_layer(train_data, test, label, score_id):
 
     magic_feature = pd.Series(magic_feature)
     magic_feature = (magic_feature-magic_feature.min())/(magic_feature.max()-magic_feature.min())
+    print(type(magic_feature))
+    print(magic_feature)
 
     magic_test = pd.Series(magic_test)
     magic_test = (magic_test-magic_test.min())/(magic_test.max()-magic_test.min())
