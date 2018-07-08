@@ -185,7 +185,7 @@ def stack_layer(names, classifiers, feature, labels, test_feature, layer_name):
                 test_score.append(test_prediction[:,1].tolist())
                 fold_score += stack_score[:,1].tolist()
                 print("model {}".format(name) + " complete")
-                roc = offline_model_performance_2(fold_split_label["fold_label_{}".format(i+1)], stack_score[:,1])
+                roc = offline_model_performance(fold_split_label["fold_label_{}".format(i+1)], stack_score[:,1])
                 roc_list.append(roc)
                 print("\n# Fold {} performace is {:4f}".format(i+1, roc))
                 end = time.time()
@@ -265,18 +265,12 @@ def two_layer_stacking(train_data, test):
 
     final_preds = np.average(test, axis =1, weights=[3./4, 1./4])
 
-    #final_preds = stack_xgb(feature, label, test)
-
     return final_preds
-
 
 def read_saved_layer(train_data, test, label):
     train_data = train_data.values
-    print(len(train_data))
     test = test.values
-    print(len(test))
     _label = label.values
-    print(len(label))
 
     feature = train_data[:,:]
     label = _label[:,1].astype(int)

@@ -13,10 +13,10 @@ now = datetime.datetime.now()
 score_path = "log/last_1_day/{}d_{}h_{}m/".format(now.day, now.hour, now.minute)
 params_path = "log/last_1_day/log_{}h.csv".format(now.hour)
 
-#train_path = "data/stack_train_best.csv"
+train_path = "data/stack_train_best.csv"
 #train_path = "data/train_float64.csv"  #train_normal_un.csv, train_float64.csv, train_normal_unlabel_float
 validation_path = "data/validation_float64.csv" #validation_normal_un.csv, validation_float64, test_normal_unlabel_float
-#test_b_path = "data/test_b.csv"
+test_b_path = "data/test_b.csv"
 test_a_path = "data/test_a.csv"
 model_name = None #"6d_23h_10m" #best score model
 corr_data = "data/corr_data.npy"
@@ -63,7 +63,7 @@ def positive_unlabel_learning(clf, data_path, train, thresh, eval = True, save_s
 
     return clf, _train, roc
 
-def init_train(clf, eval = True, save_score = True, save_model = False, params = None, dump_model = None):
+def init_train(clf, eval = True, save_score = False, save_model = False, params = None, dump_model = None):
 
     start = time.time()
     #Train
@@ -80,7 +80,7 @@ def init_train(clf, eval = True, save_score = True, save_model = False, params =
     feature, label = split_train_label(train)
 
     if dump_model != None :
-        model_path =  "log/last_3_days/" + dump_model + "/inti_model.pkl"
+        model_path =  "log/last_1_day1/" + dump_model + "/inti_model.pkl"
         print("\n# Load Model from {}".format(dump_model))
         clf = joblib.load(model_path)
 
@@ -194,8 +194,6 @@ def pu_a():
                     colsample_bytree = 0.8, learning_rate = 0.07, n_jobs = -1)
 
     clf, train, roc_init = init_train(_clf, params = params, dump_model = model_name)
-    #print("\n# START PU - UNLABEL , PU_thresh_unlabel = {}".format(pu_unlabel))
-    #clf, train, roc_unlabel = positive_unlabel_learning(clf, unlabel_path, train, pu_unlabel, prefix = "un_pu")
 
     print("\n# START PU - TESTA , PU_thresh_a = {}".format(pu_thresh_a))
     _, train, roc_pua = positive_unlabel_learning(clf, test_a_path, train, pu_thresh_a, prefix = "pua")
@@ -226,10 +224,6 @@ def pu_b(train, pu_test_b, eval):
     return
 
 def main():
-    train_path = "log/2018_7_8/layer1_train_2:38.csv"
-    test_b_path = "log/2018_7_8/layer1_test_2:38.csv"
-    label_path = "data/stack_train_best.csv"
-
     print("\n# Make dirs in {}".format(score_path))
     print("\n# Train_path : {}".format(train_path))
     print("\n# Validation_path : {}".format(validation_path))
@@ -240,18 +234,11 @@ def main():
     #train.to_csv("data/stack_train_best.csv", index = None)
     pu_b(train, pu_test_b, eval = True)
     """
-
     if stacking:
 
-        train = pd.read_csv(train_path, header = None, low_memory = False)
-        test_b = pd.read_csv(test_b_path, header = None)
-        label = pd.read_csv(label_path, low_memory = False)
-        _test_b = pd.read_csv(test_b_path)
+        probs = two_layer_stacking(train, test_b)
 
-        #probs = two_layer_stacking(train, test_b)
-        read_saved_layer(train, test_b, label)
-
-        score = pd.DataFrame(_test_b["id"]).assign(score = probs)
+        score = pd.DataFrame(test_b["id"]).assign(score = probs)
         _score_path = score_path  + "stacking_score_{}d_{}h_{}m.csv".format(now.day, now.hour, now.minute)
         score.to_csv(_score_path, index = None, float_format = "%.9f")
         print("\n# Stacking Score saved in {}".format(_score_path))
