@@ -251,7 +251,7 @@ def two_layer_stacking(train_data, test):
     layer2_clf_names = ["XGB", "RF"]
 
     layer2_classifier = [
-        XGBClassifier(n_estimators=480, max_depth=4, learning_rate = 0.07,
+        XGBClassifier(n_estimators=460, max_depth=4, learning_rate = 0.07, scale_pos_weight = 20,
                           gamma = 0, n_jobs = -1,
                           subsample = 0.8, colsample_bytree = 0.8),
 
