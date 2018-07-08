@@ -290,6 +290,8 @@ def read_saved_layer(train_data, test, label):
     magic_feature = (magic_feature-magic_feature.min())/(magic_feature.max()-magic_feature.min())
     print("2\n", magic_feature)
 
+    sys.exit()
+
     print("\n# Read saved layer data  !! ")
     layer2_clf_names = ["XGB", "RF"]
 
