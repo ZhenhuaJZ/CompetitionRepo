@@ -110,7 +110,7 @@ def select_feature_from_xgb(feature,labels,test_feature):
     with open(data_path + "importance_feature.txt" , "w") as log:
         for f in range(feature_new.shape[1]):
             log.write(str(f + 1) + "." +  " feature " +  str(indices[f]) + "  " + str(importances[indices[f]]) + "\n")
-            #print("%d. feature %d (%f)" % (f + 1, indices[f], importances[indices[f]]))
+            print("%d. feature %d (%f)" % (f + 1, indices[f], importances[indices[f]]))
     print("feature selection done saved new data in data path")
 
     return feature_new, test_feature_new

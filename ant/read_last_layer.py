@@ -20,6 +20,9 @@ score_id_path = "data/test_b.csv"
 
 def main():
 
+    select_feature_from_xgb()
+    sys.exit()
+    
     print("\n# Make dirs in {}".format(score_path))
     print("\n# Train_path : {}".format(train_path))
     os.makedirs(score_path)
