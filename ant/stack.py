@@ -276,8 +276,8 @@ def two_layer_stacking(train_data, test):
 ####################################################################################################
 
 def read_saved_layer(train_data, test, label, score_id):
-    train_data = train_data.drop(train_data.index[:4000])
-    label = label.drop(train_data.index[:4000])
+    train_data = train_data.drop(train_data.index[:4700])
+    label = label.drop(train_data.index[:4700])
     print(train_data)
     train_data = train_data.values
     test = test.values
