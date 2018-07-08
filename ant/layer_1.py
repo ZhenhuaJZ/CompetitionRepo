@@ -7,16 +7,16 @@ from sklearn.externals import joblib
 from sklearn.base import clone
 import time, sys, datetime
 from lib.tool import *
-from stack import *
+from stack_debug import *
 now = datetime.datetime.now()
 
 score_path = "log/last_1_day/{}d_{}h_{}m/".format(now.day, now.hour, now.minute)
 params_path = "log/last_1_day/log_{}h.csv".format(now.hour)
 
-#train_path = "data/stack_train_best.csv"
+train_path = "data/stack_train_best.csv"
 #train_path = "data/train_float64.csv"  #train_normal_un.csv, train_float64.csv, train_normal_unlabel_float
 validation_path = "data/validation_float64.csv" #validation_normal_un.csv, validation_float64, test_normal_unlabel_float
-#test_b_path = "data/test_b.csv"
+test_b_path = "data/test_b.csv"
 test_a_path = "data/test_a.csv"
 model_name = None #"6d_23h_10m" #best score model
 corr_data = "data/corr_data.npy"
@@ -226,10 +226,6 @@ def pu_b(train, pu_test_b, eval):
     return
 
 def main():
-    train_path = "log/2018_7_8/layer1_train_2:38.csv"
-    test_b_path = "log/2018_7_8/layer1_test_2:38.csv"
-    label_path = "data/stack_train_best.csv"
-
     print("\n# Make dirs in {}".format(score_path))
     print("\n# Train_path : {}".format(train_path))
     print("\n# Validation_path : {}".format(validation_path))
@@ -243,15 +239,11 @@ def main():
 
     if stacking:
 
-        train = pd.read_csv(train_path, header = None, low_memory = False)
-        test_b = pd.read_csv(test_b_path, header = None)
-        label = pd.read_csv(label_path, low_memory = False)
-        _test_b = pd.read_csv(test_b_path)
+        train = pd.read_csv(train_path, low_memory = False)
+        test_b = pd.read_csv(test_b_path)
+        probs = two_layer_stacking(train, test_b)
 
-        #probs = two_layer_stacking(train, test_b)
-        read_saved_layer(train, test_b, label)
-
-        score = pd.DataFrame(_test_b["id"]).assign(score = probs)
+        score = pd.DataFrame(test_b["id"]).assign(score = probs)
         _score_path = score_path  + "stacking_score_{}d_{}h_{}m.csv".format(now.day, now.hour, now.minute)
         score.to_csv(_score_path, index = None, float_format = "%.9f")
         print("\n# Stacking Score saved in {}".format(_score_path))
