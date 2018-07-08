@@ -241,7 +241,8 @@ def two_layer_stacking(train_data, test):
             #MLPClassifier(hidden_layer_sizes=(256,128,128), activation = "logistic", batch_size = 20000)
     ]
     print(classifier)
-    feature, test, avg_roc = stack_layer(clf_names, classifier, feature, label, test, layer_name = "layer1")
+    feature, test, avg_roc_layer1 = stack_layer(clf_names, classifier, feature, label, test, layer_name = "layer1")
+    print(avg_roc_layer1)
 
     layer2_clf_names = ["XGB", "RF"]
 
@@ -255,6 +256,7 @@ def two_layer_stacking(train_data, test):
     print(layer2_classifier)
 
     feature, test, avg_roc = stack_layer(layer2_clf_names, layer2_classifier, feature, label, test, layer_name = "layer2")
+    print(avg_roc)
 
     try:
         avg_roc = np.average(avg_roc, axis =1, weights=[3./4, 1./4])
@@ -289,6 +291,7 @@ def read_saved_layer(train_data, test, label):
     print(layer2_classifier)
 
     feature, test, avg_roc = stack_layer(layer2_clf_names, layer2_classifier, feature, label, test, layer_name = "layer2")
+    print("\n# Final_layer : ", avg_roc)
 
     try:
         avg_roc = np.average(avg_roc, axis =1, weights=[3./4, 1./4])
