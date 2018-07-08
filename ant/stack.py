@@ -99,7 +99,7 @@ def feature_processing(names,preprocessors,feature,test_feature):
 def select_feature_from_xgb(feature,labels,test_feature):
 
     print("\nStart selecting importance feature")
-    xgb = XGBClassifier(n_estimators=2, max_depth=4, learning_rate = 0.07, subsample = 0.8, colsample_bytree = 0.9)
+    xgb = XGBClassifier(n_estimators=400, max_depth=4, learning_rate = 0.07, subsample = 0.8, colsample_bytree = 0.0, gamma = 0.1)
     xgb = xgb.fit(feature, labels)
     importances = xgb.feature_importances_
     print(importances)
