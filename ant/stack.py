@@ -269,6 +269,9 @@ def two_layer_stacking(train_data, test):
 
     return final_preds
 
+
+####################################################################################################
+
 def read_saved_layer(train_data, test, label):
     train_data = train_data.values
     test = test.values
@@ -282,11 +285,11 @@ def read_saved_layer(train_data, test, label):
     layer2_clf_names = ["XGB", "RF"]
 
     layer2_classifier = [
-        XGBClassifier(n_estimators=20, max_depth=4, learning_rate = 0.07,
-                          gamma = 0, n_jobs = -1,
+        XGBClassifier(n_estimators=460, max_depth=4, learning_rate = 0.06,
+                          gamma = 0.1, n_jobs = -1,
                           subsample = 0.8, colsample_bytree = 0.8),
 
-        RandomForestClassifier(n_estimators = 20, min_samples_split = 110, max_depth = 20, criterion='entropy', n_jobs = -1),
+        RandomForestClassifier(n_estimators = 330, min_samples_split = 120, max_depth = 20, criterion='entropy', n_jobs = -1),
     ]
     print(layer2_classifier)
 

@@ -13,8 +13,8 @@ now = datetime.datetime.now()
 score_path = "log/last_1_day/{}d_{}h_{}m/".format(now.day, now.hour, now.minute)
 params_path = "log/last_1_day/log_{}h.csv".format(now.hour)
 
-train_path = "log/2018_7_8/layer1_train_2:38.csv"
-test_b_path = "log/2018_7_8/layer1_test_2:38.csv"
+train_path = "log/last_1_day/layer1_train_3:45.csv"
+test_b_path = "log/last_1_day/layer1_test_3:45.csv"
 label_path = "data/stack_train_best.csv"
 score_id_path = "data/test_b.csv"
 
