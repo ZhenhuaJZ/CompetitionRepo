@@ -15,7 +15,7 @@ params_path = "log/last_1_day/log_{}h.csv".format(now.hour)
 
 train_path = "data/stack_train_best.csv"
 #train_path = "data/train_float64.csv"  #train_normal_un.csv, train_float64.csv, train_normal_unlabel_float
-validation_path = "data/validation_float64.csv" #validation_normal_un.csv, validation_float64, test_normal_unlabel_float
+#validation_path = "data/validation_float64.csv" #validation_normal_un.csv, validation_float64, test_normal_unlabel_float
 test_b_path = "data/test_b.csv"
 test_a_path = "data/test_a.csv"
 model_name = None #"6d_23h_10m" #best score model
@@ -226,13 +226,15 @@ def pu_b(train, pu_test_b, eval):
 def main():
     print("\n# Make dirs in {}".format(score_path))
     print("\n# Train_path : {}".format(train_path))
-    print("\n# Validation_path : {}".format(validation_path))
+    #print("\n# Validation_path : {}".format(validation_path))
     os.makedirs(score_path)
     sys.stdout = Logger(score_path + "log_{}d_{}h_{}m.txt".format(now.day, now.hour, now.minute))
 
+    """
     train = pu_a()
     train.to_csv("data/stack_train_best.csv", index = None)
     pu_b(train, pu_test_b, eval = True)
+    """
 
     if stacking:
 
