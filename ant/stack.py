@@ -280,11 +280,13 @@ def read_saved_layer(train_data, test, label, score_id):
     test = test.values
     _label = label.values
     _score_id = score_id.values
+    mg_f = 4
+    print("\n# Magic feature is {} : ".format("f"+ mg_f + 1))
 
     feature = train_data
     label = _label[:,1].astype(int)
-    magic_feature = _label[:,208] #feature 6, 209, 5, 46, 20, 45, 247, 233
-    magic_test = _score_id[:,207] #
+    magic_feature = _label[:,mg_f] #feature 6, 209, 5, 46, 20, 45, 247, 233
+    magic_test = _score_id[:,mg_f-1] #
 
     magic_feature = pd.Series(magic_feature)
     magic_feature = (magic_feature-magic_feature.min())/(magic_feature.max()-magic_feature.min())
