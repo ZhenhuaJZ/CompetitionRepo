@@ -275,11 +275,11 @@ def read_saved_layer(train_data, test, label):
     print(len(train_data))
     test = test.values
     print(len(test))
-    label = label.values
+    _label = label.values
     print(len(label))
 
     feature = train_data[:,:]
-    label = train_data[:,1].astype(int)
+    label = _label[:,1].astype(int)
     test = test[:,:]
 
     print("\n# Read saved layer data  !! ")
