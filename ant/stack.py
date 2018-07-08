@@ -294,8 +294,8 @@ def read_saved_layer(train_data, test, label, score_id):
     magic_test = (magic_test-magic_test.min())/(magic_test.max()-magic_test.min())
     magic_test = np.array(magic_test)
 
-    feature = feature.vstack(magic_feature)
-    test = test.vstack(magic_test)
+    feature = feature.hstack(magic_feature)
+    test = test.hstack(magic_test)
     print(feature)
     sys.exit()
 
