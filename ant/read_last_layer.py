@@ -16,7 +16,7 @@ params_path = "log/last_1_day/log_{}h.csv".format(now.hour)
 train_path = "log/2018_7_8/layer1_train_2:38.csv"
 test_b_path = "log/2018_7_8/layer1_test_2:38.csv"
 label_path = "data/stack_train_best.csv"
-test_b_path_label = "data/test_b.csv"
+score_id_path = "data/test_b.csv"
 
 def main():
 
@@ -28,12 +28,11 @@ def main():
     train = pd.read_csv(train_path, header = None, low_memory = False)
     test_b = pd.read_csv(test_b_path, header = None)
     label = pd.read_csv(label_path, low_memory = False)
-    _test_b = pd.read_csv(test_b_path_label)
+    score_id = pd.read_csv(score_id_path)
 
-    #probs = two_layer_stacking(train, test_b)
     read_saved_layer(train, test_b, label)
 
-    score = pd.DataFrame(_test_b["id"]).assign(score = probs)
+    score = pd.DataFrame(score_id["id"]).assign(score = probs)
     _score_path = score_path  + "stacking_score_{}d_{}h_{}m.csv".format(now.day, now.hour, now.minute)
     score.to_csv(_score_path, index = None, float_format = "%.9f")
     print("\n# Stacking Score saved in {}".format(_score_path))
