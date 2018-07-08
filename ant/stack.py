@@ -292,7 +292,7 @@ def read_saved_layer(train_data, test, label, score_id):
     magic_feature = _label[:,mg_f] #feature 6, 209, 5, 46, 20, 45, 247, 233
     magic_test = _score_id[:,mg_f-1] #
     #Append magic feature
-    for mg_f in [5, 208, 4, 45, 19]:
+    for mg_f in [19, 20, 21, 22, 23,24,25,26]:
 
         print("\n# Magic feature is {} : ".format("f"+ str(mg_f + 1)))
 
