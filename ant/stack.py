@@ -285,10 +285,14 @@ def read_saved_layer(train_data, test, label):
     label = _label[:,1].astype(int)
 
     feature_new, test_feature_new = select_feature_from_xgb(feature, label, test)
-    feature_new = feature_new[0]
-    test_feature_new = test_feature_new[0]
-    print(feature_new[0])
-    print(len(feature_new[0]))
+    feature_new = pd.Series(feature_new[0])
+    test_feature_new = pd.Series(test_feature_new[0])
+
+    normalized_feature_new = (feature_new-feature_new.min())/(feature_new.max()-feature_new.min())
+    normalized_feature_new = (test_feature_new-test_feature_new.min())/(test_feature_new.max()-test_feature_new.min())
+
+    print(normalized_feature_new[0])
+    print(len(normalized_feature_new[0]))
 
     print("\n# Read saved layer data  !! ")
     layer2_clf_names = ["XGB", "RF"]
