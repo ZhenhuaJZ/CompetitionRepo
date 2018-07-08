@@ -281,7 +281,7 @@ def read_saved_layer(train_data, test, label, score_id):
     _label = label.values
     _score_id = score_id.values
     mg_f = 4
-    print("\n# Magic feature is {} : ".format("f"+ mg_f + 1))
+    print("\n# Magic feature is {} : ".format("f"+ str(mg_f + 1)))
 
     feature = train_data
     label = _label[:,1].astype(int)
