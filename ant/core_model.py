@@ -333,3 +333,9 @@ def evaluation(clf, test_set_path, train_set):
     roc_test =  eval_test_set(clf, test_set_path)
     # TODO:  high variance, low varience .etc
     return roc_val, roc_test
+
+class CoreModel(object):
+	"""docstring for ."""
+	def __init__(self, arg):
+		super(, self).__init__()
+		self.arg = arg
