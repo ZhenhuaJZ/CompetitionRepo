@@ -10,6 +10,7 @@ now = datetime.datetime.now()
 ##################### Data subsampling / imbalanced data ######################
 
 #standarlization data
+# TODO:  convert to numpy
 def standarlization(df):
     df = (df - df.mean()) / (df.max() - df.min())
     return df
@@ -81,23 +82,6 @@ def SMOTE_sampling(data, ratio = 1):
 #     data = feature.insert(1, "label", new_label)
 #     print(data)
 #     return data
-
-########################### Memory Manage ######################################
-def clear_mermory(*args):
-    for a in args:
-        del a
-    gc.collect()
-
-#check the dtype of a dataframe
-def dataframe_management():
-    #df.iloc[:,1:] = df.iloc[:,:].astype('int32')
-    df.info(memory_usage='deep')
-    for dtype in ['float','int','object']:
-        selected_dtype = _train_data.select_dtypes(include=[dtype])
-        mean_usage_b = selected_dtype.memory_usage(deep=True).mean()
-        mean_usage_mb = mean_usage_b / 1024 ** 2
-        print("Average memory usage for {} columns: {:03.2f} MB".format(dtype,mean_usage_mb))
-
 # #####################Creat path###############################################
 def creat_project_dirs(log_path):
     params_path = log_path + "params/"
@@ -108,19 +92,7 @@ def creat_project_dirs(log_path):
     os.makedirs(score_path)
     os.makedirs(model_path)
 
-def round_to_whole(data, tolerance):
-    p = 10**tolerance
-    return int(data*p + 0.5)/p
-
 #################################### Split data ################################
-def batch_data(data, split_ratio):
-    size_per_batch = len(data.iloc[:,1]) * split_ratio
-    num_batch = int(1/split_ratio)
-    batch = {}
-    for i in range(num_batch):
-        batch["batch_{}".format(i)] = data.loc[(i*size_per_batch):(size_per_batch*(i+1))]
-    return batch
-
 def sample_segmentation(data, feature_list):
     # seg_a_data is data that is larger than value_range
     # seg_b_data is data that is less than value_range
@@ -135,6 +107,7 @@ def sample_segmentation(data, feature_list):
     return seg_a_data, seg_b_data
 
 #Pass the training dataframe or datapath and split to feature and label
+## TODO:  convert numpy
 def split_train_label(data):
     #print(type(data))
     if isinstance(data, str):
@@ -146,6 +119,7 @@ def split_train_label(data):
         label = data.iloc[:,1]
     return feature, label
 
+# TODO:  Convet to numpy
 # test_train_split_by_date split the test set by providing a range of dates in yyyymmdd
 def test_train_split_by_date(data, start_y_m_d, end_y_m_d):
     # Extract data sets within the start and end date
@@ -161,6 +135,7 @@ def test_train_split_by_date(data, start_y_m_d, end_y_m_d):
 
     return data, split_data
 
+## TODO:  Convet to numpy
 # This function merges two dataframe and can be sort by provided string
 def file_merge(data_1, data_2, sort_by = "", reset_index = False):
     if len(data_1) == 0:
@@ -194,11 +169,13 @@ def file_merge_hard_drive(srcpath, despath):
                 output.write(data)
     print("# File merge done")
 
+## TODO:  numpy fill na
 def df_read_and_fillna(data_path, fillna_value = 0):
 	data = pd.read_csv(data_path)
 	data = custom_imputation(data, fillna_value)
 	return data
 
+## TODO:  convert to numpy
 ############################## Replace_missing by mode #########################
 # This function still having trouble
 def find_common_mode(black_frequency_list, white_frequency_list):
@@ -242,32 +219,9 @@ def replace_missing_by_custom_mode(train_data,test_data):
     train_data_merged = file_merge(black_data, white_data)
     return train_data_merged, test_data
 
-#custom_imputation
-def custom_imputation_3_inputs(df_train, df_test_b, df_test_a, fillna_value = 0):
-    train = df_train.fillna(fillna_value)
-    test_b = df_test_b.fillna(fillna_value)
-    test_a = df_test_a.fillna(fillna_value)
-    print("##"*40)
-    print("\n# Filling missing data with <{}>".format(fillna_value))
-    return train, test_b, test_a
-
-#custom_imputation
-def custom_imputation(df, fillna_value = 0):
-    data = df.fillna(fillna_value)
-    #print("##"*40)
-    #print("\n# Filling missing data with <{}>".format(fillna_value))
-    return data
 # #############################Save score#######################################
+## TODO:  convert to numpy
 #pass preds and save score file path
-"""
-def save_score(preds, score_path):
-    as_path = "lib/answer_sheet.csv"
-    answer_sheet = pd.read_csv(as_path)
-    answer_sheet = pd.DataFrame(answer_sheet)
-    answer = answer_sheet.assign(score = preds)
-    answer.to_csv(score_path + "score_day{}_time{}:{}.csv".format(now.day, now.hour, now.minute), index = None, float_format = "%.9f")
-    return print("\n# Score saved in {}".format(score_path))
-"""
 def save_score(clf, test_path, score_path, feature_drops, prefix):
     test_data = pd.read_csv(test_path)
     if len(feature_drops) != 0:

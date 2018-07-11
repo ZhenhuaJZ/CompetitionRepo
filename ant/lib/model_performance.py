@@ -1,16 +1,8 @@
 import os
-import pandas as pd
-from sklearn.model_selection import cross_val_score
 from sklearn.metrics import roc_curve
-from sklearn.metrics.scorer import make_scorer
-import datetime
 import numpy as np
 import bisect
 import re, csv
-import collections
-
-now = datetime.datetime.now()
-
 ############################### Offline performance ######################
 def offline_model_performance(ground_truth, predict, **kwargs):
     # Obtain array of false positive rate and true positive rate
@@ -140,42 +132,3 @@ def offline_model_performance_2(ground_truth, predict, **kwargs):
     model_performance = 0.4*tpr1 + 0.3*tpr2 + 0.3*tpr3
 
     return model_performance
-
-# #############################Log all the data ################################
-
-def log_parmas(clf, save_path, **kwargs):
-    #formate log
-    #valset = str(valset[0]) + "-" + str(valset[1])
-    #roc_1 = round(roc_1, 6)
-    #roc_2 = round(roc_2, 6)
-    #if isinstance(cv_roc_1_mean, float):
-        #cv_roc_1_mean = round(cv_roc_1_mean, 6)
-        #cv_roc_2_mean = round(cv_roc_2_mean, 6)
-    #score_path = re.split('log/', score_path)[-1]
-    split_string = re.split('[(,' '\n)' ']', str(clf))
-    #split_string = re.split('[(,' '\n)' ']', str(kwargs["bst_clf"]))
-
-    f = csv.writer(open(save_path, "a"))
-
-    log = [] #clf name
-    header = [] #header
-    parmas = [] #parmas
-
-    for i in split_string:
-        if len(i)>0:
-            new = i.strip().split('=')
-            if len(new) <= 1:
-                log.append(new[0])
-            if len(new) > 1:
-                header.append(new[0])
-                parmas.append(new[1])
-
-    log_v = [(k,kwargs[k]) for k in sorted(kwargs.keys())]
-    for l in log_v:
-        header.append(l[0])
-        parmas.append(l[1])
-
-    f.writerow(log)
-    f.writerow(header)
-    f.writerow(parmas)
-    f.writerow([])

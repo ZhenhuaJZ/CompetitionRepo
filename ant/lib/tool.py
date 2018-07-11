@@ -16,7 +16,6 @@ def double_check(dict, **kwargs):
         print("\n# Exit")
         return sys.exit()
 
-
 class Logger(object):
     def __init__(self, filename = "Logger.log"):
         self.terminal = sys.stdout
